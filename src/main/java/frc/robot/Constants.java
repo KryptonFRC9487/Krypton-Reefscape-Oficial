@@ -7,7 +7,7 @@ public final class Constants {
 
   public final class Teste{
 
-    public static final int testes2 = 9;
+    public static final int testes2 = 92;
 
   }
 }
