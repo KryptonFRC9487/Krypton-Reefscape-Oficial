@@ -12,16 +12,16 @@ public class Commands extends Command{
 
 public Commands(
     XboxController pController,
-    Subsystem Subsystem
+    Subsystem subsystem
 ) {
-    this.pController = pController,
-    this.subsystem = Subsystem
+    this.pController = pController;
+    this.subsystem = subsystem;
  }
 
  @Override
  public void execute(){
     if(pController.getRawButton(Buttons.BUTTON_A)){
-        Subsystem.TestSpeed();
+        subsystem.TestSpeed(0.1);   
     }
  }
 }

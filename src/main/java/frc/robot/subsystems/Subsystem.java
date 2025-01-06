@@ -16,7 +16,7 @@ public class Subsystem extends SubsystemBase{
 
     }
 
-    public void TesteSpeed(double speed){
+    public void TestSpeed(double speed){
         test.set(speed);
     }
 }
