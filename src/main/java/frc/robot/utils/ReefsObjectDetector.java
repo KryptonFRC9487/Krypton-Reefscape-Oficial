@@ -11,12 +11,12 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import frc.lib.vision.VisionProcessor;
+import frc.lib.vision.OpenCvObjectDetection;
 import frc.robot.Constants.ReefsVisionConstants;
 
-public class ReefsVisionProcessor extends VisionProcessor {
+public class ReefsObjectDetector extends OpenCvObjectDetection {
 
-	public ReefsVisionProcessor() {
+	public ReefsObjectDetector() {
 		super(
 				ReefsVisionConstants.CAMERA_INDEX,
 				ReefsVisionConstants.STREAM_NAME,
@@ -56,7 +56,7 @@ public class ReefsVisionProcessor extends VisionProcessor {
 		// Identifica o maior contorno
 		double maxArea = 0;
 		Rect largestRect = null;
-		
+
 		for (MatOfPoint contour : contours) {
 			double area = Imgproc.contourArea(contour);
 			if (area > maxArea) {
@@ -82,8 +82,8 @@ public class ReefsVisionProcessor extends VisionProcessor {
 			int frameCenterY = inputMat.rows() / 2;
 
 			// Calcula o deslocamento
-			int offsetX = rectCenterX - frameCenterX;
-			int offsetY = rectCenterY - frameCenterY;
+			offsetX = rectCenterX - frameCenterX;
+			offsetY = rectCenterY - frameCenterY;
 
 			// Adiciona texto indicando o deslocamento
 			String offsetText = String.format("Offset: X=%d, Y=%d", offsetX, offsetY);
@@ -111,5 +111,16 @@ public class ReefsVisionProcessor extends VisionProcessor {
 		drawCenterCross(inputMat);
 
 		return processedMats;
+	}
+
+	private int offsetX = 0;
+	private int offsetY = 0;
+
+	public int getOffsetX() {
+		return offsetX;
+	}
+
+	public int getOffsetY() {
+		return offsetY;
 	}
 }

@@ -24,7 +24,7 @@ import java.util.List;
  * A classe captura o fluxo de vídeo e permite o processamento personalizado
  * através do método abstrato {@link #processPipeline(Mat)}.
  */
-public abstract class VisionProcessor {
+public abstract class OpenCvObjectDetection {
 	private UsbCamera camera;
 	private CvSink cvSink;
 	private CvSource outputStream;
@@ -40,7 +40,7 @@ public abstract class VisionProcessor {
 	 * @param width       Largura da resolução da câmera.
 	 * @param height      Altura da resolução da câmera.
 	 */
-	public VisionProcessor(int cameraIndex, String streamName, int width, int height) {
+	public OpenCvObjectDetection(int cameraIndex, String streamName, int width, int height) {
 		initializeCamera(cameraIndex, streamName, width, height);
 
 		mat = new Mat();
