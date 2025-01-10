@@ -9,6 +9,8 @@ import java.io.File;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Controle;
 import frc.robot.Constants.Trajetoria;
@@ -32,6 +35,9 @@ public class RobotContainer {
   private final XboxController xboxControle = new XboxController(
     Controle.xboxControle
   );
+
+  final CommandXboxController controleTeste = new CommandXboxController(3);
+
 
   public RobotContainer() {
     NamedCommands.registerCommand("Intake", new PrintCommand("Intake"));
@@ -81,10 +87,14 @@ public class RobotContainer {
       new JoystickButton(xboxControle, XboxController.Button.kX.value)
           .onTrue(new MoveToPosition(swerve, 15.980, 0.758));
     }
-
   }
 
   private void configureBindings() {
+    if (Robot.isSimulation())
+    {
+      controleTeste.start().onTrue(Commands.runOnce(() -> swerve.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+    }
+
     new JoystickButton(xboxControle, XboxController.Button.kA.value)
       .onTrue(new InstantCommand(
         swerve::resetGyro
@@ -97,6 +107,9 @@ public class RobotContainer {
 
     new JoystickButton(xboxControle, XboxController.Button.kRightBumper.value)
     .onTrue(new MoveToPosition(swerve, 8, 4));
+
+    new JoystickButton(xboxControle, 0)
+      .onTrue(new MoveToPosition(swerve, 0, 0));
   }
 
   private void registerAutoCommands() {
