@@ -9,24 +9,33 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.OuttakeSubsystem;
+import frc.robot.Constants.Controle;
 
 public class RobotContainer {
 
-  private XboxController controller;
+  // private XboxController p2Controller;
   private ElevatorSubsystem elevatorSubsystem;
+  private OuttakeSubsystem outtakeSubsystem;
+
+  private XboxController p1Controller = new XboxController(Controle.P1PORT);
+  private XboxController p2Controller = new XboxController(Controle.P2PORT);
+
 
   public RobotContainer() {
-    controller = new XboxController(0);
+
     elevatorSubsystem = new ElevatorSubsystem();
+    outtakeSubsystem = new OuttakeSubsystem();
+
 
     configureBindings();
   }
 
     private void configureBindings() {
-      new JoystickButton(controller, XboxController.Button.kA.value)
+      new JoystickButton(p2Controller, XboxController.Button.kA.value)
         .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(1)));
 
-      new JoystickButton(controller, XboxController.Button.kY.value)
+      new JoystickButton(p2Controller, XboxController.Button.kY.value)
         .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(17)));
     }
 
