@@ -10,11 +10,11 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class SparkMController implements IMotorController {
 
-  private SparkMax motor;
-  private SparkMaxConfig config;
+  public SparkMax controller;
+  public SparkMaxConfig config;
 
   public SparkMController(int deviceId) {
-    motor = new SparkMax(deviceId, MotorType.kBrushless);
+    controller = new SparkMax(deviceId, MotorType.kBrushless);
     config = new SparkMaxConfig();
 
     updateConfig();
@@ -22,7 +22,7 @@ public class SparkMController implements IMotorController {
 
   @Override
   public void setPower(double power) {
-    motor.set(power);
+    controller.set(power);
   }
 
   @Override
@@ -40,7 +40,16 @@ public class SparkMController implements IMotorController {
     updateConfig();
   }
 
-  private void updateConfig() {
-    motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  public void follow(SparkMController leader) {
+    config.follow(leader.getController());
+    updateConfig();
+  }
+
+  public void updateConfig() {
+    controller.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+  public SparkMax getController() {
+    return controller;
   }
 }

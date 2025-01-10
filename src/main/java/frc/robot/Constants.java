@@ -5,8 +5,11 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public final class MotorId {
-    public static final int motortest = 2;
+  public final class ElevatorConstants {
+    public static final int LEFT_MOTOR_ID = 16;
+    public static final int RIGHT_MOTOR_ID = 15;
+  }
+
   }
 
   public static final class ReefsVisionConstants {

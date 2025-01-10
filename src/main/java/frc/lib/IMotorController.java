@@ -6,5 +6,4 @@ public interface IMotorController {
   public void setInverted(boolean isInverted);
   
   public void setBrake(boolean isBrake);
-
 }
