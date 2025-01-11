@@ -72,10 +72,10 @@ public class SwerveCommand extends Command {
 
     switch (speedMode) {
       case StateStrings.OFF:
-        Drive(1, 1, 1);
+        Drive(0.3, 0.3, 0.3);
         break;
       case StateStrings.ON:
-        Drive(1,1, 1);
+        Drive(0.8,0.8, 0.8);
         break;
     }
   }

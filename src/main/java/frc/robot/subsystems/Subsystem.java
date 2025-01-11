@@ -1,22 +1,18 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.IMotorController;
 import frc.lib.SparkMController;
 
 
 public class Subsystem extends SubsystemBase {
 
-    public IMotorController motor;
-    public SparkMax teste;
+    public SparkMController motor, motor2;
 
     public Subsystem(){
-
-        motor = new SparkMController(0);
-        motor.setPower(0);
-        motor.setBrake(true);
+        // motor = new SparkMController();
+        // motor2 = new SparkMController();
+        // motor.setBrake(true);
+        // motor.setInverted(true);
+        // motor.follow(motor2);
     }
-    
 }

@@ -14,6 +14,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
 import frc.robot.Constants.Tracao;
 // import frc.robot.commands.Auto.ConfigAuto;
 import swervelib.SwerveController;
@@ -38,11 +41,15 @@ import swervelib.parser.SwerveParser;
 public class SwerveSubsystem extends SubsystemBase {
     // Objeto global da SwerveDrive (Classe YAGSL)
     public SwerveDrive swerveDrive;
-    //Variavel para ativar/desativar a correção do tanto que gira
+
     public boolean correctionPID = false;
+
+    // Objeto global autônomo
+    // ConfigAuto autonomo;
 
     // Método construtor da classe
     public SwerveSubsystem(File directory) {
+
         // Seta a telemetria como nível mais alto
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
@@ -55,6 +62,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDrive.setHeadingCorrection(true);
         setupPathPlanner();
     }
+
     
     @Override
     public void periodic() {
@@ -160,6 +168,7 @@ public class SwerveSubsystem extends SubsystemBase {
   {
     swerveDrive.driveFieldOriented(velocity);
   }
+
     // Função drive que chamamos em nossa classe de comando Teleoperado
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) 
     {

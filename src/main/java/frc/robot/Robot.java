@@ -54,9 +54,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+
+    m_robotContainer.setHeadingCorrection(true);
+
+
   }
 
   @Override
