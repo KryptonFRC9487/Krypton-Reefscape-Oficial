@@ -19,5 +19,7 @@ public class OuttakeCommand extends Command{
 
         addRequirements(outtakeSubsystem);
      }
+
+     
 }
 

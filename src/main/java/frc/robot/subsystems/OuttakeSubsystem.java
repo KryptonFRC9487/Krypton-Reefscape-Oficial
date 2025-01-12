@@ -25,7 +25,6 @@ public class OuttakeSubsystem extends SubsystemBase{
         collectmotor = 
             new SparkMax(OuttakeConstants.COLLECT_ID, MotorType.kBrushless);
 
-
         pid = new PIDController(0, 0, 0);
         througbore1 = new DutyCycleEncoder(0);
 

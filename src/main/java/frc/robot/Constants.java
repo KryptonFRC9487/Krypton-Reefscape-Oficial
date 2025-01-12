@@ -95,8 +95,8 @@ public static final class Dimensoes {
   }
 
   public final class OuttakeConstants{
-    public static final int ANGLE_ID = 0;
-    public static final int COLLECT_ID = 0;
+    public static final int ANGLE_ID = 24;
+    public static final int COLLECT_ID = 25;
   }
 
   public static final class ReefsVisionConstants {

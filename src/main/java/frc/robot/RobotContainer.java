@@ -49,16 +49,12 @@ public class RobotContainer {
 
   final CommandXboxController controleTeste = new CommandXboxController(3);
 
-  private ElevatorSubsystem elevatorSubsystem;
-  private OuttakeSubsystem outtakeSubsystem;
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final OuttakeSubsystem outtakeSubsystem = new OuttakeSubsystem();
 
 
   public RobotContainer() {
     NamedCommands.registerCommand("Intake", new PrintCommand("Intake"));
-
-
-    elevatorSubsystem = new ElevatorSubsystem();
-    outtakeSubsystem = new OuttakeSubsystem();
 
     setDefaultCommands();
     registerAutoCommands();
@@ -107,11 +103,11 @@ public class RobotContainer {
           .onTrue(new MoveToPosition(swerve, 15.980, 0.758));
     }
 
-    // outtakeSubsystem.setDefaultCommand(
-    //   new OuttakeCommand(
-    //     outtakeSubsystem, p2Controller
-    //   )
-    // );
+    outtakeSubsystem.setDefaultCommand(
+      new OuttakeCommand(
+        outtakeSubsystem, p2Controller
+      )
+    );
   }
 
 
