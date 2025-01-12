@@ -14,7 +14,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -55,7 +54,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         // Acessa os arquivos do diretório .JSON
         try {
-        swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.Dimensoes.MAX_SPEED);
+        swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.Tracao.MAX_SPEED);
         } catch (Exception e) {
           throw new RuntimeException(e);
         }

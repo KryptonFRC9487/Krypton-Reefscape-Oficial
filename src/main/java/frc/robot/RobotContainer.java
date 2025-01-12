@@ -22,9 +22,11 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Controle;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.Trajetoria;
 import frc.robot.commands.MoveToPosition;
 import frc.robot.commands.SwerveCommand;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -33,15 +35,24 @@ public class RobotContainer {
     new File(Filesystem.getDeployDirectory(), "swerve")
   );
 
-  private final XboxController xboxControle = new XboxController(
-    Controle.xboxControle
+
+  private XboxController p1Controller = new XboxController(
+    Controle.P1PORT
+  );
+
+  private XboxController p2Controller = new XboxController(
+    Controle.P2PORT
   );
 
   final CommandXboxController controleTeste = new CommandXboxController(3);
 
+  private ElevatorSubsystem elevatorSubsystem;
+
 
   public RobotContainer() {
     NamedCommands.registerCommand("Intake", new PrintCommand("Intake"));
+
+    elevatorSubsystem = new ElevatorSubsystem();
 
     setDefaultCommands();
     registerAutoCommands();
@@ -55,12 +66,12 @@ public class RobotContainer {
       new SwerveCommand(
         swerve,
         () ->
-          -MathUtil.applyDeadband(xboxControle.getLeftY(), Controle.DEADBAND),
+          -MathUtil.applyDeadband(p1Controller.getLeftY(), Controle.DEADBAND),
         () ->
-          -MathUtil.applyDeadband(xboxControle.getLeftX(), Controle.DEADBAND),
+          -MathUtil.applyDeadband(p1Controller.getLeftX(), Controle.DEADBAND),
         () ->
-          -MathUtil.applyDeadband(xboxControle.getRightX(), Controle.DEADBAND),
-        () -> xboxControle.getRightBumperPressed()
+          -MathUtil.applyDeadband(p1Controller.getRightX(), Controle.DEADBAND),
+        () -> p1Controller.getRightBumperPressed()
       )
     );
     } else {
@@ -68,60 +79,37 @@ public class RobotContainer {
       new SwerveCommand(
         swerve,
         () ->
-          MathUtil.applyDeadband(xboxControle.getLeftY(), Controle.DEADBAND),
+          MathUtil.applyDeadband(p1Controller.getLeftY(), Controle.DEADBAND),
         () ->
-          MathUtil.applyDeadband(xboxControle.getLeftX(), Controle.DEADBAND),
+          MathUtil.applyDeadband(p1Controller.getLeftX(), Controle.DEADBAND),
         () ->
-          MathUtil.applyDeadband(xboxControle.getRightX(), Controle.DEADBAND),
-        () -> xboxControle.getRightBumperPressed()
+          MathUtil.applyDeadband(p1Controller.getRightX(), Controle.DEADBAND),
+        () -> p1Controller.getRightBumperPressed()
       )
     );
     }
 
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      new JoystickButton(xboxControle, XboxController.Button.kX.value)
+      new JoystickButton(p1Controller, XboxController.Button.kX.value)
           .onTrue(new MoveToPosition(swerve, 1.630, 7.328));
-      new JoystickButton(xboxControle, XboxController.Button.kB.value)
+      new JoystickButton(p1Controller, XboxController.Button.kB.value)
           .onTrue(new MoveToPosition(swerve, 0.707, 1.346));
     } else if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-      new JoystickButton(xboxControle, XboxController.Button.kB.value)
+      new JoystickButton(p1Controller, XboxController.Button.kB.value)
           .onTrue(new MoveToPosition(swerve, 15.872, 7.364));
-      new JoystickButton(xboxControle, XboxController.Button.kX.value)
+      new JoystickButton(p1Controller, XboxController.Button.kX.value)
           .onTrue(new MoveToPosition(swerve, 15.980, 0.758));
     }
   }
 
-  private void configureBindings() {
-    if (Robot.isSimulation())
-    {
-      controleTeste.start().onTrue(Commands.runOnce(() -> swerve.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-    }
 
-    new JoystickButton(xboxControle, XboxController.Button.kA.value)
-      .onTrue(new InstantCommand(
-        swerve::resetGyro
-    ));
-
-    new JoystickButton(xboxControle, XboxController.Button.kY.value)
-      .toggleOnTrue(Commands.startEnd(
-        swerve::disableHeading, swerve::resetHeading
-    ));
-
-    new JoystickButton(xboxControle, XboxController.Button.kRightBumper.value)
-    .onTrue(new MoveToPosition(swerve, 8, 4));
-
-    new JoystickButton(xboxControle, 0)
-      .onTrue(new MoveToPosition(swerve, 0, 0));
-  }
 
   private void registerAutoCommands() {
 
   }
 
   //Heading Correction 
-  public void setHeadingCorrection(boolean setHeadingCorrection){
-    swerve.swerveDrive.setHeadingCorrection(setHeadingCorrection);
-  }   
+ 
 
     private void configureBindings() {
 
@@ -150,6 +138,29 @@ public class RobotContainer {
 
       new JoystickButton(p2Controller, XboxController.Button.kY.value)
         .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(17)));
+
+
+      //ToPose Commands 
+        if (Robot.isSimulation())
+        {
+          controleTeste.start().onTrue(Commands.runOnce(() -> swerve.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+        }
+    
+        new JoystickButton(p1Controller, XboxController.Button.kA.value)
+          .onTrue(new InstantCommand(
+            swerve::resetGyro
+        ));
+    
+        new JoystickButton(p1Controller, XboxController.Button.kY.value)
+          .toggleOnTrue(Commands.startEnd(
+            swerve::disableHeading, swerve::resetHeading
+        ));
+    
+        new JoystickButton(p1Controller, XboxController.Button.kRightBumper.value)
+        .onTrue(new MoveToPosition(swerve, 8, 4));
+    
+        new JoystickButton(p1Controller, 0)
+          .onTrue(new MoveToPosition(swerve, 0, 0));
     }
 
   public Command getAutonomousCommand() {
@@ -162,9 +173,7 @@ public class RobotContainer {
   }   
 
   // Define os motores como coast ou brake
-  public void setMotorBrake(boolean brake) {
-    swerve.setMotorBrake(brake);
-  }
+
 
   public void setMotorBrake(boolean brake) {
     swerve.setMotorBrake(brake);

@@ -3,12 +3,12 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+// import frc.lib.SparkMController
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.SparkMController;
 import frc.robot.Constants.OuttakeConstants;;
 
 public class OuttakeSubsystem extends SubsystemBase{
@@ -35,7 +35,7 @@ public class OuttakeSubsystem extends SubsystemBase{
     public void periodic(){
 
         double output = pid.calculate(getMeasurement());
-        output = MathUtil.clamp(output, -0.8,0.8); //0.3
+        output = MathUtil.clamp(output, -0.8,0.8); 
         anglemotor.set(output);
 
          SmartDashboard.putNumber("Encoder Outtake",getMeasurement());
