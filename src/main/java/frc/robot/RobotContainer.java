@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,8 +26,10 @@ import frc.robot.Constants.Controle;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.Trajetoria;
 import frc.robot.commands.MoveToPosition;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.SwerveCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -47,12 +50,15 @@ public class RobotContainer {
   final CommandXboxController controleTeste = new CommandXboxController(3);
 
   private ElevatorSubsystem elevatorSubsystem;
+  private OuttakeSubsystem outtakeSubsystem;
 
 
   public RobotContainer() {
     NamedCommands.registerCommand("Intake", new PrintCommand("Intake"));
 
+
     elevatorSubsystem = new ElevatorSubsystem();
+    outtakeSubsystem = new OuttakeSubsystem();
 
     setDefaultCommands();
     registerAutoCommands();
@@ -100,6 +106,12 @@ public class RobotContainer {
       new JoystickButton(p1Controller, XboxController.Button.kX.value)
           .onTrue(new MoveToPosition(swerve, 15.980, 0.758));
     }
+
+    // outtakeSubsystem.setDefaultCommand(
+    //   new OuttakeCommand(
+    //     outtakeSubsystem, p2Controller
+    //   )
+    // );
   }
 
 

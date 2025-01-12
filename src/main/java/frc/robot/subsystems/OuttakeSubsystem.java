@@ -15,7 +15,7 @@ public class OuttakeSubsystem extends SubsystemBase{
 
     public SparkMax anglemotor, collectmotor;
     private final PIDController pid;
-    private final DutyCycleEncoder througbore1;
+    public DutyCycleEncoder througbore1;
 
     public OuttakeSubsystem(){
 
