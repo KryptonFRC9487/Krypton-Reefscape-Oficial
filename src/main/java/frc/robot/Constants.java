@@ -6,99 +6,110 @@ import swervelib.math.Matter;
 import swervelib.math.SwerveMath;
 import swervelib.parser.PIDFConfig;
 
+/**
+ * Classe Constants para armazenar constantes usadas no código do robô.
+ * Organizada em classes internas para melhor separação de responsabilidades.
+ */
 public final class Constants {
 
+  /**
+   * Configurações relacionadas às dimensões e características físicas do robô.
+   */
+  public static final class Dimensoes {
+    public static final double LOOP_TIME = 0.13; // Tempo de loop em segundos (sparkMax + normal)
+    public static final double ROBOT_MASS = 38; // Massa do robô em quilogramas
 
-public static final class Dimensoes {
-    // Tempo de loop (sparkMax + normal = 130ms)
-    public static final double LOOP_TIME = 0.13;
-    // Massa do robô
-    public static final double ROBOT_MASS = 38;
+    // Posições do centro de massa
+    private static final double X_MASS = 0.0;
+    private static final double Y_MASS = 0.0;
+    private static final double Z_MASS = 0.08;
 
-    //Posições do centro de massa
-    private static final double xMass = 0;
-    private static final double yMass = 0;
-    private static final double zMass = .08;
     // Centro de massa do chassi
-    public static final Matter CHASSIS    = new Matter(new Translation3d(xMass, yMass, (zMass)), ROBOT_MASS);
+    public static final Matter CHASSIS = new Matter(
+        new Translation3d(X_MASS, Y_MASS, Z_MASS), ROBOT_MASS);
 
-    // Máxima aceleração e velocidade
-    public static final double MAX_ACCE_AUTO = 4;
-    public static final double MAX_VEL_AUTO  = 4;
+    // Máxima aceleração e velocidade (m/s² e m/s)
+    public static final double MAX_ACCE_AUTO = 4.0;
+    public static final double MAX_VEL_AUTO = 4.0;
 
-    // Diâmetro da roda do módulo
-    public static final double wheelDiameterInMeters = Units.inchesToMeters(4);
-    
-    // Redução para motor de acionamento e ângulo
-    public static final double driveGearRatio = 6.18;
-    public static final double angleGearRatio = 21.42;
+    // Dimensões das rodas e reduções
+    public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
+    public static final double DRIVE_GEAR_RATIO = 6.18;
+    public static final double ANGLE_GEAR_RATIO = 21.42;
 
-    // PPR do encoder interno NEO;
-    public static final  double pulsePerRotation = 1;
+    // PPR do encoder interno NEO
+    public static final double PULSE_PER_ROTATION = 1;
 
-    // Fatores de conversão para motores de acionamento e ângulo
-    public static final  double driveConversion = SwerveMath.calculateMetersPerRotation(wheelDiameterInMeters, driveGearRatio, pulsePerRotation);
-    public static final  double angleConversion = SwerveMath.calculateDegreesPerSteeringRotation(angleGearRatio, pulsePerRotation);
-   }
+    // Fatores de conversão
+    public static final double DRIVE_CONVERSION = SwerveMath.calculateMetersPerRotation(
+        WHEEL_DIAMETER_METERS, DRIVE_GEAR_RATIO, PULSE_PER_ROTATION);
+    public static final double ANGLE_CONVERSION = SwerveMath.calculateDegreesPerSteeringRotation(
+        ANGLE_GEAR_RATIO, PULSE_PER_ROTATION);
+  }
 
-    // Classe que contém os PID para o autônomo
-    public static final class PID {
-      // PID para frente e para trás
-      public static final PIDFConfig xAutoPID     = new PIDFConfig(0.65, 0, 0.05);
-      // PID para esquerda e direita
-      public static final PIDFConfig yAutoPID     = new PIDFConfig(0.6, 0, 0);
-      // PID de rotação
-      public static final PIDFConfig angleAutoPID = new PIDFConfig(0.1, 0, 0.01);
-    }
+  /**
+   * Configurações de PID para controle autônomo.
+   */
+  public static final class PID {
+    public static final PIDFConfig X_AUTO_PID = new PIDFConfig(0.65, 0, 0.05);
+    public static final PIDFConfig Y_AUTO_PID = new PIDFConfig(0.6, 0, 0);
+    public static final PIDFConfig ANGLE_AUTO_PID = new PIDFConfig(0.1, 0, 0.01);
+  }
 
-    public static final class Tracao {
-      // Define se a tração vai ser orientada ao campo (sim = true)
-      public static final boolean fieldRelative = true;
-      // false para malha-fechada
-      public static final boolean isOpenLoop = false;
-      // true para correção de aceleração
-      public static final boolean accelCorrection = false;
-      // constante para diminuir o input do joystick (0 < multiplicadorRotacional <= 1)
-      public static final double multiplicadorRotacional = 0.8;
-      // constante para diminuir o input do joystick (y)
-      public static final double multiplicadorTranslacionalY = 0.7;
-      // constante para diminuir o input do joystick (x)
-      public static final double multiplicadorTranslacionalX = 0.7;
+  /**
+   * Configurações relacionadas ao controle de tração.
+   */
+  public static final class SwerveMotionConfig {
+    public static final boolean FIELD_RELATIVE = true; // Orientação ao campo
+    public static final boolean IS_OPEN_LOOP = false; // Malha fechada
+    public static final boolean ACCEL_CORRECTION = false; // Correção de aceleração
 
-      public static final double TURN_CONSTANT = 0.75;
+    // Multiplicadores para suavizar entradas do joystick
+    public static final double MULT_ROTACIONAL = 0.8;
+    public static final double MULT_TRANSLACIONAL_Y = 0.7;
+    public static final double MULT_TRANSLACIONAL_X = 0.7;
 
-      // constante que define a velocidade máxima
-      public static final double MAX_SPEED = 4.8;
+    public static final double TURN_CONSTANT = 0.75; // Constante de rotação
+    public static final double MAX_SPEED = 4.8; // Velocidade máxima (m/s)
+    public static final double DT = 0.02; // Intervalo de tempo (s)
+    public static final double CONSTANT_ROTATION = 4.0; // Rotação constante
+  }
 
-      public static final double dt = 0.02;
+  /**
+   * Configurações das trajetórias autônomas.
+   */
+  public static final class Trajetoria {
+    public static final String NOME_TRAJETORIA1 = "New Auto";
+    public static final String NOME_TRAJETORIA2 = "New Path2";
+  }
 
-      public static final double constantRotation = 4;
-    }
+  /**
+   * Estados usados em strings.
+   */
+  public static final class StateStrings {
+    public static final String OFF = "OFF";
+    public static final String ON = "ON";
+  }
 
-      // Classe que guarda os nomes das trajetórias
-      public static final class Trajetoria {
-        public static final boolean ALIANCA = false; // Caso a aliança seja azul use false, se for vermelha use true
-        public static final String NOME_TRAJETORIA = "New Auto";
-        public static final String NOME_TRAJETORIA2 = "New Path2";
-      }
-  
-      public static final class StateStrings {
-  
-        public static final String OFF = "OFF";
-        public static final String ON = "ON";
-      }
-
-        
-  public final class ElevatorConstants {
+  /**
+   * Configurações do elevador.
+   */
+  public static final class ElevatorConstants {
     public static final int LEFT_MOTOR_ID = 16;
     public static final int RIGHT_MOTOR_ID = 15;
   }
 
-  public final class OuttakeConstants{
+  /**
+   * Configurações do sistema de outtake.
+   */
+  public static final class OuttakeConstants {
     public static final int ANGLE_ID = 24;
     public static final int COLLECT_ID = 25;
   }
 
+  /**
+   * Configurações de visão.
+   */
   public static final class ReefsVisionConstants {
     public static final int CAMERA_INDEX = 1;
     public static final String STREAM_NAME = "Red Detection";
@@ -106,15 +117,15 @@ public static final class Dimensoes {
     public static final int IMAGE_HEIGHT = 480;
   }
 
-  public static final class Controle{
-    public static final int P1PORT = 0;
-    public static final int P2PORT = 1;
-
-    //Deadband do controle p1
-    public static final double DEADBAND = 0.2;
+  /**
+   * Configurações do controle e botões.
+   */
+  public static final class GamepadConstants {
+    public static final int P1_PORT = 0;
+    public static final int P2_PORT = 1;
+    public static final double DEADBAND = 0.2; // Deadband do controle P1
   }
 
-  
   public static final class Buttons {
     public static final int BUTTON_A = 1;
     public static final int BUTTON_B = 2;
@@ -124,6 +135,4 @@ public static final class Dimensoes {
     public static final int RIGHT_BUMPER = 6;
     public static final int BUTTON_BACK = 7;
   }
-
-
 }
