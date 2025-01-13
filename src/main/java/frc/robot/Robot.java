@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
-        if (isSimulation())
+    if (isSimulation())
     {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
@@ -54,10 +54,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
     m_robotContainer.setHeadingCorrection(true);
-
-
   }
 
   @Override

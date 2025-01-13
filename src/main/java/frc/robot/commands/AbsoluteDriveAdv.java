@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Dimensoes;
-import frc.robot.Constants.Tracao;
+import frc.robot.Constants.SwerveMotionConfig;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.List;
@@ -99,15 +99,18 @@ public class AbsoluteDriveAdv extends Command
 
     //Dont overwrite a button press
     if(headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) > 0){
-      newHeading = Rotation2d.fromRadians(Tracao.TURN_CONSTANT * -headingAdjust.getAsDouble())
-                                                                      .plus(swerve.getHeading());
+      newHeading = Rotation2d.fromRadians(SwerveMotionConfig.TURN_CONSTANT * -headingAdjust.getAsDouble())
+          .plus(swerve.getHeading());
+
       headingX = newHeading.getSin();
       headingY = newHeading.getCos();
     }
 
-    ChassisSpeeds desiredSpeeds = swerve.getTargetSpeeds(vX.getAsDouble(), vY.getAsDouble(),
-                                                         headingX,
-                                                         headingY);
+    ChassisSpeeds desiredSpeeds = swerve.getTargetSpeeds(
+        vX.getAsDouble(),
+        vY.getAsDouble(),
+        headingX,
+        headingY);
 
     // Prevent Movement After Auto
     if(initRotation)
@@ -128,20 +131,21 @@ public class AbsoluteDriveAdv extends Command
     Translation2d translation = SwerveController.getTranslation2d(desiredSpeeds);
 
     // Caso essa função seja verdadeira a aceleração do robô será limitada
-    if(Tracao.accelCorrection) {
-        translation = SwerveMath.limitVelocity(translation, swerve.getFieldVelocity(), swerve.getPose(),
-                                              Dimensoes.LOOP_TIME, Dimensoes.ROBOT_MASS, 
-                                               List.of(Dimensoes.CHASSIS),
-                                               swerve.getSwerveDriveConfiguration());
+    if (SwerveMotionConfig.ACCEL_CORRECTION) {
+      translation = SwerveMath.limitVelocity(
+          translation,
+          swerve.getFieldVelocity(),
+          swerve.getPose(),
+          Dimensoes.LOOP_TIME,
+          Dimensoes.ROBOT_MASS,
+          List.of(Dimensoes.CHASSIS),
+          swerve.getSwerveDriveConfiguration());
 
         SmartDashboard.putNumber("LimitedTranslation", translation.getX());
         SmartDashboard.putString("Translation", translation.toString());
-    }
-                                      
-
-
+      }
     // Make the robot move
-    swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, Tracao.fieldRelative);
+    swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, SwerveMotionConfig.FIELD_RELATIVE);
   }
 
   // Called once the command ends or is interrupted.

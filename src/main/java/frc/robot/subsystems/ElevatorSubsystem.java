@@ -18,17 +18,19 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private SparkMax leftMotor, rightMotor;
     private SparkMaxConfig leftMotorConfig, rightMotorConfig;
-    private SparkClosedLoopController leftClosedLoopController;
+    private SparkClosedLoopController leftClosedLoopController, rightClosedLoopController;
     private RelativeEncoder leftEncoder, rightEncoder;
 
     public ElevatorSubsystem(){
         leftMotor = new SparkMax(ElevatorConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
         rightMotor = new SparkMax(ElevatorConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
-        
+
         leftMotorConfig = new SparkMaxConfig();
         rightMotorConfig = new SparkMaxConfig();
 
         leftClosedLoopController = leftMotor.getClosedLoopController();
+        rightClosedLoopController = rightMotor.getClosedLoopController();
+
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
@@ -53,8 +55,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setTarget(double target) {
-        leftMotor.getClosedLoopController().setReference(target, ControlType.kPosition); 
-        rightMotor.getClosedLoopController().setReference(target, ControlType.kPosition); 
+        leftClosedLoopController.setReference(target, ControlType.kPosition);
+        rightClosedLoopController.setReference(target, ControlType.kPosition);
     }
 
     @Override
