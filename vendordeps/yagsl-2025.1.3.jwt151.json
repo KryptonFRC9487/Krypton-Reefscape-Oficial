@@ -26,7 +26,7 @@
             "uuid": "151ecca8-670b-4026-8160-cdd2679ef2bd",
             "errorMessage": "ReduxLib is required!",
             "offlineFileName": "ReduxLib-2025.0.0.json",
-            "onlineUrl": "[https://frcsdk.reduxrobotics.com/ReduxLib_2025.json]"
+            "onlineUrl": "https://frcsdk.reduxrobotics.com/ReduxLib_2025.json"
         },
         {
             "uuid": "e995de00-2c64-4df5-8831-c1441420ff19",
