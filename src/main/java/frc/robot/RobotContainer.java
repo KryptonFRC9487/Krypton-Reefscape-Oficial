@@ -117,11 +117,11 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return swerveSubsystem.getAutonomousCommand(Trajetoria.NOME_TRAJETORIA1, true);
+    return swerveSubsystem.getAutonomousCommand(Trajetoria.NOME_TRAJETORIA, true);
   }
 
   //Heading Correction 
   public void setHeadingCorrection(boolean setHeadingCorrection){
-    swerveSubsystem.swerveDrive.setHeadingCorrection(setHeadingCorrection);
+    swerveSubsystem.getSwerveDrive().setHeadingCorrection(setHeadingCorrection);
   }
 }

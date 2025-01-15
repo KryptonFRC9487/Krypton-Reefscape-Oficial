@@ -47,7 +47,7 @@ public class MoveToPosition extends Command{
 
         //Faz o robô andar para a posição desejada
         //Moves the robot to the desired position
-        swerveSubsystem.drive(new Translation2d(vX, vY), 0, true);
+        // swerveSubsystem.drive(new Translation2d(vX, vY), 0, true);
     }
 
 
@@ -65,6 +65,6 @@ public class MoveToPosition extends Command{
     //O interrupt is used to stop the robot if another command is executed during the process
     @Override
     public void end(boolean interromper){
-        swerveSubsystem.drive(new Translation2d(0, 0), 0, true);
+        // swerveSubsystem.drive(new Translation2d(0, 0), 0, true);
     }
 }

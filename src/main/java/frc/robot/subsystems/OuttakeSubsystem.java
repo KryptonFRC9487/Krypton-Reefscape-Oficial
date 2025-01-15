@@ -1,7 +1,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 // import frc.lib.SparkMController
 import edu.wpi.first.math.MathUtil;
@@ -22,8 +26,15 @@ public class OuttakeSubsystem extends SubsystemBase{
         anglemotor =
             new SparkMax(OuttakeConstants.ANGLE_ID, MotorType.kBrushless);
 
+        SparkMaxConfig angleMotorConfig = new SparkMaxConfig();
+
+        angleMotorConfig.idleMode(IdleMode.kBrake);
+
+        anglemotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         collectmotor = 
             new SparkMax(OuttakeConstants.COLLECT_ID, MotorType.kBrushless);
+
 
         pid = new PIDController(0, 0, 0);
         througbore1 = new DutyCycleEncoder(0);
@@ -43,5 +54,16 @@ public class OuttakeSubsystem extends SubsystemBase{
     public double getMeasurement(){
         return througbore1.get();
         }
+        
+
+    public void setOuttakePosition(double setpoint) {
+        pid.setSetpoint(setpoint);
+    }
+    
+    public void setOuttakeSpeed(double speed){
+        collectmotor.set(speed);
+    }
+    
+
     
 }
