@@ -11,7 +11,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
@@ -19,11 +19,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.Trajetoria;
-import frc.robot.commands.MoveToPosition;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
@@ -46,8 +44,6 @@ public class RobotContainer {
       GamepadConstants.P2_PORT
   );
 
-  private final CommandXboxController controleTeste = new CommandXboxController(3);
-
   public RobotContainer() {
     setDefaultCommands();
     registerAutoCommands();
@@ -55,12 +51,13 @@ public class RobotContainer {
   }
 
   private void setDefaultCommands() {
-    swerveSubsystem.setDefaultCommand(new SwerveCommand(
-        swerveSubsystem,
-        () -> MathUtil.applyDeadband(p1Controller.getLeftY(), GamepadConstants.DEADBAND),
-        () -> MathUtil.applyDeadband(p1Controller.getLeftX(), GamepadConstants.DEADBAND),
-        () -> MathUtil.applyDeadband(p1Controller.getRightX(), GamepadConstants.DEADBAND),
-        () -> p1Controller.getRightBumperPressed()));
+      swerveSubsystem.setDefaultCommand(new SwerveCommand(
+          swerveSubsystem,
+          () -> -MathUtil.applyDeadband(p1Controller.getLeftY(), GamepadConstants.DEADBAND),
+          () -> -MathUtil.applyDeadband(p1Controller.getLeftX(), GamepadConstants.DEADBAND),
+          () -> -MathUtil.applyDeadband(p1Controller.getRightX(), GamepadConstants.DEADBAND),
+          () -> p1Controller.getRightBumperPressed()));
+    
 
     outtakeSubsystem.setDefaultCommand(
       new OuttakeCommand(
@@ -77,14 +74,37 @@ public class RobotContainer {
 
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       new JoystickButton(p1Controller, XboxController.Button.kX.value)
-          .onTrue(new MoveToPosition(swerveSubsystem, 1.630, 7.328));
+        .whileTrue(
+          swerveSubsystem.driveToPose(
+            new Pose2d(
+              new Translation2d(1.630, 7.328), 
+              Rotation2d.fromDegrees(0)
+      )));
+
       new JoystickButton(p1Controller, XboxController.Button.kB.value)
-          .onTrue(new MoveToPosition(swerveSubsystem, 0.707, 1.346));
-    } else {
+        .whileTrue(
+          swerveSubsystem.driveToPose(
+            new Pose2d(
+              new Translation2d(0.707, 1.346), 
+              Rotation2d.fromDegrees(0)
+      )));
+
+    } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
       new JoystickButton(p1Controller, XboxController.Button.kX.value)
-          .onTrue(new MoveToPosition(swerveSubsystem, 15.980, 0.758));
+        .whileTrue(
+          swerveSubsystem.driveToPose(
+            new Pose2d(
+              new Translation2d(15.980, 0.758), 
+              Rotation2d.fromDegrees(0)
+      )));
+
       new JoystickButton(p1Controller, XboxController.Button.kB.value)
-          .onTrue(new MoveToPosition(swerveSubsystem, 15.872, 7.364));
+        .whileTrue(
+          swerveSubsystem.driveToPose(
+            new Pose2d(
+              new Translation2d( 15.872, 7.364), 
+              Rotation2d.fromDegrees(0)
+      )));
     }
 
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
@@ -100,8 +120,8 @@ public class RobotContainer {
 
     // ToPose Commands
     if (Robot.isSimulation()) {
-      controleTeste.start()
-          .onTrue(Commands.runOnce(() -> swerveSubsystem.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      new JoystickButton(p1Controller, XboxController.Button.kStart.value)
+        .onTrue(Commands.runOnce(() -> swerveSubsystem.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
     }
 
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
@@ -112,8 +132,6 @@ public class RobotContainer {
         .toggleOnTrue(Commands.startEnd(
             swerveSubsystem::disableHeading, swerveSubsystem::resetHeading));
 
-    new JoystickButton(p1Controller, XboxController.Button.kRightBumper.value)
-        .onTrue(new MoveToPosition(swerveSubsystem, 8, 4));
   }
 
   public Command getAutonomousCommand() {
