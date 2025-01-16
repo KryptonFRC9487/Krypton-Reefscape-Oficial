@@ -35,6 +35,13 @@ public class OuttakeCommand extends Command{
    @Override
    public void execute(){
 
+      
+      if(p2Controller.getRawButton(Buttons.BUTTON_Y)){
+         outtakePose = OuttakePose.DEPOSIT;
+      } else if(p2Controller.getRawButton(Buttons.BUTTON_A)){
+         outtakePose = OuttakePose.INIT;
+      }
+      
       if(p2Controller.getRightTriggerAxis() != 0){
          outtakeSubsystem.setOuttakeSpeed(0);
       } else if(p2Controller.getLeftTriggerAxis() != 0){
@@ -43,11 +50,17 @@ public class OuttakeCommand extends Command{
          outtakeSubsystem.setOuttakeSpeed(0);
       }
 
-      if(p2Controller.getRawButton(Buttons.BUTTON_Y)){
-         outtakePose = OuttakePose.DEPOSIT;
-      } else if(p2Controller.getRawButton(Buttons.BUTTON_A)){
-         outtakePose = OuttakePose.INIT;
-      }
+      if(p2Controller.getRightTriggerAxis() != 0){
+         if(!OuttakeSubsystem.limitSwitch){
+             outtakeSubsystem.setOuttakeSpeed(0);
+         } else {
+             outtakeSubsystem.setOuttakeSpeed(0.5);
+         }
+     } else if(p2Controller.getLeftTriggerAxis() != 0){
+         outtakeSubsystem.setOuttakeSpeed(-0.5);
+     } else {
+         outtakeSubsystem.setOuttakeSpeed(0);
+     } 
 
       switch (outtakePose) {
          case INIT:

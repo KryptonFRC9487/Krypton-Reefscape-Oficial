@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 // import frc.lib.SparkMController
 import edu.wpi.first.math.MathUtil;
@@ -20,6 +21,9 @@ public class OuttakeSubsystem extends SubsystemBase{
     public SparkMax anglemotor, collectmotor;
     private final PIDController pid;
     public DutyCycleEncoder througbore1;
+    public final DigitalInput m_limitSwitch;
+
+    public static boolean limitSwitch;
 
     public OuttakeSubsystem(){
 
@@ -34,6 +38,8 @@ public class OuttakeSubsystem extends SubsystemBase{
 
         collectmotor = 
             new SparkMax(OuttakeConstants.COLLECT_ID, MotorType.kBrushless);
+
+        m_limitSwitch = new DigitalInput(3);
 
 
         pid = new PIDController(0, 0, 0);
