@@ -107,6 +107,7 @@ import swervelib.parser.PIDFConfig;
        */
       public static final class OuttakeConstants {
         public static final int ANGLE_ID = 24;
+        public static final int ANGLE2_ID = 0;
         public static final int COLLECT_ID = 25;
       }
     

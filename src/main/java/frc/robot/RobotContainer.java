@@ -115,7 +115,7 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(1)));
 
     new JoystickButton(p2Controller, XboxController.Button.kY.value)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(17)));
+        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(15)));
 
 
     // ToPose Commands

@@ -7,10 +7,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
-
-
-//teste
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -20,7 +16,7 @@ import frc.robot.Constants.OuttakeConstants;
 
 public class OuttakeSubsystem extends SubsystemBase{
 
-    public SparkMax anglemotor, collectmotor;
+    public SparkMax anglemotor, anglemotor2, collectmotor;
     private final PIDController pid;
     public DutyCycleEncoder througbore1;
     public final DigitalInput m_limitSwitch;
@@ -29,14 +25,18 @@ public class OuttakeSubsystem extends SubsystemBase{
 
     public OuttakeSubsystem(){
 
-        anglemotor =
-            new SparkMax(OuttakeConstants.ANGLE_ID, MotorType.kBrushless);
+        anglemotor = new SparkMax(OuttakeConstants.ANGLE_ID, MotorType.kBrushless);
+        anglemotor2 = new SparkMax(OuttakeConstants.ANGLE2_ID, MotorType.kBrushless);  
 
         SparkMaxConfig angleMotorConfig = new SparkMaxConfig();
+        SparkMaxConfig angleMotorConfig2 = new SparkMaxConfig();
 
         angleMotorConfig.idleMode(IdleMode.kBrake);
 
+        angleMotorConfig2.follow(anglemotor);
+
         anglemotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        anglemotor2.configure(angleMotorConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         collectmotor = 
             new SparkMax(OuttakeConstants.COLLECT_ID, MotorType.kBrushless);
@@ -51,12 +51,12 @@ public class OuttakeSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-
         double output = pid.calculate(getMeasurement());
         output = MathUtil.clamp(output, -0.8,0.8); 
         anglemotor.set(output);
+        
 
-         SmartDashboard.putNumber("Encoder Outtake",getMeasurement());
+        SmartDashboard.putNumber("Encoder Outtake",getMeasurement());
     }
 
     public double getMeasurement(){

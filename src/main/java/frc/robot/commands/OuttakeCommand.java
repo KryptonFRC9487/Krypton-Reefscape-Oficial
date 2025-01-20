@@ -40,13 +40,13 @@ public class OuttakeCommand extends Command{
          outtakePose = OuttakePose.INIT;
       }
       
-      if(p2Controller.getRightTriggerAxis() != 0){
-         outtakeSubsystem.setOuttakeSpeed(0);
-      } else if(p2Controller.getLeftTriggerAxis() != 0){
-         outtakeSubsystem.setOuttakeSpeed(-0);
-      } else{
-         outtakeSubsystem.setOuttakeSpeed(0);
-      }
+      // if(p2Controller.getRightTriggerAxis() != 0){
+      //    outtakeSubsystem.setOuttakeSpeed(0);
+      // } else if(p2Controller.getLeftTriggerAxis() != 0){
+      //    outtakeSubsystem.setOuttakeSpeed(-0);
+      // } else{
+      //    outtakeSubsystem.setOuttakeSpeed(0);
+      // }
 
       if(p2Controller.getRightTriggerAxis() != 0){
          if(!OuttakeSubsystem.limitSwitch){

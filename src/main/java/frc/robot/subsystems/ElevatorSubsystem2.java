@@ -1,68 +1,64 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
-public class ElevatorSubsystem extends SubsystemBase {
+public class ElevatorSubsystem2 extends SubsystemBase {
 
     private SparkMax leftMotor, rightMotor;
     private SparkMaxConfig leftMotorConfig, rightMotorConfig;
-    private SparkClosedLoopController leftClosedLoopController, rightClosedLoopController;
     private RelativeEncoder leftEncoder, rightEncoder;
 
-    public ElevatorSubsystem(){
+    private PIDController leftPidController, rightPidController;
+
+    public ElevatorSubsystem2() {
         leftMotor = new SparkMax(ElevatorConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
         rightMotor = new SparkMax(ElevatorConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
         leftMotorConfig = new SparkMaxConfig();
         rightMotorConfig = new SparkMaxConfig();
 
-        leftClosedLoopController = leftMotor.getClosedLoopController();
-        rightClosedLoopController = rightMotor.getClosedLoopController();
-
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
         leftMotorConfig.inverted(true);
 
-        InitializePidControl(leftMotorConfig);
-        InitializePidControl(rightMotorConfig);
-
+        leftPidController = new PIDController(0.3, 0, 0);
+        rightPidController = new PIDController(0.3, 0, 0);
+        
         leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        rightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-    }
-
-    private void InitializePidControl(SparkMaxConfig config) {
-        config.encoder
-            .positionConversionFactor(1)
-            .velocityConversionFactor(1);
-
-        config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pidf(0.3, 0, 0, 0.05)
-            .outputRange(-1.0, 1.0);
     }
 
     public void setTarget(double target) {
-        leftClosedLoopController.setReference(target, ControlType.kPosition);
-        rightClosedLoopController.setReference(target, ControlType.kPosition);
+        leftPidController.setSetpoint(target);
+        rightPidController.setSetpoint(target);
     }
 
     @Override
     public void periodic() {
+        double leftMotorOutput = leftPidController.calculate(leftEncoder.getPosition());
+        double rightMotorOutput = rightPidController.calculate(rightEncoder.getPosition());
+
+        leftMotorOutput = MathUtil.clamp(leftMotorOutput, -1.0, 1.0);
+        rightMotorOutput = MathUtil.clamp(rightMotorOutput, -1.0, 1.0);
+
+        leftMotor.set(leftMotorOutput);
+        rightMotor.set(rightMotorOutput);
+
+        SmartDashboard.putNumber("Left Elevator Output", leftMotorOutput);
         SmartDashboard.putNumber("Left Elevator Position", leftEncoder.getPosition());
         SmartDashboard.putNumber("Left Elevator Velocity", leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Right Elevator Output", rightMotorOutput);
         SmartDashboard.putNumber("Right Elevator Position", rightEncoder.getPosition());
         SmartDashboard.putNumber("Right Elevator Velocity", rightEncoder.getVelocity());
     }
