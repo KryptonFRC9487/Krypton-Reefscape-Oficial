@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.simulation.VisionSystemSim;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,6 +27,8 @@ public class Robot extends TimedRobot {
     {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
+
+    VisionSystemSim visionSim = new VisionSystemSim("main");
   }
 
   @Override
