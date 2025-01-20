@@ -47,10 +47,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         config.encoder
             .positionConversionFactor(1)
             .velocityConversionFactor(1);
-
+ 
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pidf(0.08, 0.0, 0, 0.0)
+            .pidf(0.1, 0, 0, 0.0)
             .outputRange(-1.0, 1.0);
     }
 

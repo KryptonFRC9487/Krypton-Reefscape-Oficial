@@ -4,8 +4,16 @@
 
 package frc.robot;
 
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -13,7 +21,24 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
+  // private XboxController controller;
+
+  // private SparkMax motor1, motor2;
+  // private SparkMaxConfig motor1Config;
+
   public Robot() {
+    // motor1 = new SparkMax(15, MotorType.kBrushless);
+
+    // controller = new XboxController(1);
+
+    // motor2 = new SparkMax(16, MotorType.kBrushless);
+
+    // motor1Config = new SparkMaxConfig();
+
+    // motor1Config.inverted(true);
+
+    // motor1.configure(motor1Config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+
   }
 
   @Override
@@ -59,6 +84,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    // motor1.set(controller.getLeftY());
+    // motor2.set(controller.getLeftY());
+
   }
 
   @Override
