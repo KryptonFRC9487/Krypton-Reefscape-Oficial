@@ -14,9 +14,7 @@ public class OuttakeCommand extends Command{
 
    private OuttakePose outtakePose;
 
-
-
-   public OuttakeCommand(
+   public OuttakeCommand( 
    OuttakeSubsystem outtakeSubsystem,
    XboxController p2Controller
    ) {

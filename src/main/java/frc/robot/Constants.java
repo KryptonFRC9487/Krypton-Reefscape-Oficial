@@ -98,8 +98,8 @@ import swervelib.parser.PIDFConfig;
        * Configurações do elevador.
        */
       public static final class ElevatorConstants {
-        public static final int LEFT_MOTOR_ID = 16;
-        public static final int RIGHT_MOTOR_ID = 15;
+        public static final int LEFT_MOTOR_ID = 15;
+        public static final int RIGHT_MOTOR_ID = 16;
       }
     
       /**

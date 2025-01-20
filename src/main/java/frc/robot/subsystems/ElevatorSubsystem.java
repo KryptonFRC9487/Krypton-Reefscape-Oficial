@@ -50,8 +50,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pidf(0.05, 0.0, 0, 0)
-            .outputRange(-1, 1);
+            .pidf(0.08, 0.0, 0, 0.0)
+            .outputRange(-1.0, 1.0);
     }
 
     public void setTarget(double target) {
