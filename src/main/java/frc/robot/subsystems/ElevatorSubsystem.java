@@ -34,7 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
-        leftMotorConfig.inverted(true);
+        rightMotorConfig.inverted(true);
 
         InitializePidControl(leftMotorConfig);
         InitializePidControl(rightMotorConfig);
@@ -51,6 +51,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pidf(0.3, 0, 0, 0.05)
+            .velocityFF(0.001)
             .outputRange(-1.0, 1.0);
     }
 
