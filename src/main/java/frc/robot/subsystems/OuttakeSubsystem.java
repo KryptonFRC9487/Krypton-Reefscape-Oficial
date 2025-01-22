@@ -32,6 +32,7 @@ public class OuttakeSubsystem extends SubsystemBase{
         SparkMaxConfig angleMotorConfig2 = new SparkMaxConfig();
 
         angleMotorConfig.idleMode(IdleMode.kBrake);
+        
 
         angleMotorConfig2.follow(anglemotor);
 
