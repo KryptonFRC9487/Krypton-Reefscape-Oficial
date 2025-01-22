@@ -10,60 +10,70 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private SparkMax leftMotor, rightMotor;
-    private SparkMaxConfig leftMotorConfig, rightMotorConfig;
-    private SparkClosedLoopController leftClosedLoopController, rightClosedLoopController;
-    private RelativeEncoder leftEncoder, rightEncoder;
+  private final SparkMax leftMotor, rightMotor;
+  private final SparkMaxConfig leftMotorConfig, rightMotorConfig;
+  private final SparkClosedLoopController leftClosedLoopController;
+  private final RelativeEncoder leftEncoder, rightEncoder;
 
-    public ElevatorSubsystem(){
-        leftMotor = new SparkMax(ElevatorConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-        rightMotor = new SparkMax(ElevatorConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+  private final ElevatorFeedforward feedforward = new ElevatorFeedforward(
+      ElevatorConstants.kS,
+      ElevatorConstants.kG,
+      ElevatorConstants.kV,
+      ElevatorConstants.kA);
 
-        leftMotorConfig = new SparkMaxConfig();
-        rightMotorConfig = new SparkMaxConfig();
+  public ElevatorSubsystem() {
+    leftMotor = new SparkMax(ElevatorConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+    rightMotor = new SparkMax(ElevatorConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
-        leftClosedLoopController = leftMotor.getClosedLoopController();
-        rightClosedLoopController = rightMotor.getClosedLoopController();
+    leftMotorConfig = new SparkMaxConfig();
+    rightMotorConfig = new SparkMaxConfig();
 
-        leftEncoder = leftMotor.getEncoder();
-        rightEncoder = rightMotor.getEncoder();
+    leftClosedLoopController = leftMotor.getClosedLoopController();
 
-        leftMotorConfig.inverted(true);
+    leftEncoder = leftMotor.getEncoder();
+    rightEncoder = rightMotor.getEncoder();
 
-        InitializePidControl(leftMotorConfig);
-        InitializePidControl(rightMotorConfig);
+    leftMotorConfig
+        .smartCurrentLimit(80)
+        .closedLoopRampRate(0.25).closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)
+        .outputRange(-1.0, 1.0);
 
-        leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        rightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-    }
+    leftMotorConfig.encoder
+        .positionConversionFactor(1)
+        .velocityConversionFactor(1);
 
-    private void InitializePidControl(SparkMaxConfig config) {
-        config.encoder
-            .positionConversionFactor(1)
-            .velocityConversionFactor(1);
+    rightMotorConfig
+        .follow(leftMotor, true)
+        .smartCurrentLimit(80);
 
-        config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pidf(0.3, 0, 0, 0.05)
-            .outputRange(-1.0, 1.0);
-    }
+    leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    rightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+  }
 
-    public void setTarget(double target) {
-        leftClosedLoopController.setReference(target, ControlType.kPosition);
-        rightClosedLoopController.setReference(target, ControlType.kPosition);
-    }
+  public void setTarget(double target) {
+    leftClosedLoopController.setReference(
+        target,
+        ControlType.kPosition);
+  }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Left Elevator Position", leftEncoder.getPosition());
-        SmartDashboard.putNumber("Left Elevator Velocity", leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Right Elevator Position", rightEncoder.getPosition());
-        SmartDashboard.putNumber("Right Elevator Velocity", rightEncoder.getVelocity());
-    }
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Left Elevator Position (Rotations)", leftEncoder.getPosition());
+    SmartDashboard.putNumber("Left Elevator Velocity (Rotations per Second)", leftEncoder.getVelocity());
+    SmartDashboard.putNumber("Left Elevator Voltage", leftMotor.getBusVoltage());
+
+    SmartDashboard.putNumber("Right Elevator Position (Rotations)", rightEncoder.getPosition());
+    SmartDashboard.putNumber("Right Elevator Velocity (Rotations per Second)", rightEncoder.getVelocity());
+    SmartDashboard.putNumber("Right Elevator Voltage", rightMotor.getBusVoltage());
+  }
+
 }
