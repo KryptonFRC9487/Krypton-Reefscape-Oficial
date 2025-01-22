@@ -1,6 +1,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 import swervelib.math.SwerveMath;
@@ -97,9 +99,29 @@ public final class Constants {
    * Configurações do elevador.
    */
   public static final class ElevatorConstants {
+
+    public static enum ElevatorPosition {
+      BOTTOM(1),
+      TOP(10);
+
+      public final double value;
+
+      private ElevatorPosition(double value) {
+        this.value = value;
+      }
+    }
+
     // IDs dos motores
     public static final int LEFT_MOTOR_ID = 15;
     public static final int RIGHT_MOTOR_ID = 16;
+
+    // Constantes do elevador
+    public static final double GEARING = 5.0;
+    public static final double MASS_KG = 5.0;
+    public static final double DRUM_CIRCUMFERENCE = 2.0 * Math.PI * Units.inchesToMeters(2.0);
+    public static final double ENCODER_ROTATIONS_TO_METERS = DRUM_CIRCUMFERENCE / GEARING;
+
+    public static final int CURRENT_LIMIT = 60;
 
     // PID Gains
     public static final double kP = 0.08; // Proporcional
@@ -107,14 +129,18 @@ public final class Constants {
     public static final double kD = 0.0; // Derivativo
 
     // Feedforward Gains
-    public static final double kS = 0.5; // Tensão estática
-    public static final double kG = 0.56; // Gravidade
-    public static final double kV = 3.12; // Velocidade
-    public static final double kA = 0.06; // Aceleração
+    public static final double kS = 0.095388; // Tensão estática TODO
+    public static final double kG = 0.54402; // Gravidade TODO
+    public static final double kV = 7.43; // Velocidade TODO
+    public static final double kA = 1.0; // Aceleração TODO
 
     // Restrições de movimento
-    public static final double MAX_VELOCITY = 3.67; // Velocidade máxima (m/s)
-    public static final double MAX_ACCELERATION = 0.5; // Aceleração máxima (m/s^2)
+    public static final double MIN_HEIGHT_METERS = 0.005; // TODO
+    public static final double MAX_HEIGHT_METERS = 1.57; // TODO
+    public static final double MAX_VELOCITY = 3.67; // Velocidade máxima (m/s) TODO
+    public static final double MAX_ACCELERATION = 3.0; // Aceleração máxima (m/s^2) TODO
+    public static final TrapezoidProfile.Constraints MOVEMENT_CONSTRAINTS = new TrapezoidProfile.Constraints(
+        MAX_VELOCITY, MAX_ACCELERATION);
   }
 
   /**
