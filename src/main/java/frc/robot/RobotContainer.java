@@ -33,7 +33,7 @@ public class RobotContainer {
   private final File swerveConfigFile = new File(Filesystem.getDeployDirectory(), "swerve");
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile);
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  // private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final OuttakeSubsystem outtakeSubsystem = new OuttakeSubsystem();
 
   private XboxController p1Controller = new XboxController(
@@ -111,11 +111,11 @@ public class RobotContainer {
         .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
 
     // Elevator Commands
-    new JoystickButton(p2Controller, XboxController.Button.kA.value)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(1)));
+    // new JoystickButton(p2Controller, XboxController.Button.kA.value)
+    //     .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(1)));
 
-    new JoystickButton(p2Controller, XboxController.Button.kY.value)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(10)));
+    // new JoystickButton(p2Controller, XboxController.Button.kY.value)
+    //     .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(10)));
 
     // ToPose Commands
     if (Robot.isSimulation()) {
