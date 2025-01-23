@@ -71,7 +71,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       new JoystickButton(p1Controller, XboxController.Button.kX.value)
         .whileTrue(
@@ -88,7 +87,6 @@ public class RobotContainer {
               new Translation2d(0.707, 1.346), 
               Rotation2d.fromDegrees(0)
       )));
-
     } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
       new JoystickButton(p1Controller, XboxController.Button.kX.value)
         .whileTrue(
@@ -117,8 +115,6 @@ public class RobotContainer {
     new JoystickButton(p2Controller, XboxController.Button.kY.value)
         .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(54)));
     
-
-
     // ToPose Commands
     if (Robot.isSimulation()) {
       new JoystickButton(p1Controller, XboxController.Button.kStart.value)
