@@ -106,8 +106,8 @@ import swervelib.parser.PIDFConfig;
        * Configurações do sistema de outtake.
        */
       public static final class OuttakeConstants {
-        public static final int ANGLE_ID = 24;
-        public static final int ANGLE2_ID = 0;
+        public static final int ANGLE_ID = 14;
+        public static final int ANGLE2_ID = 17;
         public static final int COLLECT_ID = 25;
       }
     
@@ -120,8 +120,8 @@ import swervelib.parser.PIDFConfig;
         INIT,
         DEPOSIT,
         }
-        public static final int OUTTAKE_INIT = 12;
-        public static final int OUTTAKE_DEPOSIT = 13;
+        public static final double OUTTAKE_INIT = 0.61;
+        public static final double OUTTAKE_DEPOSIT = 0.20;
       }
     
       /**

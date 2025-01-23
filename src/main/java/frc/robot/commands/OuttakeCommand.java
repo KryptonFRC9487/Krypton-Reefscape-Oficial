@@ -34,9 +34,9 @@ public class OuttakeCommand extends Command{
    public void execute(){
 
       
-      if(p2Controller.getRawButton(Buttons.BUTTON_Y)){
+      if(p2Controller.getRawButton(Buttons.BUTTON_X)){
          outtakePose = OuttakePose.DEPOSIT;
-      } else if(p2Controller.getRawButton(Buttons.BUTTON_A)){
+      } else if(p2Controller.getRawButton(Buttons.BUTTON_B)){
          outtakePose = OuttakePose.INIT;
       }
       

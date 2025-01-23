@@ -23,10 +23,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.Trajetoria;
 import frc.robot.commands.OuttakeCommand;
-import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.commands.teleOp.SwerveCommand;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 public class RobotContainer {
 
@@ -112,10 +112,11 @@ public class RobotContainer {
 
     // Elevator Commands
     new JoystickButton(p2Controller, XboxController.Button.kA.value)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(1)));
+        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(3)));
 
     new JoystickButton(p2Controller, XboxController.Button.kY.value)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(15)));
+        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(54)));
+    
 
 
     // ToPose Commands

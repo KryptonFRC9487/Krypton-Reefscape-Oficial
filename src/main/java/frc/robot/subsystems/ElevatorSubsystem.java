@@ -28,13 +28,15 @@ public class ElevatorSubsystem extends SubsystemBase {
         leftMotorConfig = new SparkMaxConfig();
         rightMotorConfig = new SparkMaxConfig();
 
+        rightMotorConfig.follow(leftMotor, true);
+
+
         leftClosedLoopController = leftMotor.getClosedLoopController();
         rightClosedLoopController = rightMotor.getClosedLoopController();
 
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
-        rightMotorConfig.inverted(true);
 
         InitializePidControl(leftMotorConfig);
         InitializePidControl(rightMotorConfig);
@@ -66,5 +68,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Left Elevator Velocity", leftEncoder.getVelocity());
         SmartDashboard.putNumber("Right Elevator Position", rightEncoder.getPosition());
         SmartDashboard.putNumber("Right Elevator Velocity", rightEncoder.getVelocity());
+
+        SmartDashboard.putNumber("VoltageR", rightMotor.get());
+        SmartDashboard.putNumber("VoltageL", leftMotor.get());
+
     }
 }

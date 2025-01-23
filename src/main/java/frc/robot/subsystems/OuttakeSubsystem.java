@@ -32,9 +32,7 @@ public class OuttakeSubsystem extends SubsystemBase{
         SparkMaxConfig angleMotorConfig2 = new SparkMaxConfig();
 
         angleMotorConfig.idleMode(IdleMode.kBrake);
-        
-
-        angleMotorConfig2.follow(anglemotor);
+        angleMotorConfig2.follow(anglemotor, true);
 
         anglemotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         anglemotor2.configure(angleMotorConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -44,8 +42,7 @@ public class OuttakeSubsystem extends SubsystemBase{
 
         m_limitSwitch = new DigitalInput(3);
 
-
-        pid = new PIDController(0, 0, 0);
+        pid = new PIDController(1.35, 0, 0);
         througbore1 = new DutyCycleEncoder(0);
 
     }
@@ -53,10 +50,9 @@ public class OuttakeSubsystem extends SubsystemBase{
     @Override
     public void periodic(){
         double output = pid.calculate(getMeasurement());
-        output = MathUtil.clamp(output, -0.8,0.8); 
+        output = MathUtil.clamp(output, -0.5,0.1); 
         anglemotor.set(output);
         
-
         SmartDashboard.putNumber("Encoder Outtake",getMeasurement());
     }
 
