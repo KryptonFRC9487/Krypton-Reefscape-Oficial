@@ -165,9 +165,9 @@ public final class Constants {
     public static final double kV = 0.29; // Velocidade TODO
     public static final double kA = 0.05; // Aceleração TODO
 
-    public static final double MAX_VELOCITY = 3.67; // Velocidade máxima (m/s) TODO
-    public static final double MAX_ACCELERATION = 3.0; // Aceleração máxima (m/s^2) TODO
-    public static final TrapezoidProfile.Constraints MOVEMENT_CONSTRAINTS = new TrapezoidProfile.Constraints(
+    public static final double MAX_VELOCITY = 118.47; // Velocidade máxima (rad/s) TODO
+    public static final double MAX_ACCELERATION = 25.0; // Aceleração máxima (rad/s^2) TODO
+    public static final TrapezoidProfile.Constraints TRAPEZOID_CONSTRAINTS = new TrapezoidProfile.Constraints(
         MAX_VELOCITY, MAX_ACCELERATION);
   }
 
