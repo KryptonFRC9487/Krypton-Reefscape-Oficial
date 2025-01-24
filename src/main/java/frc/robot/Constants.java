@@ -150,9 +150,25 @@ public final class Constants {
    * Configurações do sistema de outtake.
    */
   public static final class OuttakeConstants {
-    public static final int ANGLE_ID = 14;
-    public static final int ANGLE2_ID = 17;
-    public static final int COLLECT_ID = 25;
+    public static final int LEFT_PIVOT_ID = 14;
+    public static final int RIGHT_PIVOT_ID = 17;
+    public static final int OUTTAKE_ID = 25;
+
+    // PID Gains
+    public static final double kP = 1.35; // Proporcional
+    public static final double kI = 0.0; // Integral
+    public static final double kD = 0.0; // Derivativo
+
+    // Feedforward Gains
+    public static final double kS = 0.1; // Tensão estática TODO
+    public static final double kG = 1.79; // Gravidade TODO
+    public static final double kV = 0.29; // Velocidade TODO
+    public static final double kA = 0.05; // Aceleração TODO
+
+    public static final double MAX_VELOCITY = 3.67; // Velocidade máxima (m/s) TODO
+    public static final double MAX_ACCELERATION = 3.0; // Aceleração máxima (m/s^2) TODO
+    public static final TrapezoidProfile.Constraints MOVEMENT_CONSTRAINTS = new TrapezoidProfile.Constraints(
+        MAX_VELOCITY, MAX_ACCELERATION);
   }
 
   /**

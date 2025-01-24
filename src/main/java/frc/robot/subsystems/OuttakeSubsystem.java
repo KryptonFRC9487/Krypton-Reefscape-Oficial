@@ -8,67 +8,123 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.units.measure.MutDistance;
+import edu.wpi.first.units.measure.MutLinearVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.OuttakeConstants;
 
-public class OuttakeSubsystem extends SubsystemBase{
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
-    public SparkMax anglemotor, anglemotor2, collectmotor;
-    private final PIDController pid;
-    public DutyCycleEncoder througbore1;
-    public final DigitalInput m_limitSwitch;
+public class OuttakeSubsystem extends SubsystemBase {
 
-    public static boolean limitSwitch;
+  private final SparkMax leftPivotMotor, rightPivotMotor, outtakeMotor;
+  private final SparkMaxConfig leftPivotConfig, rightPivotConfig;
+  private final ProfiledPIDController pid;
+  private final DutyCycleEncoder encoder;
+  private final DigitalInput m_limitSwitch;
 
-    public OuttakeSubsystem(){
+  private final ArmFeedforward feedforward = new ArmFeedforward(
+      OuttakeConstants.kS,
+      OuttakeConstants.kG,
+      OuttakeConstants.kV,
+      OuttakeConstants.kA);
 
-        anglemotor = new SparkMax(OuttakeConstants.ANGLE_ID, MotorType.kBrushless);
-        anglemotor2 = new SparkMax(OuttakeConstants.ANGLE2_ID, MotorType.kBrushless);  
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+  private final MutAngle m_distance = Rotations.mutable(0);
+  private final MutAngularVelocity m_velocity = RadiansPerSecond.mutable(0);
 
-        SparkMaxConfig angleMotorConfig = new SparkMaxConfig();
-        SparkMaxConfig angleMotorConfig2 = new SparkMaxConfig();
+  // Adicionando rotina SysId
+  // private final SysIdRoutine routine = new SysIdRoutine(
+  // new SysIdRoutine.Config(),
+  // new SysIdRoutine.Mechanism(
+  // voltage -> leftPivotMotor.setVoltage(voltage),
+  // log -> {
+  // log.motor("leftPivotMotor")
+  // .voltage(m_appliedVoltage.mut_replace(
+  // leftPivotMotor.get() * 12.0, // Considera a bateria como 12V nominal
+  // Volts))
+  // .angularPosition(m_distance.mut_replace(
+  // leftPivotMotor.getEncoder().getPosition(), Rotations))
+  // .angularVelocity(m_velocity.mut_replace(
+  // leftPivotMotor.getEncoder().getVelocity(), RadiansPerSecond));
+  // },
+  // this));
 
-        angleMotorConfig.idleMode(IdleMode.kBrake);
-        angleMotorConfig2.follow(anglemotor, true);
+  public static boolean limitSwitch;
 
-        anglemotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        anglemotor2.configure(angleMotorConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  public OuttakeSubsystem() {
 
-        collectmotor = 
-            new SparkMax(OuttakeConstants.COLLECT_ID, MotorType.kBrushless);
+    leftPivotMotor = new SparkMax(OuttakeConstants.LEFT_PIVOT_ID, MotorType.kBrushless);
+    rightPivotMotor = new SparkMax(OuttakeConstants.RIGHT_PIVOT_ID, MotorType.kBrushless);
 
-        m_limitSwitch = new DigitalInput(3);
+    leftPivotConfig = new SparkMaxConfig();
+    rightPivotConfig = new SparkMaxConfig();
 
-        pid = new PIDController(1.35, 0, 0);
-        througbore1 = new DutyCycleEncoder(0);
+    leftPivotConfig.idleMode(IdleMode.kBrake);
+    rightPivotConfig.idleMode(IdleMode.kBrake);
 
-    }
+    rightPivotConfig.follow(leftPivotMotor, true);
 
-    @Override
-    public void periodic(){
-        double output = pid.calculate(getMeasurement());
-        output = MathUtil.clamp(output, -0.5,0.1); 
-        anglemotor.set(output);
-        
-        SmartDashboard.putNumber("Encoder Outtake",getMeasurement());
-    }
+    leftPivotMotor.configure(leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    rightPivotMotor.configure(rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    public double getMeasurement(){
-        return througbore1.get();
-        }
-        
+    outtakeMotor = new SparkMax(OuttakeConstants.OUTTAKE_ID, MotorType.kBrushless);
 
-    public void setOuttakePosition(double setpoint) {
-        pid.setSetpoint(setpoint);
-    }
-    
-    public void setOuttakeSpeed(double speed){
-        collectmotor.set(speed);
-    }
-    
+    m_limitSwitch = new DigitalInput(3);
 
-    
+    pid = new ProfiledPIDController(
+        OuttakeConstants.kP,
+        OuttakeConstants.kI,
+        OuttakeConstants.kD,
+        OuttakeConstants.MOVEMENT_CONSTRAINTS);
+
+    encoder = new DutyCycleEncoder(0);
+  }
+
+  @Override
+  public void periodic() {
+    double output = pid.calculate(getMeasurement());
+    output = MathUtil.clamp(output, -0.5, 0.1);
+    leftPivotMotor.set(output);
+
+    SmartDashboard.putNumber("Encoder Outtake", getMeasurement());
+  }
+
+  public double getMeasurement() {
+    return encoder.get();
+  }
+
+  public void setOuttakePosition(double setpoint) {
+    pid.setGoal(setpoint);
+  }
+
+  public void setOuttakeSpeed(double speed) {
+    outtakeMotor.set(speed);
+  }
+
+  // public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+  // return routine.quasistatic(direction);
+  // }
+
+  // public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+  // return routine.dynamic(direction);
+  // }
 }
