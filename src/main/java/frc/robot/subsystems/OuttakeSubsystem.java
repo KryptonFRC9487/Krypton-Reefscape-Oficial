@@ -37,6 +37,7 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     leftPivotConfig.idleMode(IdleMode.kBrake);
     rightPivotConfig.idleMode(IdleMode.kBrake);
+    rightPivotConfig.inverted(true);
 
     rightPivotConfig.follow(leftPivotMotor, true);
 
@@ -71,7 +72,7 @@ public class OuttakeSubsystem extends SubsystemBase {
     double feedforwardOutput = feedforward.calculate(position, velocity);
     double output = pidOutput + feedforwardOutput;
 
-    output = MathUtil.clamp(output, -1.0, 1.0);
+    output = MathUtil.clamp(output, -0.1, 0.1);
 
     leftPivotMotor.set(output);
 

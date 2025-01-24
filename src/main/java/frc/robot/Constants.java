@@ -152,10 +152,10 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static final int LEFT_PIVOT_ID = 14;
     public static final int RIGHT_PIVOT_ID = 17;
-    public static final int OUTTAKE_ID = 25;
+    public static final int OUTTAKE_ID = 18;
 
     // PID Gains
-    public static final double kP = 1.35; // Proporcional
+    public static final double kP = 0.2; // Proporcional 1.35
     public static final double kI = 0.0; // Integral
     public static final double kD = 0.0; // Derivativo
 
@@ -181,8 +181,8 @@ public final class Constants {
       DEPOSIT,
     }
 
-    public static final double OUTTAKE_INIT = 0.61;
-    public static final double OUTTAKE_DEPOSIT = 0.20;
+    public static final double OUTTAKE_INIT = 0.40;
+    public static final double OUTTAKE_DEPOSIT = 0.55;
   }
 
   /**
