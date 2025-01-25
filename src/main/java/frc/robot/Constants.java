@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -153,36 +152,34 @@ public final class Constants {
     public static final int LEFT_PIVOT_ID = 14;
     public static final int RIGHT_PIVOT_ID = 17;
     public static final int OUTTAKE_ID = 18;
+    public static final double OUTTAKE_ENCODER_OFFSET = 131.0;
+
+    public static enum OuttakePose {
+      INIT(90),
+      DEPOSIT(0);
+
+      public final double value;
+
+      private OuttakePose(double value) {
+        this.value = value;
+      }
+    }
 
     // PID Gains
-    public static final double kP = 0.2; // Proporcional 1.35
+    public static final double kP = 0.1; // Proporcional 1.35
     public static final double kI = 0.0; // Integral
     public static final double kD = 0.0; // Derivativo
 
     // Feedforward Gains
-    public static final double kS = 0.1; // Tensão estática TODO
-    public static final double kG = 1.79; // Gravidade TODO
-    public static final double kV = 0.29; // Velocidade TODO
-    public static final double kA = 0.05; // Aceleração TODO
+    public static final double kG = 0.053; // 0.14 Gravidade TODO
+    public static final double kV = 0.725; // 0.725 Velocidade TODO
+    public static final double kS = 0.0; // Tensão estática TODO
+    public static final double kA = 0.0; // Aceleração TODO
 
-    public static final double MAX_VELOCITY = 118.47; // Velocidade máxima (rad/s) TODO
-    public static final double MAX_ACCELERATION = 25.0; // Aceleração máxima (rad/s^2) TODO
+    public static final double MAX_VELOCITY = 25.0; // Velocidade máxima (rad/s) TODO
+    public static final double MAX_ACCELERATION = 5.0; // Aceleração máxima (rad/s^2) TODO
     public static final TrapezoidProfile.Constraints TRAPEZOID_CONSTRAINTS = new TrapezoidProfile.Constraints(
         MAX_VELOCITY, MAX_ACCELERATION);
-  }
-
-  /**
-   * Configurações de posição do outtake
-   */
-  public static final class Outtake {
-
-    public static enum OuttakePose {
-      INIT,
-      DEPOSIT,
-    }
-
-    public static final double OUTTAKE_INIT = 0.40;
-    public static final double OUTTAKE_DEPOSIT = 0.55;
   }
 
   /**
