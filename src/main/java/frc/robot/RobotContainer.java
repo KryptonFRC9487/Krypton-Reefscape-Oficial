@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.Trajetoria;
@@ -114,7 +115,7 @@ public class RobotContainer {
 
     new JoystickButton(p2Controller, XboxController.Button.kY.value)
         .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(54)));
-    
+
     // ToPose Commands
     if (Robot.isSimulation()) {
       new JoystickButton(p1Controller, XboxController.Button.kStart.value)
