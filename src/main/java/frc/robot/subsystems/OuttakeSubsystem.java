@@ -8,67 +8,89 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OuttakeConstants;
 
-public class OuttakeSubsystem extends SubsystemBase{
+public class OuttakeSubsystem extends SubsystemBase {
 
-    public SparkMax anglemotor, anglemotor2, collectmotor;
-    private final PIDController pid;
-    public DutyCycleEncoder througbore1;
-    public final DigitalInput m_limitSwitch;
+  private final SparkMax leftPivotMotor, rightPivotMotor, outtakeMotor;
+  private final SparkMaxConfig leftPivotConfig, rightPivotConfig;
+  private final DutyCycleEncoder encoder;
+  private final DigitalInput m_limitSwitch;
 
-    public static boolean limitSwitch;
+  private final ProfiledPIDController pid;
+  private final ArmFeedforward feedforward;
 
-    public OuttakeSubsystem(){
+  public static boolean limitSwitch;
 
-        anglemotor = new SparkMax(OuttakeConstants.ANGLE_ID, MotorType.kBrushless);
-        anglemotor2 = new SparkMax(OuttakeConstants.ANGLE2_ID, MotorType.kBrushless);  
+  public OuttakeSubsystem() {
 
-        SparkMaxConfig angleMotorConfig = new SparkMaxConfig();
-        SparkMaxConfig angleMotorConfig2 = new SparkMaxConfig();
+    leftPivotMotor = new SparkMax(OuttakeConstants.LEFT_PIVOT_ID, MotorType.kBrushless);
+    rightPivotMotor = new SparkMax(OuttakeConstants.RIGHT_PIVOT_ID, MotorType.kBrushless);
 
-        angleMotorConfig.idleMode(IdleMode.kBrake);
-        angleMotorConfig2.follow(anglemotor, true);
+    leftPivotConfig = new SparkMaxConfig();
+    rightPivotConfig = new SparkMaxConfig();
 
-        anglemotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        anglemotor2.configure(angleMotorConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    leftPivotConfig.idleMode(IdleMode.kBrake);
+    rightPivotConfig.idleMode(IdleMode.kBrake);
+    rightPivotConfig.inverted(true);
 
-        collectmotor = 
-            new SparkMax(OuttakeConstants.COLLECT_ID, MotorType.kBrushless);
+    rightPivotConfig.follow(leftPivotMotor, true);
 
-        m_limitSwitch = new DigitalInput(3);
+    leftPivotMotor.configure(leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    rightPivotMotor.configure(rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        pid = new PIDController(1.35, 0, 0);
-        througbore1 = new DutyCycleEncoder(0);
+    outtakeMotor = new SparkMax(OuttakeConstants.OUTTAKE_ID, MotorType.kBrushless);
 
-    }
+    m_limitSwitch = new DigitalInput(3);
 
-    @Override
-    public void periodic(){
-        double output = pid.calculate(getMeasurement());
-        output = MathUtil.clamp(output, -0.5,0.1); 
-        anglemotor.set(output);
-        
-        SmartDashboard.putNumber("Encoder Outtake",getMeasurement());
-    }
+    encoder = new DutyCycleEncoder(0);
 
-    public double getMeasurement(){
-        return througbore1.get();
-        }
-        
+    pid = new ProfiledPIDController(
+        OuttakeConstants.kP,
+        OuttakeConstants.kI,
+        OuttakeConstants.kD,
+        OuttakeConstants.TRAPEZOID_CONSTRAINTS);
 
-    public void setOuttakePosition(double setpoint) {
-        pid.setSetpoint(setpoint);
-    }
-    
-    public void setOuttakeSpeed(double speed){
-        collectmotor.set(speed);
-    }
-    
+    feedforward = new ArmFeedforward(
+        OuttakeConstants.kS,
+        OuttakeConstants.kG,
+        OuttakeConstants.kV,
+        OuttakeConstants.kA);
+  }
 
-    
+  @Override
+  public void periodic() {
+    double position = getMeasurement();
+    double velocity = pid.getSetpoint().velocity;
+
+    double pidOutput = pid.calculate(position);
+    double feedforwardOutput = feedforward.calculate(position, velocity);
+    double output = pidOutput + feedforwardOutput;
+
+    output = MathUtil.clamp(output, -0.1, 0.1);
+
+    leftPivotMotor.set(output);
+
+    SmartDashboard.putNumber("Encoder Outtake", position);
+    SmartDashboard.putNumber("PID Output", pidOutput);
+    SmartDashboard.putNumber("Feedforward Output", feedforwardOutput);
+    SmartDashboard.putNumber("Total Output", output);
+  }
+
+  public double getMeasurement() {
+    return encoder.get();
+  }
+
+  public void setOuttakePosition(double setpoint) {
+    pid.setGoal(setpoint);
+  }
+
+  public void setOuttakeSpeed(double speed) {
+    outtakeMotor.set(speed);
+  }
 }
