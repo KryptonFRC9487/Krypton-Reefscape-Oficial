@@ -99,13 +99,16 @@ public final class Constants {
    */
   public static final class ElevatorConstants {
 
-    public static enum ElevatorPosition {
-      BOTTOM(1),
-      TOP(10);
+    public static enum ElevatorPose {
+      INITAL(2),
+      L1(2),
+      L2(2),
+      L3(2),
+      L4(54);
 
       public final double value;
 
-      private ElevatorPosition(double value) {
+      private ElevatorPose(double value) {
         this.value = value;
       }
     }
@@ -155,8 +158,9 @@ public final class Constants {
     public static final double OUTTAKE_ENCODER_OFFSET = 131.0;
 
     public static enum OuttakePose {
-      INIT(90),
-      DEPOSIT(0);
+      INIT(97),
+      // DEPOSIT(-70);
+      DEPOSIT(-65);
 
       public final double value;
 
@@ -166,9 +170,9 @@ public final class Constants {
     }
 
     // PID Gains
-    public static final double kP = 0.1; // Proporcional 1.35
-    public static final double kI = 0.0; // Integral
-    public static final double kD = 0.0; // Derivativo
+    public static final double kP = 0.0088; // 0.0085 Proporcional 
+    public static final double kI = 0.0025; // 0.0025 Integral
+    public static final double kD = 0.0006; // 0.0003 Derivativo
 
     // Feedforward Gains
     public static final double kG = 0.053; // 0.14 Gravidade TODO
@@ -210,4 +214,16 @@ public final class Constants {
     public static final int RIGHT_BUMPER = 6;
     public static final int BUTTON_BACK = 7;
   }
+
+  public static final class POV {
+
+    public static final int UP = 0;
+    public static final int UP_RIGHT = 45;
+    public static final int RIGHT = 90;
+    public static final int DOWN_RIGHT = 135;
+    public static final int DOWN = 180;
+    public static final int DOWN_LEFT = 225;
+    public static final int LEFT = 270;
+    public static final int UP_LEFT = 315;
+  } 
 }

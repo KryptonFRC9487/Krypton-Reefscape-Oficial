@@ -21,21 +21,27 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.Trajetoria;
+import frc.robot.Constants.ElevatorConstants.ElevatorPose;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.SubsystemTracker;
 import frc.robot.commands.teleOp.SwerveCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.Constants.POV;
+
 
 public class RobotContainer {
 
   private final File swerveConfigFile = new File(Filesystem.getDeployDirectory(), "swerve");
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile);
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  private final OuttakeSubsystem outtakeSubsystem = new OuttakeSubsystem();
+  private final SubsystemTracker subsystemSupplier = new SubsystemTracker();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(subsystemSupplier);
+  private final OuttakeSubsystem outtakeSubsystem = new OuttakeSubsystem(subsystemSupplier);
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -110,11 +116,14 @@ public class RobotContainer {
         .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
 
     // Elevator Commands
-    new JoystickButton(p2Controller, XboxController.Button.kA.value)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(3)));
+    new POVButton(p2Controller, POV.DOWN)
+        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.INITAL)));
 
-    new JoystickButton(p2Controller, XboxController.Button.kY.value)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(54)));
+    new POVButton(p2Controller, POV.LEFT)
+      .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.L3)));
+
+    new POVButton(p2Controller, POV.UP)
+        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.L4)));
 
     // ToPose Commands
     if (Robot.isSimulation()) {
