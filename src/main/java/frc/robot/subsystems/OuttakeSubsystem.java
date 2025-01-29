@@ -47,7 +47,7 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     m_limitSwitch = new DigitalInput(3);
 
-    encoder = new DutyCycleEncoder(0);
+    encoder = new DutyCycleEncoder(0, 360, 79.0);
 
     pid = new PIDController(
         OuttakeConstants.kP,
@@ -70,6 +70,7 @@ public class OuttakeSubsystem extends SubsystemBase {
         break;
 
       case L3:
+        setOuttakePosition(OuttakePose.INIT);
       case L4:
         setOuttakePosition(OuttakePose.DEPOSIT);
         break;
@@ -92,7 +93,7 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     // Aplica a saída (descomente quando for necessário testar o movimento)
     // output = MathUtil.clamp(output, -0.17, 0.09);
-    output = MathUtil.clamp(output, -0.17, 0.13);
+    output = MathUtil.clamp(output, -0.17, 0.09);
     
     leftPivotMotor.set(output);
     rightPivotMotor.set(output);
@@ -100,7 +101,9 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   // Função para obter a medição da posição (encoder)
   public double getMeasurement() {
-    return encoder.get() * 360 - OuttakeConstants.OUTTAKE_ENCODER_OFFSET;
+    double rawAngle = encoder.get(); 
+
+    return (rawAngle > 180) ? rawAngle - 360 : rawAngle;
   }
 
   // Função para definir a posição do outtake

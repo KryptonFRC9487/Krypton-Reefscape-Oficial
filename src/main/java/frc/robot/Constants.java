@@ -155,12 +155,12 @@ public final class Constants {
     public static final int LEFT_PIVOT_ID = 14;
     public static final int RIGHT_PIVOT_ID = 17;
     public static final int OUTTAKE_ID = 18;
-    public static final double OUTTAKE_ENCODER_OFFSET = 131.0;
+    public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
 
     public static enum OuttakePose {
-      INIT(97),
+      INIT(90),
       // DEPOSIT(-70);
-      DEPOSIT(-65);
+      DEPOSIT(-64);
 
       public final double value;
 
