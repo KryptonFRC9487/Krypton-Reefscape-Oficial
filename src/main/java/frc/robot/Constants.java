@@ -160,7 +160,7 @@ public final class Constants {
     public static enum OuttakePose {
       INIT(90),
       // DEPOSIT(-70);
-      DEPOSIT(-64);
+      DEPOSIT(-69);
 
       public final double value;
 

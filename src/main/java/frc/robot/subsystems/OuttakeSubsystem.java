@@ -114,9 +114,9 @@ public class OuttakeSubsystem extends SubsystemBase {
   }
 
   // Função para definir a velocidade do outtake
-  public void setOuttakeSpeed(double speed) {
-    outtakeMotor.set(speed);
-  }
+    public void setOuttakeSpeed(double speed) {
+      outtakeMotor.set(speed);
+    }
 
   public boolean outtakeHasCoral() {
     return m_limitSwitch.get();

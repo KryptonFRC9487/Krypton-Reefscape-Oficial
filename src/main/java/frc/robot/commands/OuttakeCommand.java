@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.Constants.Buttons;
-import frc.robot.Constants.OuttakeConstants.OuttakePose;
 
 public class OuttakeCommand extends Command {
 
@@ -27,16 +26,16 @@ public class OuttakeCommand extends Command {
       if (!outtakeSubsystem.outtakeHasCoral()) {
         outtakeSubsystem.setOuttakeSpeed(0);
       } else {
-        outtakeSubsystem.setOuttakeSpeed(0.5);
+        outtakeSubsystem.setOuttakeSpeed(-0.19);
       }
     } else if (p2Controller.getLeftTriggerAxis() != 0) {
-      outtakeSubsystem.setOuttakeSpeed(-0.5);
+      outtakeSubsystem.setOuttakeSpeed(0.16);
     } else {
       outtakeSubsystem.setOuttakeSpeed(0);
     }
 
     if(p2Controller.getRawButton(Buttons.LEFT_BUMPER)){
-      outtakeSubsystem.setOuttakeSpeed(0.25);
+      outtakeSubsystem.setOuttakeSpeed(-0.15);
     }
 
     if(p2Controller.getRawButton(Buttons.BUTTON_B)){
