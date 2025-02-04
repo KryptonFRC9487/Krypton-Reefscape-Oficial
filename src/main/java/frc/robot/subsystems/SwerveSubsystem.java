@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -20,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Tracao;
@@ -36,6 +38,7 @@ import swervelib.parser.SwerveParser;
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive swerveDrive;
   public boolean correctionPID = false;
+  private final Pigeon2 pigeon;
 
   // Objeto global autônomo
   // ConfigAuto autonomo;
@@ -53,6 +56,7 @@ public class SwerveSubsystem extends SubsystemBase {
     // autonomo = new ConfigAuto(this);
 
     // autonomo.setupPathPlanner();
+    pigeon = new Pigeon2(13);
 
     swerveDrive.setHeadingCorrection(true);
 
@@ -133,6 +137,11 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     swerveDrive.updateOdometry();
+
+  //   getPitch();
+  //  SmartDashboard.putNumber("Valar do pitch", getPitch()); 
+  //   SmartDashboard.putBoolean("Se subiu", getUp()); 
+
   }
 
   public void driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
@@ -171,6 +180,18 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getHeading() {
     return swerveDrive.getYaw();
   }
+
+  // public double getPitch(){
+  //   return pigeon.getPitch().getValueAsDouble();
+  // }
+
+  // public boolean getUp() {
+  //   if (getPitch() > 0.0) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }    
 
   public void resetOdometry(Pose2d posicao) {
     swerveDrive.resetOdometry(posicao);

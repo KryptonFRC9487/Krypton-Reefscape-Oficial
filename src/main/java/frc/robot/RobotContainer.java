@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -61,12 +60,12 @@ public class RobotContainer {
   }
 
   private void setDefaultCommands() {
-      swerveSubsystem.setDefaultCommand(new SwerveCommand(
-          swerveSubsystem,
-          () -> -MathUtil.applyDeadband(p1Controller.getLeftY(), GamepadConstants.DEADBAND),
-          () -> -MathUtil.applyDeadband(p1Controller.getLeftX(), GamepadConstants.DEADBAND),
-          () -> -MathUtil.applyDeadband(p1Controller.getRightX(), GamepadConstants.DEADBAND),
-          () -> p1Controller.getRightBumperPressed()));
+    swerveSubsystem.setDefaultCommand(new SwerveCommand(
+      swerveSubsystem, 
+      () -> p1Controller.getLeftY(), 
+      () -> p1Controller.getLeftX(), 
+      () -> -p1Controller.getRightX(),
+      () -> p1Controller.getRightBumperButtonPressed()));
     
 
     outtakeSubsystem.setDefaultCommand(
@@ -81,39 +80,46 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      new JoystickButton(p1Controller, XboxController.Button.kX.value)
-        .whileTrue(
-          swerveSubsystem.driveToPose(
-            new Pose2d(
-              new Translation2d(1.630, 7.328), 
-              Rotation2d.fromDegrees(0)
-      )));
+    // if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+    //   new JoystickButton(p1Controller, XboxController.Button.kX.value)
+    //     .whileTrue(
+    //       swerveSubsystem.driveToPose(
+    //         new Pose2d(
+    //           new Translation2d(1.630, 7.328), 
+    //           Rotation2d.fromDegrees(0)
+    //   )));
 
-      new JoystickButton(p1Controller, XboxController.Button.kB.value)
-        .whileTrue(
-          swerveSubsystem.driveToPose(
-            new Pose2d(
-              new Translation2d(0.707, 1.346), 
-              Rotation2d.fromDegrees(0)
-      )));
-    } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-      new JoystickButton(p1Controller, XboxController.Button.kX.value)
-        .whileTrue(
-          swerveSubsystem.driveToPose(
-            new Pose2d(
-              new Translation2d(15.980, 0.758), 
-              Rotation2d.fromDegrees(0)
-      )));
+    //   new JoystickButton(p1Controller, XboxController.Button.kB.value)
+    //     .whileTrue(
+    //       swerveSubsystem.driveToPose(
+    //         new Pose2d(
+    //           new Translation2d(0.707, 1.346), 
+    //           Rotation2d.fromDegrees(0)
+    //   )));
+    // } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+    //   new JoystickButton(p1Controller, XboxController.Button.kX.value)
+    //     .whileTrue(
+    //       swerveSubsystem.driveToPose(
+    //         new Pose2d(
+    //           new Translation2d(15.980, 0.758), 
+    //           Rotation2d.fromDegrees(0)
+    //   )));
 
-      new JoystickButton(p1Controller, XboxController.Button.kB.value)
-        .whileTrue(
-          swerveSubsystem.driveToPose(
-            new Pose2d(
-              new Translation2d( 15.872, 7.364), 
-              Rotation2d.fromDegrees(0)
-      )));
-    }
+    //   new JoystickButton(p1Controller, XboxController.Button.kB.value)
+    //     .whileTrue(
+    //       swerveSubsystem.driveToPose(
+    //         new Pose2d(
+    //           new Translation2d( 15.872, 7.364), 
+    //           Rotation2d.fromDegrees(0)
+    //   )));
+    // }
+
+    new JoystickButton(p1Controller, XboxController.Button.kBack.value).onFalse(new SwerveCommand(
+      swerveSubsystem,
+      () -> -MathUtil.applyDeadband(p1Controller.getLeftY(), GamepadConstants.DEADBAND),
+      () -> -MathUtil.applyDeadband(p1Controller.getLeftX(), GamepadConstants.DEADBAND),
+      () -> -MathUtil.applyDeadband(p1Controller.getRightX(), GamepadConstants.DEADBAND),
+      () -> p1Controller.getRightBumperPressed()));
 
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
         .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
@@ -128,6 +134,8 @@ public class RobotContainer {
     new POVButton(p2Controller, POV.UP)
         .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.L4)));
 
+    new POVButton(p2Controller, POV.RIGHT)
+        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.L2)));
     // ToPose Commands
     if (Robot.isSimulation()) {
       new JoystickButton(p1Controller, XboxController.Button.kStart.value)

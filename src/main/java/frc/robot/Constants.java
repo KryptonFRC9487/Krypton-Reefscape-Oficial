@@ -102,7 +102,7 @@ public final class Constants {
     public static enum ElevatorPose {
       INITAL(2),
       L1(2),
-      L2(2),
+      L2(10),
       L3(2),
       L4(54);
 
@@ -125,7 +125,7 @@ public final class Constants {
 
     public static final int CURRENT_LIMIT = 60;
 
-    // PID Gains
+    // PID Gains Elevator
     public static final double kP = 0.3; // Proporcional
     public static final double kI = 0.0; // Integral
     public static final double kD = 0.0; // Derivativo
@@ -158,9 +158,9 @@ public final class Constants {
     public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
 
     public static enum OuttakePose {
-      INIT(90),
-      // DEPOSIT(-70);
-      DEPOSIT(-69);
+      INIT(95),
+      MIDL2(80),
+      DEPOSIT(-70);
 
       public final double value;
 
@@ -169,10 +169,10 @@ public final class Constants {
       }
     }
 
-    // PID Gains
-    public static final double kP = 0.0088; // 0.0085 Proporcional 
-    public static final double kI = 0.0025; // 0.0025 Integral
-    public static final double kD = 0.0006; // 0.0003 Derivativo
+    // PID Gains Outtake
+    public static final double kP = 0.0065; // 0.0085 Proporcional 
+    public static final double kI = 0.0007; // 0.0025 Integral
+    public static final double kD = 0.0003; // 0.0003 Derivativo
 
     // Feedforward Gains
     public static final double kG = 0.053; // 0.14 Gravidade TODO

@@ -42,10 +42,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     leftMotorConfig
         .closedLoopRampRate(0.1).closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, ElevatorConstants.kFF)
+        .pidf(
+        ElevatorConstants.kP,
+        ElevatorConstants.kI,
+        ElevatorConstants.kD,
+        ElevatorConstants.kFF 
+        )
         .velocityFF(ElevatorConstants.kVelocityFF)
         .outputRange(-1.0, 1.0);
-        // .outputRange(-0.5, 0.5);
 
     leftMotorConfig.encoder
         .positionConversionFactor(1)

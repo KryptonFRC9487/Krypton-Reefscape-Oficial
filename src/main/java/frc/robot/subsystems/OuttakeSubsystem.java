@@ -47,7 +47,7 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     m_limitSwitch = new DigitalInput(3);
 
-    encoder = new DutyCycleEncoder(0, 360, 79.0);
+    encoder = new DutyCycleEncoder(0, 360, 72);  
 
     pid = new PIDController(
         OuttakeConstants.kP,
@@ -67,6 +67,10 @@ public class OuttakeSubsystem extends SubsystemBase {
       case INITAL:
         if (subsystemTracker.getElevatorRealPosition() < 30.0)
           setOuttakePosition(OuttakePose.INIT);
+        break;
+
+      case L2:
+        setOuttakePosition(OuttakePose.MIDL2);
         break;
 
       case L3:
@@ -92,8 +96,7 @@ public class OuttakeSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("O. Right Power", rightPivotMotor.get());
 
     // Aplica a saída (descomente quando for necessário testar o movimento)
-    // output = MathUtil.clamp(output, -0.17, 0.09);
-    output = MathUtil.clamp(output, -0.17, 0.09);
+    output = MathUtil.clamp(output, -0.18, 0.09);
     
     leftPivotMotor.set(output);
     rightPivotMotor.set(output);

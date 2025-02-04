@@ -62,7 +62,7 @@ public class SwerveCommand extends Command {
         break;
 
       case StateStrings.OFF:
-        drive(0.35);
+        drive(0.2);
         break;
     }
   }
