@@ -29,7 +29,7 @@ public class OuttakeCommand extends Command {
         outtakeSubsystem.setOuttakeSpeed(-0.35);
       }
     } else if (p2Controller.getLeftTriggerAxis() != 0) {
-      outtakeSubsystem.setOuttakeSpeed(0.25);
+      outtakeSubsystem.setOuttakeSpeed(0.35);
     } else {
       outtakeSubsystem.setOuttakeSpeed(0);
     }

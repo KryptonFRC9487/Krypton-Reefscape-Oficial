@@ -21,7 +21,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Tracao;
@@ -129,7 +128,7 @@ public class SwerveSubsystem extends SubsystemBase {
       e.printStackTrace();
     }
 
-    //Preload PathPlanner Path finding
+    // Preload PathPlanner Path finding
     // IF USING CUSTOM PATHFINDER ADD BEFORE THIS LINE
     PathfindingCommand.warmupCommand().schedule();
   }
@@ -138,10 +137,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     swerveDrive.updateOdometry();
 
-  //   getPitch();
+  //  getPitch();
   //  SmartDashboard.putNumber("Valar do pitch", getPitch()); 
-  //   SmartDashboard.putBoolean("Se subiu", getUp()); 
-
+  //  SmartDashboard.putBoolean("Se subiu", getUp()); 
   }
 
   public void driveFieldOriented(Supplier<ChassisSpeeds> velocity) {

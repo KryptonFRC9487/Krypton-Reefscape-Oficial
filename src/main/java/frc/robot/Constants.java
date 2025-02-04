@@ -152,11 +152,6 @@ public final class Constants {
    * Configurações do sistema de outtake.
    */
   public static final class OuttakeConstants {
-    public static final int LEFT_PIVOT_ID = 14;
-    public static final int RIGHT_PIVOT_ID = 17;
-    public static final int OUTTAKE_ID = 18;
-    public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
-
     public static enum OuttakePose {
       INIT(95),
       MIDL2(80),
@@ -169,16 +164,24 @@ public final class Constants {
       }
     }
 
+    public static final int LEFT_PIVOT_ID = 14;
+    public static final int RIGHT_PIVOT_ID = 17;
+    public static final int OUTTAKE_ID = 18;
+    public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
+
     // PID Gains Outtake
-    public static final double kP = 0.0065; // 0.0085 Proporcional 
-    public static final double kI = 0.0007; // 0.0025 Integral
-    public static final double kD = 0.0003; // 0.0003 Derivativo
+    // public static final double kP = 0.0065; 
+    // public static final double kI = 0.0007;
+    // public static final double kD = 0.0003;
+    public static final double kP = 0.0; 
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
 
     // Feedforward Gains
-    public static final double kG = 0.053; // 0.14 Gravidade TODO
-    public static final double kV = 0.725; // 0.725 Velocidade TODO
-    public static final double kS = 0.0; // Tensão estática TODO
-    public static final double kA = 0.0; // Aceleração TODO
+    public static final double kG = 0.0; // 0.058 Gravidade
+    public static final double kV = 0.0; // 0.725 Velocidade
+    public static final double kS = 0.0; // Tensão estática
+    public static final double kA = 0.0; // Aceleração
 
     public static final double MAX_VELOCITY = 25.0; // Velocidade máxima (rad/s) TODO
     public static final double MAX_ACCELERATION = 5.0; // Aceleração máxima (rad/s^2) TODO
