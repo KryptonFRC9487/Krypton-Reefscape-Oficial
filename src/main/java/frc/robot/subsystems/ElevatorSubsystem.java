@@ -64,9 +64,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void setTarget(ElevatorPose elevatorPose) {
     this.elevatorPose = elevatorPose;
 
-    leftClosedLoopController.setReference(
-        elevatorPose.value,
-        ControlType.kPosition);
+    // leftClosedLoopController.setReference(
+    // elevatorPose.value,
+    // ControlType.kPosition);
   }
 
   @Override
@@ -76,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("L. Elevator Position (Rotations)", leftEncoder.getPosition());
     SmartDashboard.putNumber("L. Elevator Velocity (Rotations per Second)", leftEncoder.getVelocity());
     SmartDashboard.putNumber("L. Elevator Applied Voltage", leftMotor.getAppliedOutput() * leftMotor.getBusVoltage());
-    SmartDashboard.putNumber("R. Elevator Applied Output", leftMotor.getAppliedOutput());
+    SmartDashboard.putNumber("L. Elevator Applied Output", leftMotor.getAppliedOutput());
 
     SmartDashboard.putNumber("R. Elevator Position (Rotations)", rightEncoder.getPosition());
     SmartDashboard.putNumber("R. Elevator Velocity (Rotations per Second)", rightEncoder.getVelocity());

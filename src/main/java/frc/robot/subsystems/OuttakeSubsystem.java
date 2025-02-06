@@ -5,12 +5,12 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OuttakeConstants;
@@ -27,7 +27,12 @@ public class OuttakeSubsystem extends SubsystemBase {
   private final SubsystemTracker subsystemTracker;
   private OuttakePose outtakePose = OuttakePose.INIT;
 
-  private final PIDController pid;
+  private final ProfiledPIDController pid;
+  private final ArmFeedforward feedforward = new ArmFeedforward(
+      OuttakeConstants.kS,
+      OuttakeConstants.kG,
+      OuttakeConstants.kV,
+      OuttakeConstants.kA);
 
   public OuttakeSubsystem(SubsystemTracker subsystemTracker) {
     this.subsystemTracker = subsystemTracker;
@@ -50,14 +55,14 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     encoder = new DutyCycleEncoder(0, 360, 72);  
 
-    pid = new PIDController(
+    pid = new ProfiledPIDController(
         OuttakeConstants.kP,
         OuttakeConstants.kI,
-        OuttakeConstants.kD);
+        OuttakeConstants.kD,
+        OuttakeConstants.TRAPEZOID_CONSTRAINTS);
 
-    pid.setSetpoint(OuttakePose.INIT.value);
+    pid.setGoal(OuttakePose.INIT.value);
     pid.setTolerance(0.5);
-    pid.reset();
   }
 
   @Override
@@ -76,6 +81,7 @@ public class OuttakeSubsystem extends SubsystemBase {
 
       case L3:
         setOuttakePosition(OuttakePose.INIT);
+
       case L4:
         setOuttakePosition(OuttakePose.DEPOSIT);
         break;
@@ -85,20 +91,23 @@ public class OuttakeSubsystem extends SubsystemBase {
     }
 
     double position = getMeasurement();
+    double velocity = pid.getSetpoint().velocity;
 
     double pidOutput = pid.calculate(position);
-    double output = pidOutput;
+    double feedforwardOutput = feedforward.calculate(position, velocity);
+    double output = pidOutput + feedforwardOutput;
 
-    SmartDashboard.putNumber("O. Current Pos", position);
+    output = MathUtil.clamp(output, -0.18, 0.09);
+
+    SmartDashboard.putNumber("O. Current Pos Radians", position);
+    SmartDashboard.putNumber("O. Current Pos Degrees", Math.toDegrees(position));
     SmartDashboard.putNumber("O. PID Output", pidOutput);
     SmartDashboard.putNumber("O. Output", output);
-    SmartDashboard.putNumber("O. Setpoint", pid.getSetpoint());
+    SmartDashboard.putNumber("O. Setpoint Radians", pid.getSetpoint().position);
+    SmartDashboard.putNumber("O. Setpoint Degrees", Math.toDegrees(pid.getSetpoint().position));
     SmartDashboard.putNumber("O. Left Power", leftPivotMotor.get());
     SmartDashboard.putNumber("O. Right Power", rightPivotMotor.get());
 
-    // Aplica a saída (descomente quando for necessário testar o movimento)
-    output = MathUtil.clamp(output, -0.18, 0.09);
-    
     leftPivotMotor.set(output);
     rightPivotMotor.set(output);
   }
@@ -106,15 +115,16 @@ public class OuttakeSubsystem extends SubsystemBase {
   // Função para obter a medição da posição (encoder)
   public double getMeasurement() {
     double rawAngle = encoder.get(); 
+    double angleInDegrees = (rawAngle > 180) ? rawAngle - 360 : rawAngle;
 
-    return (rawAngle > 180) ? rawAngle - 360 : rawAngle;
+    return Math.toRadians(angleInDegrees);
   }
 
   // Função para definir a posição do outtake
   public void setOuttakePosition(OuttakePose outtakePose) {
     this.outtakePose = outtakePose;
     
-    pid.setSetpoint(outtakePose.value);
+    pid.setGoal(outtakePose.value);
   }
 
   // Função para definir a velocidade do outtake

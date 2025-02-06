@@ -153,14 +153,16 @@ public final class Constants {
    */
   public static final class OuttakeConstants {
     public static enum OuttakePose {
-      INIT(95),
+      // INIT(95),
+      INIT(0),
       MIDL2(80),
-      DEPOSIT(-70);
+      // DEPOSIT(-70);
+      DEPOSIT(90);
 
       public final double value;
 
       private OuttakePose(double value) {
-        this.value = value;
+        this.value = Math.toRadians(value);
       }
     }
 
@@ -170,16 +172,16 @@ public final class Constants {
     public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
 
     // PID Gains Outtake
-    // public static final double kP = 0.0065; 
+    // public static final double kP = 0.0065;
     // public static final double kI = 0.0007;
     // public static final double kD = 0.0003;
     public static final double kP = 0.0; 
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    // Feedforward Gains
-    public static final double kG = 0.0; // 0.058 Gravidade
-    public static final double kV = 0.0; // 0.725 Velocidade
+    // Feedforward Gains // MIN DOWN -0.03985 MIN UP -0.09
+    public static final double kG = 0.064925; // 0.058 Gravidade
+    public static final double kV = 0.025075; // 0.725 Velocidade
     public static final double kS = 0.0; // Tensão estática
     public static final double kA = 0.0; // Aceleração
 
