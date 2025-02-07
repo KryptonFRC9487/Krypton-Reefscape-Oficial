@@ -1,8 +1,11 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import swervelib.math.Matter;
 import swervelib.math.SwerveMath;
 import swervelib.parser.PIDFConfig;
@@ -166,10 +169,16 @@ public final class Constants {
       }
     }
 
-    public static final int LEFT_PIVOT_ID = 14;
-    public static final int RIGHT_PIVOT_ID = 17;
-    public static final int OUTTAKE_ID = 18;
-    public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
+    public static final Angle kArmMinAngle = Degrees.of(-98.0);
+    public static final Angle kArmMaxAngle = Degrees.of(87.0);
+
+    public static final int kArmStallCurrentLimit = 40;
+    public static final double kArmClosedLoopRate = 0.5;
+
+    public static final int kLeftPivotId = 14;
+    public static final int kRightPivotId = 17;
+    public static final int kOuttakeId = 18;
+    public static final double kOuttakeEncoderOffset = 79.0;
 
     // PID Gains Outtake
     // public static final double kP = 0.0065;
@@ -185,10 +194,10 @@ public final class Constants {
     public static final double kS = 0.0; // Tensão estática
     public static final double kA = 0.0; // Aceleração
 
-    public static final double MAX_VELOCITY = 25.0; // Velocidade máxima (rad/s) TODO
-    public static final double MAX_ACCELERATION = 5.0; // Aceleração máxima (rad/s^2) TODO
-    public static final TrapezoidProfile.Constraints TRAPEZOID_CONSTRAINTS = new TrapezoidProfile.Constraints(
-        MAX_VELOCITY, MAX_ACCELERATION);
+    public static final double kMaxVelocity = 25.0; // Velocidade máxima (rad/s)
+    public static final double kMaxAcceleration = 5.0; // Aceleração máxima (rad/s^2)
+    public static final TrapezoidProfile.Constraints kTrapezoidConstraints = new TrapezoidProfile.Constraints(
+        kMaxVelocity, kMaxAcceleration);
   }
 
   /**
