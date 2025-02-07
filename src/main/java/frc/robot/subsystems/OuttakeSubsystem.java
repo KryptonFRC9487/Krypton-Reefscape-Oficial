@@ -1,29 +1,34 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Timer;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
-import static edu.wpi.first.units.Units.*;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OuttakeConstants;
+import frc.robot.Constants.OuttakeConstants.ArmConfig;
+import frc.robot.Constants.OuttakeConstants.Gains;
+import frc.robot.Constants.OuttakeConstants.HardwareConfig;
 import frc.robot.Constants.OuttakeConstants.OuttakePose;
-import frc.robot.commands.OuttakeCommand;
+import frc.robot.Constants.OuttakeConstants.TrapezoidProfileConstants;
 import frc.robot.utils.SubsystemTracker;
 
 public class OuttakeSubsystem extends SubsystemBase {
@@ -43,11 +48,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   private OuttakePose outtakePose = OuttakePose.INIT;
 
   private final ProfiledPIDController pid;
-  private final ArmFeedforward feedforward = new ArmFeedforward(
-      OuttakeConstants.kS,
-      OuttakeConstants.kG,
-      OuttakeConstants.kV,
-      OuttakeConstants.kA);
+  private final ArmFeedforward feedforward;
 
   // public final Trigger atMin = new Trigger(() ->
   // getAngle().lte(OuttakeConstants.ARM_MIN_ANGLE.plus(Degrees.of(5))));
@@ -57,24 +58,33 @@ public class OuttakeSubsystem extends SubsystemBase {
   public OuttakeSubsystem(SubsystemTracker subsystemTracker) {
     this.subsystemTracker = subsystemTracker;
 
-    leftPivotMotor = new SparkMax(OuttakeConstants.kLeftPivotId, MotorType.kBrushless);
-    rightPivotMotor = new SparkMax(OuttakeConstants.kRightPivotId, MotorType.kBrushless);
+    leftPivotMotor = new SparkMax(HardwareConfig.kLeftPivotId, MotorType.kBrushless);
+    rightPivotMotor = new SparkMax(HardwareConfig.kRightPivotId, MotorType.kBrushless);
+    outtakeMotor = new SparkMax(HardwareConfig.kOuttakeId, MotorType.kBrushless);
 
     leftPivotEncoder = leftPivotMotor.getEncoder();
     rightPivotEncoder = rightPivotMotor.getEncoder();
+    absoluteEncoder = leftPivotMotor.getAbsoluteEncoder();
+    encoder = new DutyCycleEncoder(0, 360.0, 72.0);
+    encoder.setInverted(true);
+
+    feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
+    pid = new ProfiledPIDController(Gains.kP, Gains.kI, Gains.kD, TrapezoidProfileConstants.kConstraints);
+    pid.setGoal(OuttakePose.INIT.value);
+    pid.setTolerance(0.5);
+
+    m_limitSwitch = new DigitalInput(3);
 
     armPivotController = leftPivotMotor.getClosedLoopController();
-
-    absoluteEncoder = leftPivotMotor.getAbsoluteEncoder();
 
     leftPivotConfig = new SparkMaxConfig();
     rightPivotConfig = new SparkMaxConfig();
 
     leftPivotConfig.idleMode(IdleMode.kBrake).inverted(true)
-        .smartCurrentLimit(OuttakeConstants.kArmStallCurrentLimit)
-        .closedLoopRampRate(OuttakeConstants.kArmClosedLoopRate).closedLoop
+        .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
+        .closedLoopRampRate(ArmConfig.kClosedLoopRate).closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(OuttakeConstants.kP, OuttakeConstants.kI, OuttakeConstants.kD)
+        .pid(Gains.kP, Gains.kI, Gains.kD)
         .outputRange(-1.0, 1.0);
 
     leftPivotConfig.encoder
@@ -82,8 +92,8 @@ public class OuttakeSubsystem extends SubsystemBase {
         .velocityConversionFactor(1.0 / 15.0);
 
     rightPivotConfig.idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(OuttakeConstants.kArmStallCurrentLimit)
-        .closedLoopRampRate(OuttakeConstants.kArmClosedLoopRate).encoder
+        .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
+        .closedLoopRampRate(ArmConfig.kClosedLoopRate).encoder
         .positionConversionFactor(1.0 / 15.0)
         .velocityConversionFactor(1.0 / 15.0);
 
@@ -91,22 +101,6 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     leftPivotMotor.configure(leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     rightPivotMotor.configure(rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    outtakeMotor = new SparkMax(OuttakeConstants.kOuttakeId, MotorType.kBrushless);
-
-    m_limitSwitch = new DigitalInput(3);
-
-    encoder = new DutyCycleEncoder(0, 360.0, 72.0);
-    encoder.setInverted(true);
-
-    pid = new ProfiledPIDController(
-        OuttakeConstants.kP,
-        OuttakeConstants.kI,
-        OuttakeConstants.kD,
-        OuttakeConstants.kTrapezoidConstraints);
-
-    pid.setGoal(OuttakePose.INIT.value);
-    pid.setTolerance(0.5);
 
     Timer.delay(2.0);
 

@@ -155,6 +155,9 @@ public final class Constants {
    * Configurações do sistema de outtake.
    */
   public static final class OuttakeConstants {
+    /**
+     * Configurações de poses do outtake.
+     */
     public static enum OuttakePose {
       // INIT(95),
       INIT(0),
@@ -169,35 +172,48 @@ public final class Constants {
       }
     }
 
-    public static final Angle kArmMinAngle = Degrees.of(-98.0);
-    public static final Angle kArmMaxAngle = Degrees.of(87.0);
+    public static class Gains {
+      // Ganhos PID para o Outtake
+      public static final double kP = 0.0; // 0.0065
+      public static final double kI = 0.0; // 0.0007
+      public static final double kD = 0.0; // 0.0003
 
-    public static final int kArmStallCurrentLimit = 40;
-    public static final double kArmClosedLoopRate = 0.5;
+      // Ganhos de Feedforward // MIN DOWN -0.03985 MIN UP -0.09
+      public static final double kG = 0.064925; // Gravidade
+      public static final double kV = 0.025075; // Velocidade
+      public static final double kS = 0.0; // Tensão estática
+      public static final double kA = 0.0; // Aceleração
+    }
 
-    public static final int kLeftPivotId = 14;
-    public static final int kRightPivotId = 17;
-    public static final int kOuttakeId = 18;
-    public static final double kOuttakeEncoderOffset = 79.0;
+    /**
+     * Restrições do perfil trapezoidal.
+     */
+    public static final class TrapezoidProfileConstants {
+      public static final double kMaxVelocity = 25.0; // Velocidade máxima (rad/s)
+      public static final double kMaxAcceleration = 5.0; // Aceleração máxima (rad/s^2)
+      public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity,
+          kMaxAcceleration);
+    }
 
-    // PID Gains Outtake
-    // public static final double kP = 0.0065;
-    // public static final double kI = 0.0007;
-    // public static final double kD = 0.0003;
-    public static final double kP = 0.0; 
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
+    /**
+     * Limites e taxas do braço.
+     */
+    public static final class ArmConfig {
+      public static final int kStallCurrentLimit = 40;
+      public static final double kClosedLoopRate = 0.5;
+      public static final Angle kMinAngle = Degrees.of(-98.0);
+      public static final Angle kMaxAngle = Degrees.of(87.0);
+    }
 
-    // Feedforward Gains // MIN DOWN -0.03985 MIN UP -0.09
-    public static final double kG = 0.064925; // 0.058 Gravidade
-    public static final double kV = 0.025075; // 0.725 Velocidade
-    public static final double kS = 0.0; // Tensão estática
-    public static final double kA = 0.0; // Aceleração
-
-    public static final double kMaxVelocity = 25.0; // Velocidade máxima (rad/s)
-    public static final double kMaxAcceleration = 5.0; // Aceleração máxima (rad/s^2)
-    public static final TrapezoidProfile.Constraints kTrapezoidConstraints = new TrapezoidProfile.Constraints(
-        kMaxVelocity, kMaxAcceleration);
+    /**
+     * IDs e configurações do sistema.
+     */
+    public static final class HardwareConfig {
+      public static final int kLeftPivotId = 14;
+      public static final int kRightPivotId = 17;
+      public static final int kOuttakeId = 18;
+      public static final double kOuttakeEncoderOffset = 79.0;
+    }
   }
 
   /**
@@ -239,5 +255,5 @@ public final class Constants {
     public static final int DOWN_LEFT = 225;
     public static final int LEFT = 270;
     public static final int UP_LEFT = 315;
-  } 
+  }
 }

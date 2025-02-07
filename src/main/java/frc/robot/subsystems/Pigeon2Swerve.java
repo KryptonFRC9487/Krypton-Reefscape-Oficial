@@ -2,21 +2,20 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 
-
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Pigeon2Configurator;
 import com.ctre.phoenix6.hardware.Pigeon2;
+
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.imu.SwerveIMU;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * SwerveIMU interface for the {@link Pigeon2}
