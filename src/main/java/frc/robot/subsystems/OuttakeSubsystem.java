@@ -1,8 +1,7 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degree;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.*;
+import static frc.robot.Constants.OuttakeConstants.*;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
@@ -19,105 +18,134 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OuttakeConstants.ArmConfig;
 import frc.robot.Constants.OuttakeConstants.Gains;
 import frc.robot.Constants.OuttakeConstants.HardwareConfig;
 import frc.robot.Constants.OuttakeConstants.OuttakePose;
 import frc.robot.Constants.OuttakeConstants.TrapezoidProfileConstants;
+import frc.robot.RobotMath;
 import frc.robot.utils.SubsystemTracker;
 
 public class OuttakeSubsystem extends SubsystemBase {
 
   private final DCMotor armGearbox = DCMotor.getNEO(2);
 
-  private final SparkMax leftPivotMotor, rightPivotMotor, outtakeMotor;
-  private final SparkMaxConfig leftPivotConfig, rightPivotConfig;
-  private final SparkClosedLoopController armPivotController;
-  private final RelativeEncoder leftPivotEncoder, rightPivotEncoder;
-  private final DutyCycleEncoder encoder;
-  private final AbsoluteEncoder absoluteEncoder;
+  private final SparkMax m_leftPivotMotor, m_rightPivotMotor, m_outtakeMotor;
+  private final SparkMaxConfig m_leftPivotConfig, m_rightPivotConfig;
+  private final SparkClosedLoopController m_armPivotController;
+  private final RelativeEncoder m_leftPivotEncoder, m_rightPivotEncoder;
+  private final DutyCycleEncoder m_encoder;
+  private final AbsoluteEncoder m_absoluteEncoder;
 
   private final DigitalInput m_limitSwitch;
   public static boolean limitSwitch;
-  private final SubsystemTracker subsystemTracker;
+  private final SubsystemTracker m_subsystemTracker;
   private OuttakePose outtakePose = OuttakePose.INIT;
 
-  private final ProfiledPIDController pid;
-  private final ArmFeedforward feedforward;
+  private final ProfiledPIDController m_pid;
+  private final ArmFeedforward m_feedforward;
 
-  // public final Trigger atMin = new Trigger(() ->
-  // getAngle().lte(OuttakeConstants.ARM_MIN_ANGLE.plus(Degrees.of(5))));
-  // public final Trigger atMax = new Trigger(() ->
-  // getAngle().gte(OuttakeConstants.ARM_MAX_ANGLE.minus(Degrees.of(5))));
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+  private final MutAngle m_angle = Rotations.mutable(0);
+  private final MutAngularVelocity m_velocity = RPM.mutable(0);
+
+  private final SysIdRoutine m_sysIdRoutine;
+
+  public final Trigger atMin = new Trigger(() -> getAngle().lte(ArmConfig.kMinAngle.plus(Degrees.of(5))));
+  public final Trigger atMax = new Trigger(() -> getAngle().gte(ArmConfig.kMaxAngle.minus(Degrees.of(5))));
 
   public OuttakeSubsystem(SubsystemTracker subsystemTracker) {
-    this.subsystemTracker = subsystemTracker;
+    this.m_subsystemTracker = subsystemTracker;
 
-    leftPivotMotor = new SparkMax(HardwareConfig.kLeftPivotId, MotorType.kBrushless);
-    rightPivotMotor = new SparkMax(HardwareConfig.kRightPivotId, MotorType.kBrushless);
-    outtakeMotor = new SparkMax(HardwareConfig.kOuttakeId, MotorType.kBrushless);
+    m_leftPivotMotor = new SparkMax(HardwareConfig.kLeftPivotId, MotorType.kBrushless);
+    m_rightPivotMotor = new SparkMax(HardwareConfig.kRightPivotId, MotorType.kBrushless);
+    m_outtakeMotor = new SparkMax(HardwareConfig.kOuttakeId, MotorType.kBrushless);
 
-    leftPivotEncoder = leftPivotMotor.getEncoder();
-    rightPivotEncoder = rightPivotMotor.getEncoder();
-    absoluteEncoder = leftPivotMotor.getAbsoluteEncoder();
-    encoder = new DutyCycleEncoder(0, 360.0, 72.0);
-    encoder.setInverted(true);
+    m_leftPivotEncoder = m_leftPivotMotor.getEncoder();
+    m_rightPivotEncoder = m_rightPivotMotor.getEncoder();
+    m_absoluteEncoder = m_leftPivotMotor.getAbsoluteEncoder();
+    m_encoder = new DutyCycleEncoder(0, 360.0, 72.0);
+    m_encoder.setInverted(true);
 
-    feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
-    pid = new ProfiledPIDController(Gains.kP, Gains.kI, Gains.kD, TrapezoidProfileConstants.kConstraints);
-    pid.setGoal(OuttakePose.INIT.value);
-    pid.setTolerance(0.5);
+    m_feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
+    m_pid = new ProfiledPIDController(Gains.kP, Gains.kI, Gains.kD, TrapezoidProfileConstants.kConstraints);
+    m_pid.setGoal(OuttakePose.INIT.value);
+    m_pid.setTolerance(0.5);
 
     m_limitSwitch = new DigitalInput(3);
 
-    armPivotController = leftPivotMotor.getClosedLoopController();
+    m_armPivotController = m_leftPivotMotor.getClosedLoopController();
 
-    leftPivotConfig = new SparkMaxConfig();
-    rightPivotConfig = new SparkMaxConfig();
+    m_leftPivotConfig = new SparkMaxConfig();
+    m_rightPivotConfig = new SparkMaxConfig();
 
-    leftPivotConfig.idleMode(IdleMode.kBrake).inverted(true)
+    m_leftPivotConfig.idleMode(IdleMode.kBrake).inverted(true)
         .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
+
         .closedLoopRampRate(ArmConfig.kClosedLoopRate).closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(Gains.kP, Gains.kI, Gains.kD)
         .outputRange(-1.0, 1.0);
 
-    leftPivotConfig.encoder
+    m_leftPivotConfig.encoder
         .positionConversionFactor(1.0 / 15.0)
         .velocityConversionFactor(1.0 / 15.0);
 
-    rightPivotConfig.idleMode(IdleMode.kBrake)
+    m_rightPivotConfig.idleMode(IdleMode.kBrake)
         .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
         .closedLoopRampRate(ArmConfig.kClosedLoopRate).encoder
         .positionConversionFactor(1.0 / 15.0)
         .velocityConversionFactor(1.0 / 15.0);
 
-    rightPivotConfig.follow(leftPivotMotor, true);
+    m_rightPivotConfig.follow(m_leftPivotMotor, true);
 
-    leftPivotMotor.configure(leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    rightPivotMotor.configure(rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_leftPivotMotor.configure(m_leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_rightPivotMotor.configure(m_rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
 
     Timer.delay(2.0);
 
     synchronizeMotors();
+
+    m_sysIdRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(Volts.per(Second).of(ArmConfig.kClosedLoopRate),
+            Volts.of(1),
+            Seconds.of(30)),
+        new SysIdRoutine.Mechanism(
+            m_leftPivotMotor::setVoltage,
+            log -> {
+              log.motor("arm")
+                  .voltage(m_appliedVoltage
+                      .mut_replace(m_leftPivotMotor.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
+                  .angularPosition(m_angle.mut_replace(m_leftPivotEncoder.getPosition(), Rotations))
+                  .angularVelocity(m_velocity.mut_replace(m_leftPivotEncoder.getVelocity(), RPM));
+            },
+            this));
   }
 
   private void synchronizeMotors() {
-    Angle armAngle = Degrees.of(encoder.get());
-    leftPivotEncoder.setPosition(armAngle.in(Rotations));
-    rightPivotEncoder.setPosition(armAngle.in(Rotations));
+    Angle armAngle = Degrees.of(m_encoder.get());
+    m_leftPivotEncoder.setPosition(armAngle.in(Rotations));
+    m_rightPivotEncoder.setPosition(armAngle.in(Rotations));
   }
-
 
   @Override
   public void periodic() {
     // subsystemTracker.updateOuttakeRealPosition(outtakePose, getMeasurement());
-    
+
     // switch (subsystemTracker.getElevatorPose()) {
     // case INITAL:
     // if (subsystemTracker.getElevatorRealPosition() < 30.0)
@@ -162,26 +190,41 @@ public class OuttakeSubsystem extends SubsystemBase {
     // rightPivotMotor.set(output);
 
     SmartDashboard.putNumber("Arm", getMeasurement());
+    SmartDashboard.putNumber("Arm Encoder", m_encoder.get());
   }
 
   // Função para obter a medição da posição (encoder)
   public double getMeasurement() {
-    return Rotations.of(leftPivotEncoder.getPosition()).in(Degree);
+    return Rotations.of(m_leftPivotEncoder.getPosition()).in(Degree);
   }
 
   // Função para definir a posição do outtake
   public void setOuttakePosition(OuttakePose outtakePose) {
     this.outtakePose = outtakePose;
-    
-    pid.setGoal(outtakePose.value);
+
+    m_pid.setGoal(outtakePose.value);
   }
 
   // Função para definir a velocidade do outtake
-    public void setOuttakeSpeed(double speed) {
-      outtakeMotor.set(speed);
-    }
+  public void setOuttakeSpeed(double speed) {
+    m_outtakeMotor.set(speed);
+  }
 
   public boolean outtakeHasCoral() {
     return m_limitSwitch.get();
+  }
+
+  public Command runSysIdRoutine() {
+    return m_sysIdRoutine.dynamic(Direction.kForward).until(atMax)
+        .andThen(m_sysIdRoutine.dynamic(Direction.kReverse).until(atMin))
+        .andThen(m_sysIdRoutine.quasistatic(Direction.kForward).until(atMax))
+        .andThen(m_sysIdRoutine.quasistatic(Direction.kReverse).until(atMin));
+  }
+
+  public Angle getAngle() {
+    m_angle.mut_replace(
+        RobotMath.Arm.convertSensorUnitsToAngle(m_angle.mut_replace(m_leftPivotEncoder.getPosition(), Rotations)));
+
+    return m_angle;
   }
 }

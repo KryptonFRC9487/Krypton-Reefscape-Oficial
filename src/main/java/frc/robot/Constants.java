@@ -201,6 +201,7 @@ public final class Constants {
     public static final class ArmConfig {
       public static final int kStallCurrentLimit = 40;
       public static final double kClosedLoopRate = 0.5;
+      public static final double kReduction = 1.0 / 15.0;
       public static final Angle kMinAngle = Degrees.of(-98.0);
       public static final Angle kMaxAngle = Degrees.of(87.0);
     }
