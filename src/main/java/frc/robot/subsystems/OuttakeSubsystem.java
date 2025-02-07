@@ -78,7 +78,7 @@ public class OuttakeSubsystem extends SubsystemBase {
     m_rightPivotEncoder = m_rightPivotMotor.getEncoder();
     m_absoluteEncoder = m_leftPivotMotor.getAbsoluteEncoder();
     m_encoder = new DutyCycleEncoder(0, 360.0, 72.0);
-    m_encoder.setInverted(true);
+    // m_encoder.setInverted(true);
 
     m_feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
     m_pid = new ProfiledPIDController(Gains.kP, Gains.kI, Gains.kD, TrapezoidProfileConstants.kConstraints);
@@ -137,7 +137,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   }
 
   private void synchronizeMotors() {
-    Angle armAngle = Degrees.of(m_encoder.get());
+    Angle armAngle = Degrees.of(m_encoder.get()).times(-1.0);
     m_leftPivotEncoder.setPosition(armAngle.in(Rotations));
     m_rightPivotEncoder.setPosition(armAngle.in(Rotations));
   }
