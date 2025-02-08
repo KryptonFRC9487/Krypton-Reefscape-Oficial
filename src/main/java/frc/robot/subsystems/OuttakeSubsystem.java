@@ -36,7 +36,6 @@ import frc.robot.Constants.OuttakeConstants.Gains;
 import frc.robot.Constants.OuttakeConstants.HardwareConfig;
 import frc.robot.Constants.OuttakeConstants.OuttakePose;
 import frc.robot.Constants.OuttakeConstants.TrapezoidProfileConstants;
-import frc.robot.RobotMath;
 import frc.robot.utils.SubsystemTracker;
 
 public class OuttakeSubsystem extends SubsystemBase {
@@ -64,8 +63,8 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   private final SysIdRoutine m_sysIdRoutine;
 
-  public final Trigger atMin = new Trigger(() -> getAngle().lte(ArmConfig.kMinAngle.plus(Degrees.of(5))));
-  public final Trigger atMax = new Trigger(() -> getAngle().gte(ArmConfig.kMaxAngle.minus(Degrees.of(5))));
+  public final Trigger atMin = new Trigger(() -> getAngle().lte(ArmConfig.kMinAngle.plus(Degrees.of(15))));
+  public final Trigger atMax = new Trigger(() -> getAngle().gte(ArmConfig.kMaxAngle.minus(Degrees.of(15))));
 
   public OuttakeSubsystem(SubsystemTracker subsystemTracker) {
     this.m_subsystemTracker = subsystemTracker;
@@ -94,7 +93,6 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     m_leftPivotConfig.idleMode(IdleMode.kBrake).inverted(true)
         .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
-
         .closedLoopRampRate(ArmConfig.kClosedLoopRate).closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(Gains.kP, Gains.kI, Gains.kD)
@@ -115,7 +113,6 @@ public class OuttakeSubsystem extends SubsystemBase {
     m_leftPivotMotor.configure(m_leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_rightPivotMotor.configure(m_rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-
     Timer.delay(2.0);
 
     synchronizeMotors();
@@ -130,8 +127,11 @@ public class OuttakeSubsystem extends SubsystemBase {
               log.motor("arm")
                   .voltage(m_appliedVoltage
                       .mut_replace(m_leftPivotMotor.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
-                  .angularPosition(m_angle.mut_replace(m_leftPivotEncoder.getPosition(), Rotations))
-                  .angularVelocity(m_velocity.mut_replace(m_leftPivotEncoder.getVelocity(), RPM));
+                  .angularPosition(
+                      m_angle.mut_replace(m_leftPivotEncoder.getPosition(), Rotations))
+                  .angularVelocity(
+                      m_velocity.mut_replace(m_leftPivotEncoder.getVelocity(), RPM));
+
             },
             this));
   }
@@ -189,8 +189,9 @@ public class OuttakeSubsystem extends SubsystemBase {
     // leftPivotMotor.set(output);
     // rightPivotMotor.set(output);
 
-    SmartDashboard.putNumber("Arm", getMeasurement());
-    SmartDashboard.putNumber("Arm Encoder", m_encoder.get());
+    SmartDashboard.putNumber("Relative Encoder", getMeasurement());
+    SmartDashboard.putNumber("Absolute Encoder", m_encoder.get());
+    SmartDashboard.putNumber("Relative Angle Degree", getAngle().in(Degree));
   }
 
   // Função para obter a medição da posição (encoder)
@@ -222,9 +223,12 @@ public class OuttakeSubsystem extends SubsystemBase {
   }
 
   public Angle getAngle() {
-    m_angle.mut_replace(
-        RobotMath.Arm.convertSensorUnitsToAngle(m_angle.mut_replace(m_leftPivotEncoder.getPosition(), Rotations)));
+    return Degrees.of(getMeasurement());
 
-    return m_angle;
+    // m_angle.mut_replace(
+    // RobotMath.Arm.convertSensorUnitsToAngle(m_angle.mut_replace(m_leftPivotEncoder.getPosition(),
+    // Rotations)));
+
+    // return m_angle;
   }
 }

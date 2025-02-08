@@ -179,10 +179,10 @@ public final class Constants {
       public static final double kD = 0.0; // 0.0003
 
       // Ganhos de Feedforward // MIN DOWN -0.03985 MIN UP -0.09
-      public static final double kG = 0.064925; // Gravidade
-      public static final double kV = 0.025075; // Velocidade
-      public static final double kS = 0.0; // Tensão estática
-      public static final double kA = 0.0; // Aceleração
+      public static final double kG = 0.2465; // Gravidade
+      public static final double kV = 0.87525; // Velocidade
+      public static final double kS = 0.38107; // Tensão estática
+      public static final double kA = 0.62714; // Aceleração
     }
 
     /**
