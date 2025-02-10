@@ -6,13 +6,18 @@ package frc.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -39,6 +44,7 @@ public class RobotContainer {
   private final SubsystemTracker subsystemSupplier = new SubsystemTracker();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(subsystemSupplier);
   private final OuttakeSubsystem outtakeSubsystem = new OuttakeSubsystem(subsystemSupplier);
+  private final SendableChooser<Command> autoChooser;
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -48,16 +54,22 @@ public class RobotContainer {
       GamepadConstants.P2_PORT
   );
 
+  
+
   public RobotContainer() {
     setDefaultCommands();
     registerAutoCommands();
     configureBindings();
+
+
+    autoChooser = AutoBuilder.buildAutoChooser("");
+    SmartDashboard.putData("Auto Select", autoChooser);
   }
 
   private void setDefaultCommands() {
     swerveSubsystem.setDefaultCommand(new SwerveCommand(
       swerveSubsystem, 
-      () -> p1Controller.getLeftY(), 
+      () -> p1Controller.getLeftY(),  
       () -> p1Controller.getLeftX(), 
       () -> -p1Controller.getRightX(),
       () -> p1Controller.getRightBumperButtonPressed()));
@@ -148,7 +160,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return swerveSubsystem.getAutonomousCommand(Trajetoria.NOME_TRAJETORIA, true);
+  
+    return autoChooser.getSelected();
   }
 
   //Heading Correction 

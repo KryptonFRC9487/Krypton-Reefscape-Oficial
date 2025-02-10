@@ -170,12 +170,12 @@ public final class Constants {
     public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
 
     // PID Gains Outtake
-    // public static final double kP = 0.0065; 
-    // public static final double kI = 0.0007;
-    // public static final double kD = 0.0003;
-    public static final double kP = 0.0; 
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
+    public static final double kP = 0.0065; 
+    public static final double kI = 0.0007;
+    public static final double kD = 0.0003;
+    // public static final double kP = 0.0; 
+    // public static final double kI = 0.0;
+    // public static final double kD = 0.0;
 
     // Feedforward Gains
     public static final double kG = 0.0; // 0.058 Gravidade
