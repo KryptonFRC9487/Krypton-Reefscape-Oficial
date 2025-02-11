@@ -153,7 +153,7 @@ public final class Constants {
    */
   public static final class OuttakeConstants {
     public static enum OuttakePose {
-      INIT(95),
+      INIT(101),
       MIDL2(80),
       DEPOSIT(-70);
 
@@ -170,9 +170,10 @@ public final class Constants {
     public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
 
     // PID Gains Outtake
-    public static final double kP = 0.0065; 
+    public static final double kP = 0.0067; 
     public static final double kI = 0.0007;
     public static final double kD = 0.0003;
+
     // public static final double kP = 0.0; 
     // public static final double kI = 0.0;
     // public static final double kD = 0.0;

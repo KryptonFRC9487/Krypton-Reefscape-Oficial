@@ -37,11 +37,12 @@ public class RobotContainer {
 
   private final File swerveConfigFile = new File(Filesystem.getDeployDirectory(), "swerve");
 
+  private final SendableChooser<Command> autoChooser;
+
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile);
   private final SubsystemTracker subsystemSupplier = new SubsystemTracker();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(subsystemSupplier);
   private final OuttakeSubsystem outtakeSubsystem = new OuttakeSubsystem(subsystemSupplier);
-  private final SendableChooser<Command> autoChooser;
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -54,6 +55,7 @@ public class RobotContainer {
   
 
   public RobotContainer() {
+
     setDefaultCommands();
     registerAutoCommands();
     configureBindings();
@@ -157,12 +159,17 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-  
+
     return autoChooser.getSelected();
   }
 
   //Heading Correction 
   public void setHeadingCorrection(boolean setHeadingCorrection){
     swerveSubsystem.getSwerveDrive().setHeadingCorrection(setHeadingCorrection);
+  }
+
+  public SwerveSubsystem getSwerveSubsystem(){
+
+    return swerveSubsystem;
   }
 }

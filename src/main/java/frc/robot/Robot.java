@@ -64,11 +64,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    
   }
 
   @Override
   public void teleopInit() {
     m_robotContainer.setHeadingCorrection(true);
+
+    m_robotContainer.getSwerveSubsystem().resetGyro();
   }
 
   @Override

@@ -101,6 +101,11 @@ public class OuttakeSubsystem extends SubsystemBase {
     // Aplica a saída (descomente quando for necessário testar o movimento
     // output = MathUtil.clamp(output, -0.18, 0.09);
 
+    SmartDashboard.putBoolean("Coleta Outtake",outtakeHasCoral());
+
+    // Aplica a saída (descomente quando for necessário testar o movimento)
+    // output = MathUtil.clamp(output, -0.18, 0.09);  
+    
     leftPivotMotor.set(output);
     rightPivotMotor.set(output);
   }

@@ -26,7 +26,7 @@ public class OuttakeCommand extends Command {
       if (!outtakeSubsystem.outtakeHasCoral()) {
         outtakeSubsystem.setOuttakeSpeed(0);
       } else {
-        outtakeSubsystem.setOuttakeSpeed(-0.35);
+        outtakeSubsystem.setOuttakeSpeed(-0.4);
       }
     } else if (p2Controller.getLeftTriggerAxis() != 0) {
       outtakeSubsystem.setOuttakeSpeed(0.35);
@@ -35,7 +35,7 @@ public class OuttakeCommand extends Command {
     }
 
     if(p2Controller.getRawButton(Buttons.LEFT_BUMPER)){
-      outtakeSubsystem.setOuttakeSpeed(-0.3);
+      outtakeSubsystem.setOuttakeSpeed(-0.25);
     }    
 
   }

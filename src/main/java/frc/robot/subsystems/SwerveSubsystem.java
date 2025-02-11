@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.core.CorePigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -21,10 +21,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.vision.LimelightHelpers;
 import frc.robot.Constants.Tracao;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -39,10 +39,8 @@ import swervelib.parser.SwerveParser;
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive swerveDrive;
   public boolean correctionPID = false;
-  private final Pigeon2 pigeon;
+  private final CorePigeon2 pigeon;
 
-  // Objeto global autônomo
-  // ConfigAuto autonomo;
 
   // Método construtor da classe
   public SwerveSubsystem(File directory) {
@@ -54,10 +52,9 @@ public class SwerveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    // autonomo = new ConfigAuto(this);
 
     // autonomo.setupPathPlanner();
-    pigeon = new Pigeon2(13);
+    pigeon = new CorePigeon2(13);
 
     swerveDrive.setHeadingCorrection(true);
 
@@ -139,11 +136,17 @@ public class SwerveSubsystem extends SubsystemBase {
 public void periodic() {
     swerveDrive.updateOdometry();
     
-    SmartDashboard.getNumber("Partida",Timer.getMatchTime());
   //  getPitch();de´´
   //  SmartDashboard.putNumber("Valar do pitch", getPitch()); 
   //  SmartDashboard.putBoolean("Se subiu", getUp()); 
 
+  LimelightHelpers.SetRobotOrientation("limelight",
+  robotYawInDegrees(),
+  getYawRate(),
+  0,
+  0,
+  0,
+  0);
   }
 
   public void driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
@@ -248,10 +251,7 @@ public void periodic() {
     return swerveDrive;
   }
 
-  // public void drive(Translation2d translation2d, int i, boolean b) {
-  //   // TODO Auto-generated method stub
-  //   throw new UnsupportedOperationException("Unimplemented method 'drive'");
-  // }
+
 
   public Command driveToPose(Pose2d pose) {
   // Create the constraints to use while pathfinding
@@ -265,5 +265,17 @@ public void periodic() {
           constraints,
           edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
                                       );
+  }
+
+  public double robotYawInDegrees(){
+    if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      return 0.0;
+    } else {
+      return 180.0;
+    }
+  }
+
+  public double getYawRate(){
+    return pigeon.getAngularVelocityZWorld().getValueAsDouble();
   }
 }
