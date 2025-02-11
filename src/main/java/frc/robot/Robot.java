@@ -5,8 +5,6 @@
 package frc.robot;
 
 
-import java.sql.Driver;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
