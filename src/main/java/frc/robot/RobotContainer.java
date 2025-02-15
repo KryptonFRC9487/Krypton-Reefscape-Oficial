@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
@@ -13,6 +14,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -20,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.GamepadConstants;
-import frc.robot.Constants.Trajetoria;
 import frc.robot.Constants.ElevatorConstants.ElevatorPose;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.OuttakeSubsystem;
@@ -31,9 +33,11 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.Constants.POV;
 
 
-public class RobotContainer {
+public class RobotContainer { 
 
   private final File swerveConfigFile = new File(Filesystem.getDeployDirectory(), "swerve");
+
+  private final SendableChooser<Command> autoChooser;
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile);
   private final SubsystemTracker subsystemSupplier = new SubsystemTracker();
@@ -48,16 +52,23 @@ public class RobotContainer {
       GamepadConstants.P2_PORT
   );
 
+  
+
   public RobotContainer() {
+
     setDefaultCommands();
     registerAutoCommands();
     configureBindings();
+
+
+    autoChooser = AutoBuilder.buildAutoChooser("");
+    SmartDashboard.putData("Auto Select", autoChooser);
   }
 
   private void setDefaultCommands() {
     swerveSubsystem.setDefaultCommand(new SwerveCommand(
       swerveSubsystem, 
-      () -> p1Controller.getLeftY(), 
+      () -> p1Controller.getLeftY(),  
       () -> p1Controller.getLeftX(), 
       () -> -p1Controller.getRightX(),
       () -> p1Controller.getRightBumperButtonPressed()));
@@ -131,6 +142,8 @@ public class RobotContainer {
 
     new POVButton(p2Controller, POV.RIGHT)
         .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.L2)));
+
+        
     // ToPose Commands
     if (Robot.isSimulation()) {
       new JoystickButton(p1Controller, XboxController.Button.kStart.value)
@@ -148,11 +161,17 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return swerveSubsystem.getAutonomousCommand(Trajetoria.NOME_TRAJETORIA, true);
+
+    return autoChooser.getSelected();
   }
 
   //Heading Correction 
   public void setHeadingCorrection(boolean setHeadingCorrection){
     swerveSubsystem.getSwerveDrive().setHeadingCorrection(setHeadingCorrection);
+  }
+
+  public SwerveSubsystem getSwerveSubsystem(){
+
+    return swerveSubsystem;
   }
 }

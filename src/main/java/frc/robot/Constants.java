@@ -106,9 +106,9 @@ public final class Constants {
     public static enum ElevatorPose {
       INITAL(2),
       L1(2),
-      L2(10),
+      L2(11),
       L3(2),
-      L4(54);
+      L4(57);
 
       public final double value;
 
@@ -252,6 +252,9 @@ public final class Constants {
     public static final int BUTTON_BACK = 7;
   }
 
+  /*
+   * Mapeamento dos botões POV
+   */
   public static final class POV {
 
     public static final int UP = 0;

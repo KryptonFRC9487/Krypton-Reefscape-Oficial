@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.core.CorePigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -21,8 +21,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.vision.LimelightHelpers;
 import frc.robot.Constants.Tracao;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -34,13 +36,12 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 /**
  * Classe de subsistema onde fazemos a ponte do nosso código para YAGSL
  */
+
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive swerveDrive;
   public boolean correctionPID = false;
-  private final Pigeon2 pigeon;
+  private final CorePigeon2 pigeon;
 
-  // Objeto global autônomo
-  // ConfigAuto autonomo;
 
   // Método construtor da classe
   public SwerveSubsystem(File directory) {
@@ -52,10 +53,9 @@ public class SwerveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    // autonomo = new ConfigAuto(this);
 
     // autonomo.setupPathPlanner();
-    pigeon = new Pigeon2(13);
+    pigeon = new CorePigeon2(13);
 
     swerveDrive.setHeadingCorrection(true);
 
@@ -130,12 +130,15 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+public void periodic() {
     swerveDrive.updateOdometry();
+    
+    // updateOdometry();
 
-    // getPitch();
-    // SmartDashboard.putNumber("Valar do pitch", getPitch());
-    // SmartDashboard.putBoolean("Se subiu", getUp());
+    LimelightHelpers.SetRobotOrientation("limelight" ,
+    robotYawInDegrees(),  
+    getYawRate(),
+    0, 0, 0, 0);
   }
 
   public void driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
@@ -174,18 +177,6 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getHeading() {
     return swerveDrive.getYaw();
   }
-
-  // public double getPitch(){
-  // return pigeon.getPitch().getValueAsDouble();
-  // }
-
-  // public boolean getUp() {
-  // if (getPitch() > 0.0) {
-  // return true;
-  // } else {
-  // return false;
-  // }
-  // }
 
   public void resetOdometry(Pose2d posicao) {
     swerveDrive.resetOdometry(posicao);
@@ -239,10 +230,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive;
   }
 
-  // public void drive(Translation2d translation2d, int i, boolean b) {
-  // // TODO Auto-generated method stub
-  // throw new UnsupportedOperationException("Unimplemented method 'drive'");
-  // }
+
 
   public Command driveToPose(Pose2d pose) {
     // Create the constraints to use while pathfinding
@@ -257,4 +245,70 @@ public class SwerveSubsystem extends SubsystemBase {
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
     );
   }
+
+  public double robotYawInDegrees(){
+    if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      return 0.0;
+    } else {
+      return 1800.0;
+    }
+  }
+
+  public double getYawRate(){
+    return pigeon.getAngularVelocityZWorld().getValueAsDouble();
+  }
+
+//  public void updateOdometry(){
+//       poseEstimator.update(
+//         Rotation2d.fromDegrees(pigeon.getYaw().getValueAsDouble()),
+//         swerveDrive.getModulePositions());
+
+
+//       boolean useMegatag2 = true;
+//       boolean doRejectUpdate = false;
+     
+//       if (useMegatag2 == false) {
+//         LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+
+
+//         if (mt1.tagCount == 1) {
+//           if (mt1.rawFiducials[0].ambiguity > .7) {
+//             doRejectUpdate = true;
+//           }
+//           if (mt1.rawFiducials[0].ambiguity > 3) {
+//             doRejectUpdate = true;
+//           }
+//         }
+       
+//         if (mt1.tagCount == 0) {
+//           doRejectUpdate = true;
+//         }
+
+
+//         if (!doRejectUpdate) {
+//           System.out.println("Adicionando medição de visão");
+//           poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+//           poseEstimator.addVisionMeasurement(
+//             mt1.pose,
+//             mt1.timestampSeconds);
+//         }
+//       } else if (useMegatag2 == true) {
+//         LimelightHelpers.SetRobotOrientation("limelight", poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+//         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+
+//         if (swerveDrive.getFieldVelocity().omegaRadiansPerSecond > 50) {
+//           doRejectUpdate = true;
+//         }
+//         if (mt2.tagCount == 0) {
+//           doRejectUpdate = true;
+//         }
+//         if (!doRejectUpdate) {
+//             poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+//             poseEstimator.addVisionMeasurement(
+//               mt2.pose,
+//               mt2.timestampSeconds);
+//         }
+//       }
+//     }
 }

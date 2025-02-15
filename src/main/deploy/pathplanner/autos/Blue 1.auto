@@ -57,11 +57,23 @@
           "data": {
             "pathName": "Source-Reef 2"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "End"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Blue 1",
   "choreoAuto": false
 }
