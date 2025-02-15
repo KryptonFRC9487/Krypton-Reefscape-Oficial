@@ -3,11 +3,15 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import static edu.wpi.first.units.Units.Degree;
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;  
@@ -44,9 +48,9 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     outtakeMotor = new SparkMax(OuttakeConstants.OUTTAKE_ID, MotorType.kBrushless);
 
-    m_limitSwitch = new DigitalInput(3);
+    m_limitSwitch = new DigitalInput(2);
 
-    encoder = new DutyCycleEncoder(0, 360, 72);
+    encoder = new DutyCycleEncoder(0, 360, -163);
 
     pid = new PIDController(
         OuttakeConstants.kP,
@@ -59,25 +63,28 @@ public class OuttakeSubsystem extends SubsystemBase {
   }
 
   @Override
-    public void periodic() {
+  public void periodic() {
+    limitSwitch = m_limitSwitch.get();
 
     subsystemTracker.updateOuttakeRealPosition(outtakePose, getMeasurement());
-    
+
     switch (subsystemTracker.getElevatorPose()) {
       case INITAL:
-      if (subsystemTracker.getElevatorRealPosition() < 30.0)
-      setOuttakePosition(OuttakePose.INIT);
+        if (subsystemTracker.getElevatorRealPosition() < 30.0)
+          setOuttakePosition(OuttakePose.INIT);
       break;
       
       case L2:
-      setOuttakePosition(OuttakePose.MIDL2);
-      break;
+        setOuttakePosition(OuttakePose.MIDL2);
+        break;
       
       case L3:
-      setOuttakePosition(OuttakePose.INIT);
+        setOuttakePosition(OuttakePose.DEPOSIT);
+        break;
+
       case L4:
-      setOuttakePosition(OuttakePose.DEPOSIT);
-      break;
+        setOuttakePosition(OuttakePose.DEPOSIT);
+        break;
       
       default:
       break;
@@ -87,24 +94,18 @@ public class OuttakeSubsystem extends SubsystemBase {
     
     double pidOutput = pid.calculate(position);
     double output = pidOutput;
-    
-    SmartDashboard.putBoolean("Coletou", outtakeHasCoral());
 
-    SmartDashboard.putNumber("O. Current Pos", position);
-    SmartDashboard.putNumber("O. PID Output", pidOutput);
-    SmartDashboard.putNumber("O. Output", output);
-    SmartDashboard.putNumber("O. Setpoint", pid.getSetpoint());
-    SmartDashboard.putNumber("O. Left Power", leftPivotMotor.get());
-    SmartDashboard.putNumber("O. Right Power", rightPivotMotor.get());
+    SmartDashboard.putNumber("Arm. Current Pos", position);
+    SmartDashboard.putNumber("Arm. Output", output);
+    SmartDashboard.putNumber("Arm. Setpoint", pid.getSetpoint());
+    SmartDashboard.putNumber("Arm. Left Power", leftPivotMotor.get());
+    SmartDashboard.putNumber("Arm. Right Power", rightPivotMotor.get());
+    SmartDashboard.putData("Arm. PID", pid);
 
-
-    // Aplica a saída (descomente quando for necessário testar o movimento
-    // output = MathUtil.clamp(output, -0.18, 0.09);
-
-    SmartDashboard.putBoolean("Coleta Outtake",outtakeHasCoral());
+    SmartDashboard.putBoolean("Coleta Outtake", outtakeHasCoral());  
 
     // Aplica a saída (descomente quando for necessário testar o movimento)
-    // output = MathUtil.clamp(output, -0.18, 0.09);  
+    output = MathUtil.clamp(output, -0.22, 0.1);  
     
     leftPivotMotor.set(output);
     rightPivotMotor.set(output);
@@ -113,7 +114,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   // Função para obter a medição da posição (encoder)
   public double getMeasurement() {
     double rawAngle = encoder.get();
-
+    
     return (rawAngle > 180) ? rawAngle - 360 : rawAngle;
   }
 

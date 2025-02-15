@@ -3,44 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<< Updated upstream
-        "x": 7.612748344370861,
-        "y": 4.831312086092716
+        "x": 8.026800496688741,
+        "y": 4.802255794701987
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.009234984145463,
-        "y": 4.8803383541897025
-=======
-        "x": 8.048592715231788,
-        "y": 4.853104304635761
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 7.301362233702026,
-        "y": 4.877738986337761
->>>>>>> Stashed changes
+        "x": 8.6010370723921,
+        "y": 4.971023042123653
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.273716887417219,
-        "y": 5.158195364238411
+        "x": 5.819,
+        "y": 4.170281456953642
       },
       "prevControl": {
-<<<<<<< Updated upstream
-        "x": 6.428378244989169,
-        "y": 4.645800547134103
-=======
-        "x": 6.219183371903559,
-        "y": 4.778999147476972
->>>>>>> Stashed changes
+        "x": 5.395391419242221,
+        "y": 4.054406474551807
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "G"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -48,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -57,17 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -118.33913203589582
+    "rotation": -178.002
   },
   "reversed": false,
   "folder": "Blue 1",
   "idealStartingState": {
     "velocity": 0,
-<<<<<<< Updated upstream
-    "rotation": -179.15747573925952
-=======
-    "rotation": 179.46785635869244
->>>>>>> Stashed changes
+    "rotation": -178.83086067209257
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

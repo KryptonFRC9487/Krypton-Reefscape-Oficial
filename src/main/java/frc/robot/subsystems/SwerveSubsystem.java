@@ -36,6 +36,7 @@ import swervelib.parser.SwerveParser;
 /**
  * Classe de subsistema onde fazemos a ponte do nosso código para YAGSL
  */
+
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive swerveDrive;
   public boolean correctionPID = false;
@@ -64,6 +65,7 @@ public class SwerveSubsystem extends SubsystemBase {
     /**
    * Setup AutoBuilder for PathPlanner.
    */
+  
   public void setupPathPlanner()
   {
     // Load the RobotConfig from the GUI settings. You should probably
@@ -136,17 +138,12 @@ public class SwerveSubsystem extends SubsystemBase {
 public void periodic() {
     swerveDrive.updateOdometry();
     
-  //  getPitch();de´´
-  //  SmartDashboard.putNumber("Valar do pitch", getPitch()); 
-  //  SmartDashboard.putBoolean("Se subiu", getUp()); 
+    // updateOdometry();
 
-  LimelightHelpers.SetRobotOrientation("limelight",
-  robotYawInDegrees(),
-  getYawRate(),
-  0,
-  0,
-  0,
-  0);
+    LimelightHelpers.SetRobotOrientation("limelight" ,
+    robotYawInDegrees(),  
+    getYawRate(),
+    0, 0, 0, 0);
   }
 
   public void driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
@@ -185,18 +182,6 @@ public void periodic() {
   public Rotation2d getHeading() {
     return swerveDrive.getYaw();
   }
-
-  // public double getPitch(){
-  //   return pigeon.getPitch().getValueAsDouble();
-  // }
-
-  // public boolean getUp() {
-  //   if (getPitch() > 0.0) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }    
 
   public void resetOdometry(Pose2d posicao) {
     swerveDrive.resetOdometry(posicao);
@@ -271,11 +256,65 @@ public void periodic() {
     if (DriverStation.getAlliance().get() == Alliance.Blue) {
       return 0.0;
     } else {
-      return 180.0;
+      return 1800.0;
     }
   }
 
   public double getYawRate(){
     return pigeon.getAngularVelocityZWorld().getValueAsDouble();
   }
+
+//  public void updateOdometry(){
+//       poseEstimator.update(
+//         Rotation2d.fromDegrees(pigeon.getYaw().getValueAsDouble()),
+//         swerveDrive.getModulePositions());
+
+
+//       boolean useMegatag2 = true;
+//       boolean doRejectUpdate = false;
+     
+//       if (useMegatag2 == false) {
+//         LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+
+
+//         if (mt1.tagCount == 1) {
+//           if (mt1.rawFiducials[0].ambiguity > .7) {
+//             doRejectUpdate = true;
+//           }
+//           if (mt1.rawFiducials[0].ambiguity > 3) {
+//             doRejectUpdate = true;
+//           }
+//         }
+       
+//         if (mt1.tagCount == 0) {
+//           doRejectUpdate = true;
+//         }
+
+
+//         if (!doRejectUpdate) {
+//           System.out.println("Adicionando medição de visão");
+//           poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+//           poseEstimator.addVisionMeasurement(
+//             mt1.pose,
+//             mt1.timestampSeconds);
+//         }
+//       } else if (useMegatag2 == true) {
+//         LimelightHelpers.SetRobotOrientation("limelight", poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+//         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+
+//         if (swerveDrive.getFieldVelocity().omegaRadiansPerSecond > 50) {
+//           doRejectUpdate = true;
+//         }
+//         if (mt2.tagCount == 0) {
+//           doRejectUpdate = true;
+//         }
+//         if (!doRejectUpdate) {
+//             poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+//             poseEstimator.addVisionMeasurement(
+//               mt2.pose,
+//               mt2.timestampSeconds);
+//         }
+//       }
+//     }
 }

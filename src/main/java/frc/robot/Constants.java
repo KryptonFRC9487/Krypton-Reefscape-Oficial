@@ -7,6 +7,7 @@ import swervelib.math.Matter;
 import swervelib.math.SwerveMath;
 import swervelib.parser.PIDFConfig;
 
+
 /**
  * Classe Constants para armazenar constantes usadas no código do robô.
  * Organizada em classes internas para melhor separação de responsabilidades.
@@ -102,9 +103,9 @@ public final class Constants {
     public static enum ElevatorPose {
       INITAL(2),
       L1(2),
-      L2(10),
+      L2(11),
       L3(2),
-      L4(54);
+      L4(57);
 
       public final double value;
 
@@ -135,9 +136,9 @@ public final class Constants {
 
     // Feedforward Gains
     public static final double kS = 0.095388; // Tensão estática TODO
-    public static final double kG = 0.54402; // Gravidade TODO
-    public static final double kV = 7.43; // Velocidade TODO
-    public static final double kA = 1.0; // Aceleração TODO
+    public static final double kG = 0.54402;  // Gravidade TODO
+    public static final double kV = 7.43;     // Velocidade TODO
+    public static final double kA = 1.0;      // Aceleração TODO
 
     // Restrições de movimento
     public static final double MIN_HEIGHT_METERS = 0.005; // TODO
@@ -153,9 +154,10 @@ public final class Constants {
    */
   public static final class OuttakeConstants {
     public static enum OuttakePose {
-      INIT(101),
-      MIDL2(80),
-      DEPOSIT(-70);
+      INIT(85),
+      MIDL2(78),
+      DEPOSIT(-75);
+    
 
       public final double value;
 
@@ -170,9 +172,9 @@ public final class Constants {
     public static final double OUTTAKE_ENCODER_OFFSET = 79.0;
 
     // PID Gains Outtake
-    public static final double kP = 0.0067; 
-    public static final double kI = 0.0007;
-    public static final double kD = 0.0003;
+    public static final double kP = 0.0047;
+    public static final double kI = 0.00034;
+    public static final double kD = 0.0;
 
     // public static final double kP = 0.0; 
     // public static final double kI = 0.0;
@@ -219,6 +221,9 @@ public final class Constants {
     public static final int BUTTON_BACK = 7;
   }
 
+   /*
+   * Mapeamento dos botões POV
+   */
   public static final class POV {
 
     public static final int UP = 0;
