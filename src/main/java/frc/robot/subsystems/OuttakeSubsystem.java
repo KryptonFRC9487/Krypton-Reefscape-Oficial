@@ -2,9 +2,11 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Radian;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
@@ -20,6 +22,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -82,13 +85,13 @@ public class OuttakeSubsystem extends SubsystemBase {
     m_leftPivotEncoder = m_leftPivotMotor.getEncoder();
     m_rightPivotEncoder = m_rightPivotMotor.getEncoder();
     m_absoluteEncoder = m_rightPivotMotor.getAbsoluteEncoder();
-    m_encoder = new DutyCycleEncoder(0, 360.0, 191.0);
+    m_encoder = new DutyCycleEncoder(HardwareConfig.kAbsoluteEncoderId, 360.0, HardwareConfig.kOuttakeEncoderOffset);
     // m_encoder.setInverted(true);
 
     m_feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
     m_pid = new ProfiledPIDController(Gains.kP, Gains.kI, Gains.kD, TrapezoidProfileConstants.kConstraints);
     m_pid.setGoal(OuttakePose.INIT.value);
-    m_pid.setTolerance(0.5);
+    // m_pid.setTolerance(0.1);
 
     m_limitSwitch = new DigitalInput(3);
 
@@ -131,16 +134,17 @@ public class OuttakeSubsystem extends SubsystemBase {
         new SysIdRoutine.Mechanism(
             m_rightPivotMotor::setVoltage,
             log -> {
-              log.motor("arm")
+              log.motor("arm-2")
                   .voltage(m_appliedVoltage
                       .mut_replace(m_rightPivotMotor.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
                   .angularPosition(
-                      m_angle.mut_replace(getMeasurement(), Degree))
+                      m_angle.mut_replace(m_rightPivotEncoder.getPosition(), Rotations))
                   .angularVelocity(
-                      m_velocity.mut_replace(m_rightPivotEncoder.getVelocity(), DegreesPerSecond));
-
+                      m_velocity.mut_replace(m_rightPivotEncoder.getVelocity(), RotationsPerSecond));
             },
             this));
+
+    SmartDashboard.putData("Arm PID", m_pid);
   }
 
   private void synchronizeMotors() {
@@ -151,67 +155,63 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // m_subsystemTracker.updateOuttakeRealPosition(outtakePose, getMeasurement());
+    m_subsystemTracker.updateOuttakeRealPosition(outtakePose, getMeasurement());
 
-    // switch (m_subsystemTracker.getElevatorPose()) {
-    // case INITAL:
-    // if (m_subsystemTracker.getElevatorRealPosition() < 30.0)
-    // setOuttakePosition(OuttakePose.INIT);
-    // break;
+    switch (m_subsystemTracker.getElevatorPose()) {
+      case INITAL:
+        if (m_subsystemTracker.getElevatorRealPosition() < 30.0)
+          setOuttakePosition(OuttakePose.INIT);
+        break;
 
-    // case L2:
-    // setOuttakePosition(OuttakePose.MIDL2);
-    // break;
+      case L2:
+        setOuttakePosition(OuttakePose.MIDL2);
+        break;
 
-    // case L3:
-    // setOuttakePosition(OuttakePose.INIT);
+      case L3:
+        setOuttakePosition(OuttakePose.INIT);
 
-    // case L4:
-    // setOuttakePosition(OuttakePose.DEPOSIT);
-    // break;
+      case L4:
+        setOuttakePosition(OuttakePose.DEPOSIT);
+        break;
 
-    // default:
-    // break;
-    // }
+      default:
+        break;
+    }
 
-    // double position = getMeasurement();
-    // double velocity = pid.getSetpoint().velocity;
+    double position = Degrees.of(getMeasurement()).in(Radians);
+    double velocity = m_pid.getSetpoint().velocity;
 
-    // double pidOutput = pid.calculate(position);
-    // double feedforwardOutput = feedforward.calculate(position, velocity);
-    // double output = pidOutput + feedforwardOutput;
+    double pidOutput = m_pid.calculate(position);
+    double output = pidOutput;
 
-    // output = MathUtil.clamp(output, -0.18, 0.09);
+    double feedforwardOutput = m_feedforward.calculate(position, velocity);
 
-    // SmartDashboard.putNumber("O. Current Pos Radians", position);
-    // SmartDashboard.putNumber("O. Current Pos Degrees", Math.toDegrees(position));
-    // SmartDashboard.putNumber("O. PID Output", pidOutput);
-    // SmartDashboard.putNumber("O. Output", output);
-    // SmartDashboard.putNumber("O. Setpoint Radians", pid.getSetpoint().position);
-    // SmartDashboard.putNumber("O. Setpoint Degrees",
-    // Math.toDegrees(pid.getSetpoint().position));
-    // SmartDashboard.putNumber("O. Left Power", leftPivotMotor.get());
-    // SmartDashboard.putNumber("O. Right Power", rightPivotMotor.get());
+    if (feedforwardOutput > 0)
+      output += feedforwardOutput;
 
-    // leftPivotMotor.set(output);
-    // rightPivotMotor.set(output);
+    m_rightPivotMotor.set(output);
 
-    SmartDashboard.putNumber("Arm. Absolute Encoder", m_encoder.get());
-    SmartDashboard.putNumber("Arm. Relative Encoder", getMeasurement());
-    SmartDashboard.putNumber("Arm. Relative Angle Degree", getAngle().in(Degree));
-    SmartDashboard.putNumber("Arm. Setpoint", outtakePose.value);
+  SmartDashboard.putNumber("Arm PID Output", pidOutput);
+  SmartDashboard.putNumber("Arm FF Output", feedforwardOutput);
+  SmartDashboard.putNumber("Arm Output", output);
+  SmartDashboard.putNumber("Arm Position", Radians.of(position).in(Degrees));
+  SmartDashboard.putNumber("Arm Velocity", velocity);
+  SmartDashboard.putNumber("Arm Setpoint", Radians.of(outtakePose.value).in(Degrees));
   }
 
   // Função para obter a medição da posição (encoder)
   public double getMeasurement() {
-    return Rotations.of(m_rightPivotEncoder.getPosition()).in(Degree);
+    // return Rotations.of(m_rightPivotEncoder.getPosition()).in(Degree);
+    double rawAngle = m_encoder.get();
+
+    return -((rawAngle > 180) ? rawAngle - 360 : rawAngle);
   }
 
   // Função para definir a posição do outtake
   public void setOuttakePosition(OuttakePose outtakePose) {
     this.outtakePose = outtakePose;
 
-    // m_pid.setGoal(outtakePose.value);
+    m_pid.setGoal(outtakePose.value);
   }
 
   // Função para definir a velocidade do outtake

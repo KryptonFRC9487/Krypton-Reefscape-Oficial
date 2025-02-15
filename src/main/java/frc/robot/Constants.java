@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -160,37 +161,39 @@ public final class Constants {
      */
     public static enum OuttakePose {
       // INIT(95),
-      INIT(-90),
+      INIT(-96),
       MIDL2(80),
       // DEPOSIT(-70);
-      DEPOSIT(-75);
+      DEPOSIT(-75),
+      VERTICAL(-90),
+      HORIZONTAL(0);
 
       public final double value;
 
       private OuttakePose(double value) {
-        this.value = value;
+        this.value = Degrees.of(value).in(Radians);
       }
     }
 
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.0; // 0.0065
-      public static final double kI = 0.0; // 0.0007
-      public static final double kD = 0.0; // 0.0003
+      public static final double kP = 0.11; // 0.0065
+      public static final double kI = 0.00; // 0.02
+      public static final double kD = 0.015; // 0.0003
 
-      // Ganhos de Feedforward // MIN DOWN -0.03985 MIN UP -0.09
-      public static final double kG = 0.2465; // Gravidade
-      public static final double kV = 0.87525; // Velocidade
-      public static final double kS = 0.38107; // Tensão estática
-      public static final double kA = 0.62714; // Aceleração
+      // Ganhos de Feedforward // MIN DOWN -0.036 MIN UP -0.071
+      public static final double kG = 0.0535; // Gravidade
+      public static final double kV = 0.0175; // Velocidade
+      public static final double kS = 0.0; // Tensão estática
+      public static final double kA = 0.0; // Aceleração
     }
 
     /**
      * Restrições do perfil trapezoidal.
      */
     public static final class TrapezoidProfileConstants {
-      public static final double kMaxVelocity = 25.0; // Velocidade máxima (rad/s)
-      public static final double kMaxAcceleration = 5.0; // Aceleração máxima (rad/s^2)
+      public static final double kMaxVelocity = 50.0; // Velocidade máxima (rad/s)
+      public static final double kMaxAcceleration = 25.0; // Aceleração máxima (rad/s^2)
       public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity,
           kMaxAcceleration);
     }
@@ -212,7 +215,10 @@ public final class Constants {
       public static final int kLeftPivotId = 14;
       public static final int kRightPivotId = 17;
       public static final int kOuttakeId = 18;
-      public static final double kOuttakeEncoderOffset = 79.0;
+      public static final int kAbsoluteEncoderId = 0;
+
+      public static final double kOuttakeEncoderOffset = 191.0;
+
       public static final double kGearRatio = 1.0 / 20.0;
     }
   }
