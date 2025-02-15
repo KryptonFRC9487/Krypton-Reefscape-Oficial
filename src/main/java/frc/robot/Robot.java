@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  // private RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer;
   private SysIdRoutineBot m_sysIdRoutineBot;
 
   public Robot() {
@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
     if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
   }
 
   @Override

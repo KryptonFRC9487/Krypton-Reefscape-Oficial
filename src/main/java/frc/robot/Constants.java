@@ -160,15 +160,15 @@ public final class Constants {
      */
     public static enum OuttakePose {
       // INIT(95),
-      INIT(0),
+      INIT(-90),
       MIDL2(80),
       // DEPOSIT(-70);
-      DEPOSIT(90);
+      DEPOSIT(-75);
 
       public final double value;
 
       private OuttakePose(double value) {
-        this.value = Math.toRadians(value);
+        this.value = value;
       }
     }
 
@@ -201,7 +201,6 @@ public final class Constants {
     public static final class ArmConfig {
       public static final int kStallCurrentLimit = 40;
       public static final double kClosedLoopRate = 0.5;
-      public static final double kReduction = 1.0 / 15.0;
       public static final Angle kMinAngle = Degrees.of(-98.0);
       public static final Angle kMaxAngle = Degrees.of(87.0);
     }
@@ -214,6 +213,7 @@ public final class Constants {
       public static final int kRightPivotId = 17;
       public static final int kOuttakeId = 18;
       public static final double kOuttakeEncoderOffset = 79.0;
+      public static final double kGearRatio = 1.0 / 20.0;
     }
   }
 

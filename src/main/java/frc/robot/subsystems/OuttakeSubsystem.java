@@ -1,7 +1,13 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.*;
-import static frc.robot.Constants.OuttakeConstants.*;
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
@@ -75,8 +81,8 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     m_leftPivotEncoder = m_leftPivotMotor.getEncoder();
     m_rightPivotEncoder = m_rightPivotMotor.getEncoder();
-    m_absoluteEncoder = m_leftPivotMotor.getAbsoluteEncoder();
-    m_encoder = new DutyCycleEncoder(0, 360.0, 72.0);
+    m_absoluteEncoder = m_rightPivotMotor.getAbsoluteEncoder();
+    m_encoder = new DutyCycleEncoder(0, 360.0, 191.0);
     // m_encoder.setInverted(true);
 
     m_feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
@@ -86,29 +92,30 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     m_limitSwitch = new DigitalInput(3);
 
-    m_armPivotController = m_leftPivotMotor.getClosedLoopController();
+    m_armPivotController = m_rightPivotMotor.getClosedLoopController();
 
     m_leftPivotConfig = new SparkMaxConfig();
     m_rightPivotConfig = new SparkMaxConfig();
 
-    m_leftPivotConfig.idleMode(IdleMode.kBrake).inverted(true)
+    m_rightPivotConfig.idleMode(IdleMode.kBrake)
         .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
         .closedLoopRampRate(ArmConfig.kClosedLoopRate).closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(Gains.kP, Gains.kI, Gains.kD)
         .outputRange(-1.0, 1.0);
+    // .outputRange(-0.05, 0.05);
 
-    m_leftPivotConfig.encoder
-        .positionConversionFactor(1.0 / 15.0)
-        .velocityConversionFactor(1.0 / 15.0);
+    m_rightPivotConfig.encoder
+        .positionConversionFactor(HardwareConfig.kGearRatio)
+        .velocityConversionFactor(HardwareConfig.kGearRatio);
 
     m_rightPivotConfig.idleMode(IdleMode.kBrake)
         .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
         .closedLoopRampRate(ArmConfig.kClosedLoopRate).encoder
-        .positionConversionFactor(1.0 / 15.0)
-        .velocityConversionFactor(1.0 / 15.0);
+        .positionConversionFactor(HardwareConfig.kGearRatio)
+        .velocityConversionFactor(HardwareConfig.kGearRatio);
 
-    m_rightPivotConfig.follow(m_leftPivotMotor, true);
+    m_leftPivotConfig.follow(m_rightPivotMotor, true);
 
     m_leftPivotMotor.configure(m_leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_rightPivotMotor.configure(m_rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -122,15 +129,15 @@ public class OuttakeSubsystem extends SubsystemBase {
             Volts.of(1),
             Seconds.of(30)),
         new SysIdRoutine.Mechanism(
-            m_leftPivotMotor::setVoltage,
+            m_rightPivotMotor::setVoltage,
             log -> {
               log.motor("arm")
                   .voltage(m_appliedVoltage
-                      .mut_replace(m_leftPivotMotor.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
+                      .mut_replace(m_rightPivotMotor.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
                   .angularPosition(
-                      m_angle.mut_replace(m_leftPivotEncoder.getPosition(), Rotations))
+                      m_angle.mut_replace(getMeasurement(), Degree))
                   .angularVelocity(
-                      m_velocity.mut_replace(m_leftPivotEncoder.getVelocity(), RPM));
+                      m_velocity.mut_replace(m_rightPivotEncoder.getVelocity(), DegreesPerSecond));
 
             },
             this));
@@ -144,11 +151,11 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // subsystemTracker.updateOuttakeRealPosition(outtakePose, getMeasurement());
+    // m_subsystemTracker.updateOuttakeRealPosition(outtakePose, getMeasurement());
 
-    // switch (subsystemTracker.getElevatorPose()) {
+    // switch (m_subsystemTracker.getElevatorPose()) {
     // case INITAL:
-    // if (subsystemTracker.getElevatorRealPosition() < 30.0)
+    // if (m_subsystemTracker.getElevatorRealPosition() < 30.0)
     // setOuttakePosition(OuttakePose.INIT);
     // break;
 
@@ -189,21 +196,22 @@ public class OuttakeSubsystem extends SubsystemBase {
     // leftPivotMotor.set(output);
     // rightPivotMotor.set(output);
 
-    SmartDashboard.putNumber("Relative Encoder", getMeasurement());
-    SmartDashboard.putNumber("Absolute Encoder", m_encoder.get());
-    SmartDashboard.putNumber("Relative Angle Degree", getAngle().in(Degree));
+    SmartDashboard.putNumber("Arm. Absolute Encoder", m_encoder.get());
+    SmartDashboard.putNumber("Arm. Relative Encoder", getMeasurement());
+    SmartDashboard.putNumber("Arm. Relative Angle Degree", getAngle().in(Degree));
+    SmartDashboard.putNumber("Arm. Setpoint", outtakePose.value);
   }
 
   // Função para obter a medição da posição (encoder)
   public double getMeasurement() {
-    return Rotations.of(m_leftPivotEncoder.getPosition()).in(Degree);
+    return Rotations.of(m_rightPivotEncoder.getPosition()).in(Degree);
   }
 
   // Função para definir a posição do outtake
   public void setOuttakePosition(OuttakePose outtakePose) {
     this.outtakePose = outtakePose;
 
-    m_pid.setGoal(outtakePose.value);
+    // m_pid.setGoal(outtakePose.value);
   }
 
   // Função para definir a velocidade do outtake
