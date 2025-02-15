@@ -1,14 +1,13 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -64,9 +63,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void setTarget(ElevatorPose elevatorPose) {
     this.elevatorPose = elevatorPose;
 
-    leftClosedLoopController.setReference(
-        elevatorPose.value,
-        ControlType.kPosition);
+    // leftClosedLoopController.setReference(
+    // elevatorPose.value,
+    // ControlType.kPosition);
   }
 
   @Override
@@ -76,7 +75,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("L. Elevator Position (Rotations)", leftEncoder.getPosition());
     SmartDashboard.putNumber("L. Elevator Velocity (Rotations per Second)", leftEncoder.getVelocity());
     SmartDashboard.putNumber("L. Elevator Applied Voltage", leftMotor.getAppliedOutput() * leftMotor.getBusVoltage());
-    SmartDashboard.putNumber("R. Elevator Applied Output", leftMotor.getAppliedOutput());
+    SmartDashboard.putNumber("L. Elevator Applied Output", leftMotor.getAppliedOutput());
 
     SmartDashboard.putNumber("R. Elevator Position (Rotations)", rightEncoder.getPosition());
     SmartDashboard.putNumber("R. Elevator Velocity (Rotations per Second)", rightEncoder.getVelocity());

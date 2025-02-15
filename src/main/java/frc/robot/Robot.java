@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -18,21 +16,20 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  Spark m_led = new Spark(0);
-  XboxController con = new XboxController(3);
+  private SysIdRoutineBot m_sysIdRoutineBot;
 
   public Robot() {
-
   }
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    // m_sysIdRoutineBot = new SysIdRoutineBot();
 
     if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
   }
   
 
@@ -77,23 +74,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    if (con.getRawButton(XboxController.Button.kA.value)) {
-      m_led.set(0.69);
-    }
-    if (con.getRawButton(XboxController.Button.kB.value)) {
-      m_led.set(0.61);
-    }
-    if (con.getRawButton(XboxController.Button.kY.value)) {
-      m_led.set(0.77);
-    }
-    if (con.getRawButton(XboxController.Button.kX.value)) {
-      m_led.set(0.143);
-    }
-
-    //A - verde
-    //B - azul
-    //Y - rosa
-
   }
 
   @Override
