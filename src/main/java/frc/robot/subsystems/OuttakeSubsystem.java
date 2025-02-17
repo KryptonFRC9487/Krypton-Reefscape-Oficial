@@ -93,7 +93,7 @@ public class OuttakeSubsystem extends SubsystemBase {
     m_pid.setGoal(OuttakePose.INIT.value);
     // m_pid.setTolerance(0.1);
 
-    m_limitSwitch = new DigitalInput(3);
+    m_limitSwitch = new DigitalInput(2);
 
     m_armPivotController = m_rightPivotMotor.getClosedLoopController();
 
@@ -197,6 +197,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   SmartDashboard.putNumber("Arm Position", Radians.of(position).in(Degrees));
   SmartDashboard.putNumber("Arm Velocity", velocity);
   SmartDashboard.putNumber("Arm Setpoint", Radians.of(outtakePose.value).in(Degrees));
+
   }
 
   // Função para obter a medição da posição (encoder)

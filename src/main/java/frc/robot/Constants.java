@@ -160,13 +160,11 @@ public final class Constants {
      * Configurações de poses do outtake.
      */
     public static enum OuttakePose {
-      // INIT(95),
-      INIT(-96),
-      MIDL2(80),
-      // DEPOSIT(-70);
-      DEPOSIT(-75),
-      VERTICAL(-90),
-      HORIZONTAL(0);
+      INIT(-96.5),
+      MIDL2(-90),
+      DEPOSIT(68);
+      // VERTICAL(-90),
+      // HORIZONTAL(0)
 
       public final double value;
 
