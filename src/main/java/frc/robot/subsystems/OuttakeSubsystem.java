@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -22,7 +20,6 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -49,7 +46,6 @@ import frc.robot.utils.SubsystemTracker;
 
 public class OuttakeSubsystem extends SubsystemBase {
 
-  private final DCMotor armGearbox = DCMotor.getNEO(2);
 
   private final SparkMax m_leftPivotMotor, m_rightPivotMotor, m_outtakeMotor;
   private final SparkMaxConfig m_leftPivotConfig, m_rightPivotConfig;

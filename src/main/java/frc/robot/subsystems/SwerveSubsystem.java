@@ -16,11 +16,13 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,8 +45,15 @@ public class SwerveSubsystem extends SubsystemBase {
   private final CorePigeon2 pigeon;
 
 
+  private final SwerveDrivePoseEstimator poseEstimator;
+  private final VisionSubsystem vision;
+
+
+
   // Método construtor da classe
-  public SwerveSubsystem(File directory) {
+  public SwerveSubsystem(File directory, VisionSubsystem vision) {
+
+    this.vision = vision;
 
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
@@ -54,10 +63,13 @@ public class SwerveSubsystem extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
-    // autonomo.setupPathPlanner();
     pigeon = new CorePigeon2(13);
 
-    swerveDrive.setHeadingCorrection(true);
+    poseEstimator = new SwerveDrivePoseEstimator(
+      swerveDrive.kinematics, getHeading(),
+      swerveDrive.getModulePositions(), getPose());
+
+      swerveDrive.setHeadingCorrection(true);
 
     setupPathPlanner();
   }
@@ -65,6 +77,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /**
    * Setup AutoBuilder for PathPlanner.
    */
+
   public void setupPathPlanner() {
     // Load the RobotConfig from the GUI settings. You should probably
     // store this in your Constants file
@@ -96,9 +109,9 @@ public class SwerveSubsystem extends SubsystemBase {
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic
               // drive trains
-              new PIDConstants(5.0, 0.0, 0.0),
+              new PIDConstants(1.2, 0.0, 0.0),
               // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0)
+              new PIDConstants( 3.6, 0.0, 0.0)
           // Rotation PID constants
           ),
           config,
@@ -131,9 +144,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
 public void periodic() {
-    swerveDrive.updateOdometry();
+
+
+    updateOdometry();
     
-    // updateOdometry();
 
     LimelightHelpers.SetRobotOrientation("limelight" ,
     robotYawInDegrees(),  
@@ -160,6 +174,7 @@ public void periodic() {
 
   public Pose2d getPose() {
     return swerveDrive.getPose();
+    
   }
 
   public ChassisSpeeds getFieldVelocity() {
@@ -231,7 +246,6 @@ public void periodic() {
   }
 
 
-
   public Command driveToPose(Pose2d pose) {
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
@@ -258,57 +272,20 @@ public void periodic() {
     return pigeon.getAngularVelocityZWorld().getValueAsDouble();
   }
 
-//  public void updateOdometry(){
-//       poseEstimator.update(
-//         Rotation2d.fromDegrees(pigeon.getYaw().getValueAsDouble()),
-//         swerveDrive.getModulePositions());
+ public void updateOdometry(){
 
+  Rotation2d gyroRotation2d = swerveDrive.getGyroRotation3d().toRotation2d();
+  poseEstimator.update(gyroRotation2d, swerveDrive.getModulePositions());
 
-//       boolean useMegatag2 = true;
-//       boolean doRejectUpdate = false;
-     
-//       if (useMegatag2 == false) {
-//         LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+    //Tenta obter a posição da visão 
+    Pose2d visionPose = vision.getEstimatedPose();
+      if(visionPose != null){
+        double timestemp = Timer.getFPGATimestamp(); // Tempo atual do robô
+        poseEstimator.addVisionMeasurement(visionPose, timestemp);
+      }
+    }
 
-
-//         if (mt1.tagCount == 1) {
-//           if (mt1.rawFiducials[0].ambiguity > .7) {
-//             doRejectUpdate = true;
-//           }
-//           if (mt1.rawFiducials[0].ambiguity > 3) {
-//             doRejectUpdate = true;
-//           }
-//         }
-       
-//         if (mt1.tagCount == 0) {
-//           doRejectUpdate = true;
-//         }
-
-
-//         if (!doRejectUpdate) {
-//           System.out.println("Adicionando medição de visão");
-//           poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
-//           poseEstimator.addVisionMeasurement(
-//             mt1.pose,
-//             mt1.timestampSeconds);
-//         }
-//       } else if (useMegatag2 == true) {
-//         LimelightHelpers.SetRobotOrientation("limelight", poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-//         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-
-
-//         if (swerveDrive.getFieldVelocity().omegaRadiansPerSecond > 50) {
-//           doRejectUpdate = true;
-//         }
-//         if (mt2.tagCount == 0) {
-//           doRejectUpdate = true;
-//         }
-//         if (!doRejectUpdate) {
-//             poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
-//             poseEstimator.addVisionMeasurement(
-//               mt2.pose,
-//               mt2.timestampSeconds);
-//         }
-//       }
-//     }
+    public Pose2d getPoses(){
+      return poseEstimator.getEstimatedPosition();
+    }
 }

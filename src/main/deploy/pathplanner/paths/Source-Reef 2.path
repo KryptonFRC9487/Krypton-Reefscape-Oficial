@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.467,
-        "y": 7.228
+        "x": 0.676,
+        "y": 6.64
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0963002620432674,
-        "y": 7.280667359420343
+        "x": 1.3053002620432674,
+        "y": 6.6926673594203425
       },
       "isLocked": false,
       "linkedName": "Pickup"
@@ -48,7 +48,7 @@
   "folder": "Blue 1",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -60.255
+    "rotation": -53.499
   },
   "useDefaultConstraints": false
 }
