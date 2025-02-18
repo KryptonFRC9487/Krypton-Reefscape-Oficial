@@ -10,10 +10,10 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.ElevatorConstants.ElevatorPose;
-import frc.robot.utils.SubsystemTracker;
+import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -21,12 +21,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMaxConfig leftMotorConfig, rightMotorConfig;
   private final SparkClosedLoopController leftClosedLoopController;
   private final RelativeEncoder leftEncoder, rightEncoder;
-  private final SubsystemTracker subsystemTracker;
-  private ElevatorPose elevatorPose = ElevatorPose.INITAL;
 
-  public ElevatorSubsystem(SubsystemTracker subsystemTracker) {
-    this.subsystemTracker = subsystemTracker;
-
+  public ElevatorSubsystem() {
     leftMotor = new SparkMax(ElevatorConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     rightMotor = new SparkMax(ElevatorConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
@@ -48,7 +44,8 @@ public class ElevatorSubsystem extends SubsystemBase {
           ElevatorConstants.kFF 
         )
         .velocityFF(ElevatorConstants.kVelocityFF)
-        .outputRange(-1.0, 1.0);
+        // .outputRange(-1.0, 1.0);
+        .outputRange(-0.2, 0.2);
 
     leftMotorConfig.encoder
         .positionConversionFactor(1)
@@ -60,18 +57,22 @@ public class ElevatorSubsystem extends SubsystemBase {
     rightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
-  public void setTarget(ElevatorPose elevatorPose) {
-    this.elevatorPose = elevatorPose;
-
+  public void setElevatorPose(ReefsScorePose reefsScorePose) {
     // leftClosedLoopController.setReference(
-    // elevatorPose.value,
+    // reefsScorePose.height,
     // ControlType.kPosition);
+  }
+
+  public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
+    return run(() -> setElevatorPose(reefsScorePose));
+  }
+
+  public double getElevatorPosition() {
+    return leftEncoder.getPosition();
   }
 
   @Override
   public void periodic() {
-    subsystemTracker.updateElevatorRealPosition(elevatorPose, leftEncoder.getPosition());
-
     SmartDashboard.putNumber("L. Elevator Position (Rotations)", leftEncoder.getPosition());
     SmartDashboard.putNumber("L. Elevator Velocity (Rotations per Second)", leftEncoder.getVelocity());
     SmartDashboard.putNumber("L. Elevator Applied Voltage", leftMotor.getAppliedOutput() * leftMotor.getBusVoltage());

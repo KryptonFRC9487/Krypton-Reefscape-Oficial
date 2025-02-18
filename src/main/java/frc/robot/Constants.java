@@ -160,13 +160,11 @@ public final class Constants {
      * Configurações de poses do outtake.
      */
     public static enum OuttakePose {
-      // INIT(95),
-      INIT(-96),
-      MIDL2(80),
-      // DEPOSIT(-70);
-      DEPOSIT(-75),
-      VERTICAL(-90),
-      HORIZONTAL(0);
+      INITAL(-96),
+      L1(75),
+      L2(75),
+      L3(75),
+      L4(75);
 
       public final double value;
 
@@ -220,6 +218,25 @@ public final class Constants {
       public static final double kOuttakeEncoderOffset = 191.0;
 
       public static final double kGearRatio = 1.0 / 20.0;
+    }
+  }
+
+  public static final class ReefsConstants {
+
+    public static enum ReefsScorePose {
+      INITAL(2, -96),
+      L1(2, 75),
+      L2(11, 75),
+      L3(2, 75),
+      L4(57, 75);
+
+      public final double height;
+      public final double angle;
+
+      private ReefsScorePose(double height, double angle) {
+        this.height = height;
+        this.angle = angle;
+      }
     }
   }
 
