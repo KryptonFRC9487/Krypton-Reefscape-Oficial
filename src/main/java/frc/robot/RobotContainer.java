@@ -130,10 +130,10 @@ public class RobotContainer {
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
         .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
 
-    m_p2Controller.pov(POV.DOWN).onTrue(Commands.runOnce(() -> m_scoreSystem.scoreCoral(ReefsScorePose.INITAL)));
-    m_p2Controller.pov(POV.RIGHT).onTrue(Commands.runOnce(() -> m_scoreSystem.scoreCoral(ReefsScorePose.L2)));
-    m_p2Controller.pov(POV.LEFT).onTrue(Commands.runOnce(() -> m_scoreSystem.scoreCoral(ReefsScorePose.L3)));
-    m_p2Controller.pov(POV.UP).onTrue(Commands.runOnce(() -> m_scoreSystem.scoreCoral(ReefsScorePose.L4)));
+    m_p2Controller.pov(POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
+    m_p2Controller.pov(POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
+    m_p2Controller.pov(POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
+    m_p2Controller.pov(POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
         
     // ToPose Commands
     if (Robot.isSimulation()) {
@@ -151,7 +151,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-
     return autoChooser.getSelected();
   }
 
@@ -160,8 +159,11 @@ public class RobotContainer {
     swerveSubsystem.getSwerveDrive().setHeadingCorrection(setHeadingCorrection);
   }
 
-  public SwerveSubsystem getSwerveSubsystem(){
-
+  public SwerveSubsystem getSwerveSubsystem() {
     return swerveSubsystem;
+  }
+
+  public void updateTelemetry() {
+    m_scoreSystem.updateTelemetry();
   }
 }

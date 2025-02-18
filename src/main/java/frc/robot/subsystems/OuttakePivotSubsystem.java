@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
+import static frc.robot.Constants.OuttakeConstants.ArmConfig.kMinSafeAngle;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -160,16 +161,24 @@ public class OuttakePivotSubsystem extends SubsystemBase {
   }
 
   // Função para definir a posição do outtake
-  public void setOuttakePosition(ReefsScorePose reefsScorePose) {
+  public void setOuttakePose(ReefsScorePose reefsScorePose) {
     m_pid.setGoal(Degrees.of(reefsScorePose.angle).in(Radians));
   }
 
+  public void setOuttakePose(double angle) {
+    m_pid.setGoal(Degrees.of(angle).in(Radians));
+  }
+
   public Command setOuttakePositionCmd(ReefsScorePose reefsScorePose) {
-    return runOnce(() -> setOuttakePosition(reefsScorePose));
+    return runOnce(() -> setOuttakePose(reefsScorePose));
+  }
+
+  public Command setOuttakePositionCmd(double angle) {
+    return runOnce(() -> setOuttakePose(angle));
   }
 
   public boolean outtakeIsSafe() {
-    return getAngle().gte(Degrees.of(ReefsScorePose.L4.angle).minus(Degrees.of(15)));
+    return getAngle().gte(kMinSafeAngle.minus(Degrees.of(10.0)));
   }
 
   public Command runSysIdRoutine() {

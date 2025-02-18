@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -45,7 +46,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         )
         .velocityFF(ElevatorConstants.kVelocityFF)
         // .outputRange(-1.0, 1.0);
-        .outputRange(-0.2, 0.2);
+        .outputRange(-0.8, 0.8);
 
     leftMotorConfig.encoder
         .positionConversionFactor(1)
@@ -58,9 +59,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setElevatorPose(ReefsScorePose reefsScorePose) {
-    // leftClosedLoopController.setReference(
-    // reefsScorePose.height,
-    // ControlType.kPosition);
+    leftClosedLoopController.setReference(
+        reefsScorePose.height,
+        ControlType.kPosition);
   }
 
   public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
