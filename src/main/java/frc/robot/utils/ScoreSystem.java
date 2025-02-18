@@ -13,6 +13,8 @@ public class ScoreSystem {
   public ScoreSystem(ElevatorSubsystem elevatorSubsystem, OuttakePivotSubsystem outtakeSubsystem) {
     m_elevatorSubsystem = elevatorSubsystem;
     m_outtakeSubsystem = outtakeSubsystem;
+
+    m_reefsScorePose = ReefsScorePose.INITAL;
   }
 
   public Command scoreCoral(ReefsScorePose reefsScorePose) {
