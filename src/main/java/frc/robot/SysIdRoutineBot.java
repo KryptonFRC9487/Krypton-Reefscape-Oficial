@@ -2,12 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.OuttakeSubsystem;
-import frc.robot.utils.SubsystemTracker;
+import frc.robot.subsystems.OuttakePivotSubsystem;
 
 public class SysIdRoutineBot {
-  private final SubsystemTracker m_subsystemTracker = new SubsystemTracker();
-  private final OuttakeSubsystem m_outtake = new OuttakeSubsystem(m_subsystemTracker);
+  private final OuttakePivotSubsystem m_outtake = new OuttakePivotSubsystem();
 
   CommandXboxController m_driverController = new CommandXboxController(Constants.GamepadConstants.P2_PORT);
 

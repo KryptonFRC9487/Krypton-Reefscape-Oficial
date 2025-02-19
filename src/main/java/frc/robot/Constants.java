@@ -1,7 +1,6 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -93,20 +92,6 @@ public final class Constants {
    */
   public static final class ElevatorConstants {
 
-    public static enum ElevatorPose {
-      INITAL(2),
-      L1(2),
-      L2(11),
-      L3(2),
-      L4(57);
-
-      public final double value;
-
-      private ElevatorPose(double value) {
-        this.value = value;
-      }
-    }
-
     // IDs dos motores
     public static final int LEFT_MOTOR_ID = 15;
     public static final int RIGHT_MOTOR_ID = 16;
@@ -146,25 +131,8 @@ public final class Constants {
    * Configurações do sistema de outtake.
    */
   public static final class OuttakeConstants {
-    /**
-     * Configurações de poses do outtake.
-     */
-    public static enum OuttakePose {  
-      INIT(-96.5),
-      MIDL2(-90),
-      DEPOSIT(70);
-      // VERTICAL(-90),
-      // HORIZONTAL(0)
-
-      public final double value;
-
-      private OuttakePose(double value) { 
-        this.value = Degrees.of(value).in(Radians);
-      }
-    }
-
     public static class Gains {
-      // Ganhos PID para o Outtake    
+      // Ganhos PID para o Outtake
       public static final double kP = 0.13; // 0.0065
       public static final double kI = 0.00; // 0.02
       public static final double kD = 0.015; // 0.0003
@@ -194,6 +162,7 @@ public final class Constants {
       public static final double kClosedLoopRate = 0.5;
       public static final Angle kMinAngle = Degrees.of(-98.0);
       public static final Angle kMaxAngle = Degrees.of(87.0);
+      public static final Angle kMinSafeAngle = Degrees.of(-45.0);
     }
 
     /**
@@ -205,9 +174,28 @@ public final class Constants {
       public static final int kOuttakeId = 18;
       public static final int kAbsoluteEncoderId = 0;
 
-      public static final double kOuttakeEncoderOffset = 191.0;
+      public static final double kOuttakeEncoderOffset = 129.0;
 
       public static final double kGearRatio = 1.0 / 20.0;
+    }
+  }
+
+  public static final class ReefsConstants {
+
+    public static enum ReefsScorePose {
+      INITAL(2, -96),
+      L1(2, 75),
+      L2(11, -80),
+      L3(2, 75),
+      L4(57, 75);
+
+      public final double height;
+      public final double angle;
+
+      private ReefsScorePose(double height, double angle) {
+        this.height = height;
+        this.angle = angle;
+      }
     }
   }
 

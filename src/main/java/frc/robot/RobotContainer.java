@@ -21,19 +21,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.GamepadConstants;
-import frc.robot.Constants.ElevatorConstants.ElevatorPose;
+import frc.robot.Constants.POV;
+import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.teleOp.SwerveCommand;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.utils.SubsystemTracker;
-import frc.robot.commands.teleOp.SwerveCommand;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.Constants.POV;
-
+import frc.robot.utils.ScoreSystem;
 
 public class RobotContainer { 
 
@@ -43,19 +43,22 @@ public class RobotContainer {
 
   private final VisionSubsystem vision = new VisionSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile, vision);
-  private final SubsystemTracker subsystemSupplier = new SubsystemTracker();
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(subsystemSupplier);
-  private final OuttakeSubsystem outtakeSubsystem = new OuttakeSubsystem(subsystemSupplier);
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+
+  private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
+  private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
+
+  private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
   );
 
-  private XboxController p2Controller = new XboxController(
-      GamepadConstants.P2_PORT
-  );
+  // private XboxController p2Controller = new XboxController(
+  // GamepadConstants.P2_PORT
+  // );
 
-  
+  private CommandXboxController m_p2Controller = new CommandXboxController(GamepadConstants.P2_PORT);
 
   public RobotContainer() {
 
@@ -85,11 +88,7 @@ public class RobotContainer {
         () -> p1Controller.getRightBumperButtonPressed()));
     }
 
-    outtakeSubsystem.setDefaultCommand(
-      new OuttakeCommand(
-        outtakeSubsystem, p2Controller
-      )
-    );
+    m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, m_p2Controller));
   }
 
   private void registerAutoCommands() {
@@ -141,19 +140,10 @@ public class RobotContainer {
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
         .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
 
-    // Elevator Commands
-    new POVButton(p2Controller, POV.DOWN)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.INITAL)));
-
-    new POVButton(p2Controller, POV.LEFT)
-      .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.L3)));
-
-    new POVButton(p2Controller, POV.UP)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.L4)));
-
-    new POVButton(p2Controller, POV.RIGHT)
-        .onTrue(new InstantCommand(() -> elevatorSubsystem.setTarget(ElevatorPose.L2)));
-
+    m_p2Controller.pov(POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
+    m_p2Controller.pov(POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
+    m_p2Controller.pov(POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
+    m_p2Controller.pov(POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
         
     // ToPose Commands
     if (Robot.isSimulation()) {
@@ -168,11 +158,9 @@ public class RobotContainer {
     new JoystickButton(p1Controller, XboxController.Button.kY.value)
         .toggleOnTrue(Commands.startEnd(
             swerveSubsystem::disableHeading, swerveSubsystem::resetHeading));
-
   }
 
   public Command getAutonomousCommand() {
-
     return autoChooser.getSelected();
   }
 
@@ -181,8 +169,7 @@ public class RobotContainer {
     swerveSubsystem.getSwerveDrive().setHeadingCorrection(setHeadingCorrection);
   }
 
-  public SwerveSubsystem getSwerveSubsystem(){
-
+  public SwerveSubsystem getSwerveSubsystem() {
     return swerveSubsystem;
   }
 }
