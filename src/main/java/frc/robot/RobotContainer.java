@@ -35,7 +35,6 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.ScoreSystem;
 
-
 public class RobotContainer { 
 
   private final File swerveConfigFile = new File(Filesystem.getDeployDirectory(), "swerve");
@@ -50,7 +49,6 @@ public class RobotContainer {
   private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
 
   private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
-
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -173,9 +171,5 @@ public class RobotContainer {
 
   public SwerveSubsystem getSwerveSubsystem() {
     return swerveSubsystem;
-  }
-
-  public void updateTelemetry() {
-    m_scoreSystem.updateTelemetry();
   }
 }

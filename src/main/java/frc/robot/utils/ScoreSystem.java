@@ -33,7 +33,7 @@ public class ScoreSystem {
     }
 
     return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
-        .alongWith(m_outtakeSubsystem.setOuttakePositionCmd(reefsScorePose));
+        .alongWith(m_outtakeSubsystem.setOuttakePositionCmd(m_reefsScorePose));
   }
 
   public void setReefsTarget(ReefsScorePose reefsScorePose) {
@@ -44,15 +44,13 @@ public class ScoreSystem {
     return m_reefsScorePose;
   }
 
-  public void updateTelemetry() {
-    SmartDashboard.putNumber("Reefs Target Angle", getReefsTarget().angle);
-    SmartDashboard.putNumber("Reefs Target Height", getReefsTarget().height);
-  }
-
   private void setInitialPose() {
     setReefsTarget(ReefsScorePose.INITAL);
 
     m_outtakeSubsystem.setOuttakePose(m_reefsScorePose);
     m_elevatorSubsystem.setElevatorPose(m_reefsScorePose);
+  }
+
+  public void updateTelemetry() {
   }
 }
