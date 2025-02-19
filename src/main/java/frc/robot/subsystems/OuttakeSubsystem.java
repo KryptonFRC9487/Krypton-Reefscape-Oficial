@@ -14,7 +14,7 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   public OuttakeSubsystem() {
     m_outtakeMotor = new SparkMax(HardwareConfig.kOuttakeId, MotorType.kBrushless);
-    m_limitSwitch = new DigitalInput(3);
+    m_limitSwitch = new DigitalInput(2);
   }
 
   public void setOuttakeSpeed(double speed) {

@@ -151,7 +151,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Velocity", velocity);
     SmartDashboard.putNumber("Arm Setpoint", Radians.of(m_pid.getSetpoint().position).in(Degrees));
   }
-
+  
   // Função para obter a medição da posição (encoder)
   public double getOuttakePosition() {
     // return Rotations.of(m_rightPivotEncoder.getPosition()).in(Degree);

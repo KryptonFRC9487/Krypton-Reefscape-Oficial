@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.core.CorePigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -16,11 +17,13 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -45,15 +48,16 @@ public class SwerveSubsystem extends SubsystemBase {
   private final CorePigeon2 pigeon;
 
 
-  private final SwerveDrivePoseEstimator poseEstimator;
-  private final VisionSubsystem vision;
+  private final SwerveDrivePoseEstimator m_poseEstimator;
+
 
 
 
   // Método construtor da classe
   public SwerveSubsystem(File directory, VisionSubsystem vision) {
 
-    this.vision = vision;
+    
+
 
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
@@ -65,7 +69,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     pigeon = new CorePigeon2(13);
 
-    poseEstimator = new SwerveDrivePoseEstimator(
+    m_poseEstimator = new SwerveDrivePoseEstimator(
       swerveDrive.kinematics, getHeading(),
       swerveDrive.getModulePositions(), getPose());
 
@@ -145,14 +149,33 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
 public void periodic() {
 
+  LimelightHelpers.SetRobotOrientation(
+    "limelight", getHeading().getDegrees(), 0, 0, 0, 0, 0);
+LimelightHelpers.PoseEstimate limelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
-    updateOdometry();
-    
+if (LimelightHelpers.getTV("limelight") && limelight.tagCount > 0) { 
+  double latencySeconds = getLimelightLatency();
+  this.swerveDrive.addVisionMeasurement(
+      limelight.pose,
+      Timer.getFPGATimestamp() - latencySeconds);
+}
+}
 
-    LimelightHelpers.SetRobotOrientation("limelight" ,
-    robotYawInDegrees(),  
-    getYawRate(),
-    0, 0, 0, 0);
+public double getLimelightLatency() {
+return (LimelightHelpers.getLatency_Capture("limelight")
+    + LimelightHelpers.getLatency_Pipeline("limelight"))
+    / 1000.0; // Originally
+// in
+// miliseconds,
+// converts
+// to seconds
+
+  
+
+    // LimelightHelpers.SetRobotOrientation("limelight" ,
+    // robotYawInDegrees(),  
+    // getYawRate(),
+    // 0, 0, 0, 0);
   }
 
   public void driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
@@ -272,20 +295,4 @@ public void periodic() {
     return pigeon.getAngularVelocityZWorld().getValueAsDouble();
   }
 
- public void updateOdometry(){
-
-  Rotation2d gyroRotation2d = swerveDrive.getGyroRotation3d().toRotation2d();
-  poseEstimator.update(gyroRotation2d, swerveDrive.getModulePositions());
-
-    //Tenta obter a posição da visão 
-    Pose2d visionPose = vision.getEstimatedPose();
-      if(visionPose != null){
-        double timestemp = Timer.getFPGATimestamp(); // Tempo atual do robô
-        poseEstimator.addVisionMeasurement(visionPose, timestemp);
-      }
-    }
-
-    public Pose2d getPoses(){
-      return poseEstimator.getEstimatedPosition();
-    }
 }

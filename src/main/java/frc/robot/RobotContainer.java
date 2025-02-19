@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,11 +24,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Constants.Buttons;
 import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.POV;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
+import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.teleOp.SwerveCommand;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
@@ -41,6 +46,7 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
+  private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile, vision);
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
@@ -54,11 +60,10 @@ public class RobotContainer {
       GamepadConstants.P1_PORT
   );
 
-  // private XboxController p2Controller = new XboxController(
-  // GamepadConstants.P2_PORT
-  // );
+  private XboxController p2Controller = new XboxController(
+  GamepadConstants.P2_PORT
+  );
 
-  private CommandXboxController m_p2Controller = new CommandXboxController(GamepadConstants.P2_PORT);
 
   public RobotContainer() {
 
@@ -88,7 +93,8 @@ public class RobotContainer {
         () -> p1Controller.getRightBumperButtonPressed()));
     }
 
-    m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, m_p2Controller));
+    m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, p2Controller));
+    m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, p2Controller));
   }
 
   private void registerAutoCommands() {
@@ -140,10 +146,10 @@ public class RobotContainer {
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
         .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
 
-    m_p2Controller.pov(POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
-    m_p2Controller.pov(POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
-    m_p2Controller.pov(POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
-    m_p2Controller.pov(POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
+    new POVButton(p2Controller, POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
+    new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
+    new POVButton(p2Controller, POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
+    new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
         
     // ToPose Commands
     if (Robot.isSimulation()) {
@@ -158,6 +164,9 @@ public class RobotContainer {
     new JoystickButton(p1Controller, XboxController.Button.kY.value)
         .toggleOnTrue(Commands.startEnd(
             swerveSubsystem::disableHeading, swerveSubsystem::resetHeading));
+
+  // m_p2Controller.button(Buttons.BUTTON_A).onTrue(climberSubsystem.setClimberPosition(0));
+
   }
 
   public Command getAutonomousCommand() {
