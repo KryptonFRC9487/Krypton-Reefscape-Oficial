@@ -39,6 +39,7 @@ import frc.robot.Constants.OuttakeConstants.Gains;
 import frc.robot.Constants.OuttakeConstants.HardwareConfig;
 import frc.robot.Constants.OuttakeConstants.TrapezoidProfileConstants;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
+import frc.robot.utils.RobotMath;
 
 public class OuttakePivotSubsystem extends SubsystemBase {
 
@@ -158,6 +159,8 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     double rawAngle = m_encoder.get();
 
     return -((rawAngle > 180) ? rawAngle - 360 : rawAngle);
+
+    // return -RobotMath.normalize360RangeTo180Range(m_encoder.get());
   }
 
   // Função para definir a posição do outtake
