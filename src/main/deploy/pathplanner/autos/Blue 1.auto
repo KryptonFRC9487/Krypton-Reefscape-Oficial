@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start"
+            "pathName": "Start Blue 1"
           }
         },
         {
@@ -74,6 +74,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Blue 1",
+  "folder": "Blue ",
   "choreoAuto": false
 }

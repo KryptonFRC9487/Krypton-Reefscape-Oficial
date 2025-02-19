@@ -8,7 +8,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import swervelib.math.Matter;
 import swervelib.math.SwerveMath;
-import swervelib.parser.PIDFConfig;
 
 /**
  * Classe Constants para armazenar constantes usadas no código do robô.
@@ -20,7 +19,7 @@ public final class Constants {
    */
   public static final class Dimensoes {
     public static final double LOOP_TIME = 0.13; // Tempo de loop (sparkMax + normal = 130ms)
-    public static final double ROBOT_MASS = 38; // Massa do robô
+    public static final double ROBOT_MASS = 49; // Massa do robô
 
     // Posições do centro de massa
     private static final double X_MASS = 0;
@@ -50,15 +49,6 @@ public final class Constants {
         driveGearRatio, pulsePerRotation);
     public static final double angleConversion = SwerveMath.calculateDegreesPerSteeringRotation(angleGearRatio,
         pulsePerRotation);
-  }
-
-  /**
-   * Configurações de PID para controle autônomo.
-   */
-  public static final class PID {
-    public static final PIDFConfig xAutoPID = new PIDFConfig(0.65, 0, 0.05);
-    public static final PIDFConfig yAutoPID = new PIDFConfig(0.6, 0, 0);
-    public static final PIDFConfig angleAutoPID = new PIDFConfig(0.1, 0, 0.01);
   }
 
   /**
@@ -133,7 +123,7 @@ public final class Constants {
     public static final double MAX_HEIGHT_METERS = 1.57; // TODO
     public static final double MAX_VELOCITY = 3.67; // Velocidade máxima (m/s) TODO
     public static final double MAX_ACCELERATION = 3.0; // Aceleração máxima (m/s^2) TODO
-    public static final TrapezoidProfile.Constraints MOVEMENT_CONSTRAINTS = new TrapezoidProfile.Constraints(
+    public static final TrapezoidProfile.Constraints MOVEMENT_pCONSTRAINTS = new TrapezoidProfile.Constraints(
         MAX_VELOCITY, MAX_ACCELERATION);
   }
 
@@ -143,7 +133,7 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.11; // 0.0065
+      public static final double kP = 0.13; // 0.0065
       public static final double kI = 0.00; // 0.02
       public static final double kD = 0.015; // 0.0003
 

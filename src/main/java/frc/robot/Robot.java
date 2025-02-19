@@ -34,10 +34,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
+    
     SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Voltage", RobotController.getBatteryVoltage());
     SmartDashboard.putBoolean("RSL", RobotController.getRSLState());
+    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());   
+    
 
     m_robotContainer.updateTelemetry();
   }
@@ -54,14 +56,17 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
+      
     }
   }
 
   @Override
   public void autonomousPeriodic() {
-    
+
+    // m_robotContainer.getSwerveSubsystem().updateOdometry();
   }
 
   @Override

@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -31,6 +32,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.ScoreSystem;
 
 
@@ -40,13 +42,15 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
-  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile);
+  private final VisionSubsystem vision = new VisionSubsystem();
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile, vision);
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
   private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
 
   private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
+
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -70,13 +74,21 @@ public class RobotContainer {
   }
 
   private void setDefaultCommands() {
-    swerveSubsystem.setDefaultCommand(new SwerveCommand(
-      swerveSubsystem, 
-      () -> p1Controller.getLeftY(),  
-      () -> p1Controller.getLeftX(), 
-      () -> -p1Controller.getRightX(),
-      () -> p1Controller.getRightBumperButtonPressed()));
-    
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+      swerveSubsystem.setDefaultCommand(new SwerveCommand(
+        swerveSubsystem, 
+        () -> -p1Controller.getLeftY(),  
+        () -> -p1Controller.getLeftX(), 
+        () -> -p1Controller.getRightX(),
+        () -> p1Controller.getRightBumperButtonPressed()));
+    } else if (DriverStation.getAlliance().get() ==  DriverStation.Alliance.Blue){
+      swerveSubsystem.setDefaultCommand(new SwerveCommand(
+        swerveSubsystem, 
+        () -> -p1Controller.getLeftY(),  
+        () -> -p1Controller.getLeftX(), 
+        () -> -p1Controller.getRightX(),
+        () -> p1Controller.getRightBumperButtonPressed()));
+    }
 
     m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, m_p2Controller));
   }
