@@ -39,7 +39,6 @@ import frc.robot.Constants.OuttakeConstants.Gains;
 import frc.robot.Constants.OuttakeConstants.HardwareConfig;
 import frc.robot.Constants.OuttakeConstants.TrapezoidProfileConstants;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
-import frc.robot.utils.RobotMath;
 
 public class OuttakePivotSubsystem extends SubsystemBase {
 

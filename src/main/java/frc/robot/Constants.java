@@ -213,7 +213,7 @@ public static final class ClimberPositions{
     DOWN;
   }
 
-  public static final double CLIMBER_UP = 0;
+  public static final double CLIMBER_UP = -159;
   public static final double CLIMBER_DOWM = 0;
 }
 

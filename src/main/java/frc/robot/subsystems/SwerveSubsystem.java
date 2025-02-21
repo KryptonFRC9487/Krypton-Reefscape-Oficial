@@ -149,34 +149,63 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
 public void periodic() {
 
-  LimelightHelpers.SetRobotOrientation(
-    "limelight", getHeading().getDegrees(), 0, 0, 0, 0, 0);
-LimelightHelpers.PoseEstimate limelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
-if (LimelightHelpers.getTV("limelight") && limelight.tagCount > 0) { 
-  double latencySeconds = getLimelightLatency();
-  this.swerveDrive.addVisionMeasurement(
-      limelight.pose,
-      Timer.getFPGATimestamp() - latencySeconds);
-}
+  // boolean doRejectUpdate = false;
+
+  // LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+      
+  // if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+  // {
+  //   if(mt1.rawFiducials[0].ambiguity > .7)
+  //   {
+  //     doRejectUpdate = true;
+  //   }
+  //   if(mt1.rawFiducials[0].distToCamera > 3)
+  //   {
+  //     doRejectUpdate = true;
+  //   }
+  // }
+  // if(mt1.tagCount == 0)
+  // {
+  //   doRejectUpdate = true;
+  // }
+
+  // if(!doRejectUpdate)
+  // {
+  //   m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
+  //   m_poseEstimator.addVisionMeasurement(
+  //       mt1.pose,
+  //       mt1.timestampSeconds);
+  // }
+
+//   LimelightHelpers.SetRobotOrientation(
+//     "limelight", getHeading().getDegrees(), 0, 0, 0, 0, 0);
+// LimelightHelpers.PoseEstimate limelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+// if (LimelightHelpers.getTV("limelight") && limelight.tagCount > 0) { 
+//   double latencySeconds = getLimelightLatency();
+//   this.swerveDrive.addVisionMeasurement(
+//       limelight.pose,
+//       Timer.getFPGATimestamp() - latencySeconds);
+// }
 }
 
-public double getLimelightLatency() {
-return (LimelightHelpers.getLatency_Capture("limelight")
-    + LimelightHelpers.getLatency_Pipeline("limelight"))
-    / 1000.0; // Originally
-// in
-// miliseconds,
-// converts
-// to seconds
+// public double getLimelightLatency() {
+// return (LimelightHelpers.getLatency_Capture("limelight")
+//     + LimelightHelpers.getLatency_Pipeline("limelight"))
+//     / 1000.0; // Originally
+// // in
+// // miliseconds,
+// // converts
+// // to seconds
 
   
 
-    // LimelightHelpers.SetRobotOrientation("limelight" ,
-    // robotYawInDegrees(),  
-    // getYawRate(),
-    // 0, 0, 0, 0);
-  }
+//     // LimelightHelpers.SetRobotOrientation("limelight" ,
+//     // robotYawInDegrees(),  
+//     // getYawRate(),
+//     // 0, 0, 0, 0);
+//   }
 
   public void driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
     swerveDrive.driveFieldOriented(velocity.get());

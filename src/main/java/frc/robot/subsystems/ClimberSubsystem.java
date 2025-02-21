@@ -33,6 +33,8 @@ public ClimberSubsystem(){
     climberConfig.idleMode(IdleMode.kBrake);
     climberEncoder = climberMotor.getEncoder();
 
+    climberEncoder.setPosition(0);
+
     pid = new PIDController(0, 0, 0);
 }
 
@@ -49,4 +51,9 @@ public void periodic(){
 public void setClimberPosition(double setpoint){
     pid.setSetpoint(setpoint);
 }
+
+//teste
+public void setClimberSpeed(double speed) {
+    climberMotor.set(speed);
+  }
 }

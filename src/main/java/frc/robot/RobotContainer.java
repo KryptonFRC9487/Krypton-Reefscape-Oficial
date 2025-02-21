@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,16 +21,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.Constants.Buttons;
 import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.POV;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
+import frc.robot.commands.AlgaePivotCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.teleOp.SwerveCommand;
+import frc.robot.subsystems.AlgaePivotSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
@@ -53,6 +52,7 @@ public class RobotContainer {
 
   private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
   private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
+  private final AlgaePivotSubsystem algaePivotSubsystem = new AlgaePivotSubsystem();
 
   private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
 
@@ -93,8 +93,9 @@ public class RobotContainer {
         () -> p1Controller.getRightBumperButtonPressed()));
     }
 
-    m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, p2Controller));
+    m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, p1Controller));
     m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, p2Controller));
+    algaePivotSubsystem.setDefaultCommand(new AlgaePivotCommand(algaePivotSubsystem, p2Controller));
   }
 
   private void registerAutoCommands() {
@@ -150,7 +151,7 @@ public class RobotContainer {
     new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
     new POVButton(p2Controller, POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
     new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
-        
+
     // ToPose Commands
     if (Robot.isSimulation()) {
       new JoystickButton(p1Controller, XboxController.Button.kStart.value)
