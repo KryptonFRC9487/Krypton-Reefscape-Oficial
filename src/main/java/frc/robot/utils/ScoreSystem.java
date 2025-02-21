@@ -3,7 +3,6 @@ package frc.robot.utils;
 import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.Constants.OuttakeConstants.ArmConfig.kMinSafeAngle;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 import frc.robot.subsystems.ElevatorSubsystem;

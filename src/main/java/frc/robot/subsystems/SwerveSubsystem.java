@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.core.CorePigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -17,19 +16,15 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.vision.LimelightHelpers;
 import frc.robot.Constants.Tracao;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -41,24 +36,15 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 /**
  * Classe de subsistema onde fazemos a ponte do nosso código para YAGSL
  */
-
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive swerveDrive;
   public boolean correctionPID = false;
   private final CorePigeon2 pigeon;
 
-
   private final SwerveDrivePoseEstimator m_poseEstimator;
-
-
-
 
   // Método construtor da classe
   public SwerveSubsystem(File directory, VisionSubsystem vision) {
-
-    
-
-
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
     try {
@@ -70,10 +56,10 @@ public class SwerveSubsystem extends SubsystemBase {
     pigeon = new CorePigeon2(13);
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
-      swerveDrive.kinematics, getHeading(),
-      swerveDrive.getModulePositions(), getPose());
+        swerveDrive.kinematics, getHeading(),
+        swerveDrive.getModulePositions(), getPose());
 
-      swerveDrive.setHeadingCorrection(true);
+    swerveDrive.setHeadingCorrection(true);
 
     setupPathPlanner();
   }
@@ -115,7 +101,7 @@ public class SwerveSubsystem extends SubsystemBase {
               // drive trains
               new PIDConstants(1.2, 0.0, 0.0),
               // Translation PID constants
-              new PIDConstants( 3.6, 0.0, 0.0)
+              new PIDConstants(3.6, 0.0, 0.0)
           // Rotation PID constants
           ),
           config,
@@ -147,65 +133,64 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   @Override
-public void periodic() {
+  public void periodic() {
 
+    // boolean doRejectUpdate = false;
 
-  // boolean doRejectUpdate = false;
+    // LimelightHelpers.PoseEstimate mt1 =
+    // LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
 
-  // LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-      
-  // if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
-  // {
-  //   if(mt1.rawFiducials[0].ambiguity > .7)
-  //   {
-  //     doRejectUpdate = true;
-  //   }
-  //   if(mt1.rawFiducials[0].distToCamera > 3)
-  //   {
-  //     doRejectUpdate = true;
-  //   }
+    // if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+    // {
+    // if(mt1.rawFiducials[0].ambiguity > .7)
+    // {
+    // doRejectUpdate = true;
+    // }
+    // if(mt1.rawFiducials[0].distToCamera > 3)
+    // {
+    // doRejectUpdate = true;
+    // }
+    // }
+    // if(mt1.tagCount == 0)
+    // {
+    // doRejectUpdate = true;
+    // }
+
+    // if(!doRejectUpdate)
+    // {
+    // m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
+    // m_poseEstimator.addVisionMeasurement(
+    // mt1.pose,
+    // mt1.timestampSeconds);
+    // }
+
+    // LimelightHelpers.SetRobotOrientation(
+    // "limelight", getHeading().getDegrees(), 0, 0, 0, 0, 0);
+    // LimelightHelpers.PoseEstimate limelight =
+    // LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+    // if (LimelightHelpers.getTV("limelight") && limelight.tagCount > 0) {
+    // double latencySeconds = getLimelightLatency();
+    // this.swerveDrive.addVisionMeasurement(
+    // limelight.pose,
+    // Timer.getFPGATimestamp() - latencySeconds);
+    // }
+  }
+
+  // public double getLimelightLatency() {
+  // return (LimelightHelpers.getLatency_Capture("limelight")
+  // + LimelightHelpers.getLatency_Pipeline("limelight"))
+  // / 1000.0; // Originally
+  // // in
+  // // miliseconds,
+  // // converts
+  // // to seconds
+
+  // // LimelightHelpers.SetRobotOrientation("limelight" ,
+  // // robotYawInDegrees(),
+  // // getYawRate(),
+  // // 0, 0, 0, 0);
   // }
-  // if(mt1.tagCount == 0)
-  // {
-  //   doRejectUpdate = true;
-  // }
-
-  // if(!doRejectUpdate)
-  // {
-  //   m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
-  //   m_poseEstimator.addVisionMeasurement(
-  //       mt1.pose,
-  //       mt1.timestampSeconds);
-  // }
-
-//   LimelightHelpers.SetRobotOrientation(
-//     "limelight", getHeading().getDegrees(), 0, 0, 0, 0, 0);
-// LimelightHelpers.PoseEstimate limelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-
-// if (LimelightHelpers.getTV("limelight") && limelight.tagCount > 0) { 
-//   double latencySeconds = getLimelightLatency();
-//   this.swerveDrive.addVisionMeasurement(
-//       limelight.pose,
-//       Timer.getFPGATimestamp() - latencySeconds);
-// }
-}
-
-// public double getLimelightLatency() {
-// return (LimelightHelpers.getLatency_Capture("limelight")
-//     + LimelightHelpers.getLatency_Pipeline("limelight"))
-//     / 1000.0; // Originally
-// // in
-// // miliseconds,
-// // converts
-// // to seconds
-
-  
-
-//     // LimelightHelpers.SetRobotOrientation("limelight" ,
-//     // robotYawInDegrees(),  
-//     // getYawRate(),
-//     // 0, 0, 0, 0);
-//   }
 
   public void driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
     swerveDrive.driveFieldOriented(velocity.get());
@@ -226,7 +211,7 @@ public void periodic() {
 
   public Pose2d getPose() {
     return swerveDrive.getPose();
-    
+
   }
 
   public ChassisSpeeds getFieldVelocity() {
@@ -297,7 +282,6 @@ public void periodic() {
     return swerveDrive;
   }
 
-
   public Command driveToPose(Pose2d pose) {
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
@@ -312,7 +296,7 @@ public void periodic() {
     );
   }
 
-  public double robotYawInDegrees(){
+  public double robotYawInDegrees() {
     if (DriverStation.getAlliance().get() == Alliance.Blue) {
       return 0.0;
     } else {
@@ -320,7 +304,7 @@ public void periodic() {
     }
   }
 
-  public double getYawRate(){
+  public double getYawRate() {
     return pigeon.getAngularVelocityZWorld().getValueAsDouble();
   }
 

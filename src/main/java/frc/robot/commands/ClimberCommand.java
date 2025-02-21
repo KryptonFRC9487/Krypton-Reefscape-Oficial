@@ -6,56 +6,53 @@ import frc.robot.Constants.Buttons;
 import frc.robot.Constants.ClimberPositions.ClimberPose;
 import frc.robot.subsystems.ClimberSubsystem;
 
-public class ClimberCommand extends Command{
+public class ClimberCommand extends Command {
 
-    private final XboxController p1Controller;
-    private ClimberSubsystem climberSubsystem;
+  private final XboxController p1Controller;
+  private ClimberSubsystem climberSubsystem;
 
-    private ClimberPose climberPose;
+  private ClimberPose climberPose;
 
-public ClimberCommand(
-    ClimberSubsystem climberSubsystem,
-    XboxController p1Controller
-){
+  public ClimberCommand(
+      ClimberSubsystem climberSubsystem,
+      XboxController p1Controller) {
+
     this.p1Controller = p1Controller;
     this.climberSubsystem = climberSubsystem;
 
     addRequirements(climberSubsystem);
-    
-}
 
-// @Override
-// public void initialize(){
-//     climberPose = ClimberPose.UP;
-// }
+  }
 
-@Override
-public void execute(){
+  // @Override
+  // public void initialize(){
+  // climberPose = ClimberPose.UP;
+  // }
 
-    if(p1Controller.getRawButton(Buttons.BUTTON_A)){
-        climberSubsystem.setClimberSpeed(-2);
-    } else if(p1Controller.getRawButton(Buttons.BUTTON_B)){
-        climberSubsystem.setClimberSpeed(2);
-    } else{
-        climberSubsystem.setClimberSpeed(0);
+  @Override
+  public void execute() {
+
+    if (p1Controller.getRawButton(Buttons.BUTTON_A)) {
+      climberSubsystem.setClimberSpeed(-2);
+    } else if (p1Controller.getRawButton(Buttons.BUTTON_B)) {
+      climberSubsystem.setClimberSpeed(2);
+    } else {
+      climberSubsystem.setClimberSpeed(0);
     }
 
-    // if(p2Controller.getRawButton(Buttons.BUTTON_A)){ 
-    //     climberPose = ClimberPose.UP;
+    // if(p2Controller.getRawButton(Buttons.BUTTON_A)){
+    // climberPose = ClimberPose.UP;
     // } else if(p2Controller.getRawButton(Buttons.BUTTON_B)){
-    //     climberPose = ClimberPose.DOWN;
+    // climberPose = ClimberPose.DOWN;
     // }
 
     // switch (climberPose) {
-    //     case UP:
-    //       climberSubsystem.setClimberPosition(ClimberPositions.CLIMBER_UP);
-    //       break;
-    //     case DOWN:
-    //       climberSubsystem.setClimberPosition(ClimberPositions.CLIMBER_DOWM);
-    //       break;
-    //   }  
-
-
-}
-    
+    // case UP:
+    // climberSubsystem.setClimberPosition(ClimberPositions.CLIMBER_UP);
+    // break;
+    // case DOWN:
+    // climberSubsystem.setClimberPosition(ClimberPositions.CLIMBER_DOWM);
+    // break;
+    // }
+  }
 }
