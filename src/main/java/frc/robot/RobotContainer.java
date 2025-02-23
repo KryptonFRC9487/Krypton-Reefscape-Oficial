@@ -54,7 +54,10 @@ public class RobotContainer {
   private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
   private final AlgaePivotSubsystem algaePivotSubsystem = new AlgaePivotSubsystem();
 
-  private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
+  private final ScoreSystem m_scoreSystem = new ScoreSystem(
+      m_elevatorSubsystem,
+      m_outtakePivotSubsystem,
+      m_outtakeSubsystem);
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -66,11 +69,9 @@ public class RobotContainer {
 
 
   public RobotContainer() {
-
     setDefaultCommands();
     registerAutoCommands();
     configureBindings();
-
 
     autoChooser = AutoBuilder.buildAutoChooser("");
     SmartDashboard.putData("Auto Select", autoChooser);
@@ -100,6 +101,7 @@ public class RobotContainer {
 
   private void registerAutoCommands() {
     NamedCommands.registerCommand("Intake", new PrintCommand("Intake"));
+    NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreCoralAuto(ReefsScorePose.L4));
   }
 
   private void configureBindings() {
