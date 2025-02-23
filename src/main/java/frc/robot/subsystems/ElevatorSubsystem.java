@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -70,6 +71,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public double getElevatorPosition() {
     return leftEncoder.getPosition();
+  }
+
+  public boolean atScoringPose(ReefsScorePose reefsScorePose) {
+    return MathUtil.isNear(reefsScorePose.height, getElevatorPosition(), 1.0);
   }
 
   @Override

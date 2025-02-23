@@ -19,6 +19,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.units.measure.Angle;
@@ -181,6 +182,10 @@ public class OuttakePivotSubsystem extends SubsystemBase {
 
   public boolean outtakeIsSafe() {
     return getAngle().gte(kMinSafeAngle.minus(Degrees.of(10.0)));
+  }
+
+  public boolean atScoringPose(ReefsScorePose reefsScorePose) {
+    return MathUtil.isNear(reefsScorePose.angle, getOuttakePosition(), 1.0);
   }
 
   public Command runSysIdRoutine() {
