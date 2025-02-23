@@ -7,25 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Init"
+            "pathName": "teste quadrado"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Reef-Source R1 "
+            "pathName": "teste quadrado 2 "
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Source-Reef R1"
+            "pathName": "teste quadrado3 "
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "teste quadrado 4 "
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Red ",
+  "folder": null,
   "choreoAuto": false
 }

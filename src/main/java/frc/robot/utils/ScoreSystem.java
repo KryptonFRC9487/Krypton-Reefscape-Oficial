@@ -27,7 +27,7 @@ public class ScoreSystem {
       return m_outtakeSubsystem.setOuttakePositionCmd(kMinSafeAngle.in(Degrees))
           .until(() -> m_outtakeSubsystem.outtakeIsSafe())
           .andThen(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
-              .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 30.0)) // 30.0 é a altura safe para o outtake
+              .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 15.0)) // 30.0 é a altura safe para o outtake
           .andThen(m_outtakeSubsystem.setOuttakePositionCmd(m_reefsScorePose));
     }
 

@@ -133,7 +133,7 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.143; // 0.0065
+      public static final double kP = 0.17; // 0.0065
       public static final double kI = 0.00; // 0.02
       public static final double kD = 0.015; // 0.0003
 
@@ -183,11 +183,11 @@ public final class Constants {
   public static final class ReefsConstants {
 
     public static enum ReefsScorePose {
-      INITAL(2, -99),
+      INITAL(2, -100),
       L1(2, 75),
       L2(11, -80),
-      L3(2, 75),
-      L4(57, 75);
+      L3(2, 69),
+      L4(57, 76);
 
       public final double height;
       public final double angle;
@@ -200,22 +200,8 @@ public final class Constants {
   }
 
 
-public static final class ClimberMotor{
 
-  public static final int kClimberMotor = 4;
-}
 
-public static final class ClimberPositions{
-
-  public static enum ClimberPose{
-
-    UP,
-    DOWN;
-  }
-
-  public static final double CLIMBER_UP = -159;
-  public static final double CLIMBER_DOWM = 0;
-}
 
   /**
    * Configurações de visão.

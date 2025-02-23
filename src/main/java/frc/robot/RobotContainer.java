@@ -26,12 +26,8 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.POV;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
-import frc.robot.commands.AlgaePivotCommand;
-import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.teleOp.SwerveCommand;
-import frc.robot.subsystems.AlgaePivotSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
@@ -45,16 +41,14 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
-  private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile, vision);
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
-  private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
-  private final AlgaePivotSubsystem algaePivotSubsystem = new AlgaePivotSubsystem();
+  // private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
 
-  private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
+  // private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -93,9 +87,7 @@ public class RobotContainer {
         () -> p1Controller.getRightBumperButtonPressed()));
     }
 
-    m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, p1Controller));
     m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, p2Controller));
-    algaePivotSubsystem.setDefaultCommand(new AlgaePivotCommand(algaePivotSubsystem, p2Controller));
   }
 
   private void registerAutoCommands() {
@@ -147,10 +139,10 @@ public class RobotContainer {
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
         .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
 
-    new POVButton(p2Controller, POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
-    new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
-    new POVButton(p2Controller, POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
-    new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
+    // new POVButton(p2Controller, POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
+    // new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
+    // new POVButton(p2Controller, POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
+    // new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
 
     // ToPose Commands
     if (Robot.isSimulation()) {
