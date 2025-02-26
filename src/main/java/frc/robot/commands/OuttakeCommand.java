@@ -1,8 +1,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Buttons;
 import frc.robot.subsystems.OuttakeSubsystem;
 
 public class OuttakeCommand extends Command {
@@ -34,7 +34,7 @@ public class OuttakeCommand extends Command {
       outtakeSubsystem.setOuttakeSpeed(0);
     }
     
-      if(p2Controller.getRawButton(Buttons.LEFT_BUMPER)){
+    if (p2Controller.getRawButton(Button.kLeftBumper.value)) {
         outtakeSubsystem.setOuttakeSpeed(-0.25);
       }
     }

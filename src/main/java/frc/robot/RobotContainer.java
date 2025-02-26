@@ -22,10 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.GamepadConstants;
-import frc.robot.Constants.POV;
-import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.teleOp.SwerveCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -33,7 +30,6 @@ import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.utils.ScoreSystem;
 
 public class RobotContainer { 
 
@@ -46,7 +42,7 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
-  // private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
+  private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
 
   // private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
   // private final ScoreSystem m_scoreSystem = new ScoreSystem(

@@ -71,7 +71,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
 
     m_feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
     m_pid = new ProfiledPIDController(Gains.kP, Gains.kI, Gains.kD, TrapezoidProfileConstants.kConstraints);
-    // m_pid.setGoal(OuttakePose.INIT.value);
+    m_pid.setGoal(Degrees.of(0).in(Radians));
     // m_pid.setTolerance(0.1);
 
     m_leftPivotConfig = new SparkMaxConfig();
@@ -143,7 +143,8 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     if (feedforwardOutput > 0.0)
       output += feedforwardOutput;
 
-    m_rightPivotMotor.set(output);
+    // m_rightPivotMotor.set(output);
+    m_rightPivotMotor.set(m_pid.getP());
 
     SmartDashboard.putNumber("Arm PID Output", pidOutput);
     SmartDashboard.putNumber("Arm FF Output", feedforwardOutput);
@@ -163,21 +164,20 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     // return -RobotMath.normalize360RangeTo180Range(m_encoder.get());
   }
 
-  // Função para definir a posição do outtake
-  public void setOuttakePose(ReefsScorePose reefsScorePose) {
-    m_pid.setGoal(Degrees.of(reefsScorePose.angle).in(Radians));
-  }
-
   public void setOuttakePose(double angle) {
     m_pid.setGoal(Degrees.of(angle).in(Radians));
   }
 
-  public Command setOuttakePositionCmd(ReefsScorePose reefsScorePose) {
-    return runOnce(() -> setOuttakePose(reefsScorePose));
+  public void setOuttakePose(ReefsScorePose reefsScorePose) {
+    setOuttakePose(reefsScorePose.angle);
   }
 
   public Command setOuttakePositionCmd(double angle) {
     return runOnce(() -> setOuttakePose(angle));
+  }
+
+  public Command setOuttakePositionCmd(ReefsScorePose reefsScorePose) {
+    return runOnce(() -> setOuttakePose(reefsScorePose));
   }
 
   public boolean outtakeIsSafe() {
