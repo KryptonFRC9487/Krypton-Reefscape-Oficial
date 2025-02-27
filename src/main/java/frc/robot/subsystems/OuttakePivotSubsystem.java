@@ -173,11 +173,11 @@ public class OuttakePivotSubsystem extends SubsystemBase {
   }
 
   public Command setOuttakePositionCmd(double angle) {
-    return runOnce(() -> setOuttakePose(angle));
+    return run(() -> setOuttakePose(angle));
   }
 
   public Command setOuttakePositionCmd(ReefsScorePose reefsScorePose) {
-    return runOnce(() -> setOuttakePose(reefsScorePose));
+    return run(() -> setOuttakePose(reefsScorePose));
   }
 
   public boolean outtakeIsSafe() {
