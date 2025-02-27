@@ -14,6 +14,7 @@ public class ScoreSystem {
   private final OuttakeSubsystem m_outtakeSubsystem;
   private final OuttakePivotSubsystem m_outtakePivotSubsystem;
   private ReefsScorePose m_reefsScorePose;
+  private boolean m_coralSystemInSafeMode;
 
   public ScoreSystem(
       ElevatorSubsystem elevatorSubsystem,
@@ -28,19 +29,23 @@ public class ScoreSystem {
   }
 
   public Command scoreCoral(ReefsScorePose reefsScorePose) {
+    setCoralSystemSafeMode(reefsScorePose);
     setReefsTarget(reefsScorePose);
 
-    return m_outtakePivotSubsystem.setOuttakePositionCmd(kMinSafeAngle.in(Degrees))
-        .until(() -> m_outtakePivotSubsystem.outtakeIsSafe())
-        .andThen(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
-            .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 10.0)) // 30.0 é a altura safe para o outtake
-        .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));
+    if (m_coralSystemInSafeMode) {
+      return m_outtakePivotSubsystem.setOuttakePositionCmd(kMinSafeAngle.in(Degrees))
+          .until(() -> m_outtakePivotSubsystem.outtakeIsSafe())
+          .andThen(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
+              .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 10.0))
+          .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));
+    }
 
-  //   return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
-  //       .alongWith(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));
+    return m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose)
+        .alongWith(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose));
   }
 
   public Command scoreCoralAuto(ReefsScorePose reefsScorePose) {
+    setCoralSystemSafeMode(reefsScorePose);
     setReefsTarget(reefsScorePose);
 
     return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
@@ -50,17 +55,22 @@ public class ScoreSystem {
         .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(kMinSafeAngle.in(Degrees))
             .until(() -> m_outtakePivotSubsystem.outtakeIsSafe()))
         .andThen(m_elevatorSubsystem.setElevatorPoseCmd(ReefsScorePose.INITAL)
-            .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 5.0)) // 30.0 é a altura safe para o outtake
+            .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 10.0)) // 30.0 é a altura safe para o outtake
         .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(ReefsScorePose.INITAL));
   }
 
   private boolean scoringPoseReached() {
-    return m_elevatorSubsystem.atScoringPose(m_reefsScorePose)
-        && m_outtakePivotSubsystem.atScoringPose(m_reefsScorePose);
+    return m_elevatorSubsystem.atPose(m_reefsScorePose)
+        && m_outtakePivotSubsystem.atPose(m_reefsScorePose);
   }
 
   public void setReefsTarget(ReefsScorePose reefsScorePose) {
     m_reefsScorePose = reefsScorePose;
+  }
+
+  public void setCoralSystemSafeMode(ReefsScorePose reefsScorePose) {
+    m_coralSystemInSafeMode = !m_elevatorSubsystem.atPose(ReefsScorePose.INITAL)
+        && reefsScorePose == ReefsScorePose.INITAL;
   }
 
   public ReefsScorePose getReefsTarget() {
@@ -72,8 +82,5 @@ public class ScoreSystem {
 
     m_outtakePivotSubsystem.setOuttakePose(m_reefsScorePose);
     m_elevatorSubsystem.setElevatorPose(m_reefsScorePose);
-  }
-
-  public void updateTelemetry() {
   }
 }

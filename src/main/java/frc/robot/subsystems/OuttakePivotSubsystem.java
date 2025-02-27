@@ -184,7 +184,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     return getAngle().gte(kMinSafeAngle.minus(Degrees.of(10.0)));
   }
 
-  public boolean atScoringPose(ReefsScorePose reefsScorePose) {
+  public boolean atPose(ReefsScorePose reefsScorePose) {
     return MathUtil.isNear(reefsScorePose.angle, getOuttakePosition(), 1.0);
   }
 
