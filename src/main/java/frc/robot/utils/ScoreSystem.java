@@ -30,11 +30,15 @@ public class ScoreSystem {
   public Command scoreCoral(ReefsScorePose reefsScorePose) {
     setReefsTarget(reefsScorePose);
 
-    return m_outtakePivotSubsystem.setOuttakePositionCmd(kMinSafeAngle.in(Degrees))
-        .until(() -> m_outtakePivotSubsystem.outtakeIsSafe())
-        .andThen(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
-            .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 10.0)) // 30.0 é a altura safe para o outtake
-        .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));
+    return m_outtakePivotSubsystem.setOuttakePositionCmd(reefsScorePose);
+
+    // return
+    // m_outtakePivotSubsystem.setOuttakePositionCmd(kMinSafeAngle.in(Degrees))
+    // .until(() -> m_outtakePivotSubsystem.outtakeIsSafe())
+    // .andThen(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
+    // .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 10.0)) // 30.0 é a
+    // altura safe para o outtake
+    // .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));
 
   //   return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
   //       .alongWith(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));

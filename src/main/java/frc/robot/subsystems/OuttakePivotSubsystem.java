@@ -71,7 +71,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
 
     m_feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
     m_pid = new ProfiledPIDController(Gains.kP, Gains.kI, Gains.kD, TrapezoidProfileConstants.kConstraints);
-    m_pid.setGoal(Degrees.of(0).in(Radians));
+    // m_pid.setGoal(Degrees.of(0).in(Radians));
     // m_pid.setTolerance(0.1);
 
     m_leftPivotConfig = new SparkMaxConfig();
@@ -143,8 +143,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     if (feedforwardOutput > 0.0)
       output += feedforwardOutput;
 
-    // m_rightPivotMotor.set(output);
-    m_rightPivotMotor.set(m_pid.getP());
+    m_rightPivotMotor.set(output);
 
     SmartDashboard.putNumber("Arm PID Output", pidOutput);
     SmartDashboard.putNumber("Arm FF Output", feedforwardOutput);

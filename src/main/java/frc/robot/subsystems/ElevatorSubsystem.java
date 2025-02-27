@@ -21,7 +21,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private final SparkMax leftMotor, rightMotor;
   private final SparkMaxConfig leftMotorConfig, rightMotorConfig;
-  private final SparkClosedLoopController leftClosedLoopController, rightClosedLoopController;
+  private final SparkClosedLoopController rightClosedLoopController;
   private final RelativeEncoder leftEncoder, rightEncoder;
 
   public ElevatorSubsystem() {
@@ -31,7 +31,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
 
-    leftClosedLoopController = leftMotor.getClosedLoopController();
     rightClosedLoopController = rightMotor.getClosedLoopController();
 
     leftEncoder = leftMotor.getEncoder();
@@ -66,10 +65,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setElevatorPose(ReefsScorePose reefsScorePose) {
-    rightClosedLoopController.setReference(
-        reefsScorePose.height,
-        ControlType.kPosition);
-
     // rightClosedLoopController.setReference(
     //     reefsScorePose.height,
     //     ControlType.kPosition);

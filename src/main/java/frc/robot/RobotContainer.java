@@ -22,7 +22,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.GamepadConstants;
+import frc.robot.Constants.POV;
+import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.teleOp.SwerveCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -30,6 +33,7 @@ import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.ScoreSystem;
 
 public class RobotContainer { 
 
@@ -44,11 +48,10 @@ public class RobotContainer {
   private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
   private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
 
-  // private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
-  // private final ScoreSystem m_scoreSystem = new ScoreSystem(
-  //     m_elevatorSubsystem,
-  //     m_outtakePivotSubsystem,
-  //     m_outtakeSubsystem);
+  private final ScoreSystem m_scoreSystem = new ScoreSystem(
+      m_elevatorSubsystem,
+      m_outtakePivotSubsystem,
+      m_outtakeSubsystem);
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -138,10 +141,10 @@ public class RobotContainer {
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
         .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
 
-    // new POVButton(p2Controller, POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
-    // new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
-    // new POVButton(p2Controller, POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
-    // new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
+    new POVButton(p2Controller, POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
+    new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
+    new POVButton(p2Controller, POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
+    new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
 
     // ToPose Commands
     if (Robot.isSimulation()) {
