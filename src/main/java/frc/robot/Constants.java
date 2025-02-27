@@ -137,8 +137,8 @@ public final class Constants {
       public static final double kI = 0.0; // 0.0
       public static final double kD = 0.0; // 0.015
 
-      private static final double kMinUp = 0.0; // motor.set() 0.071
-      private static final double kMinDown = 0.0; // // motor.set() 0.036
+      private static final double kMinUp = 0.176; // motor.set() 0.071
+      private static final double kMinDown = 0.07; // // motor.set() 0.036
 
       // Ganhos de Feedforward
       public static final double kG = (kMinUp + kMinDown) / 2; // Gravidade 0.0535
@@ -177,7 +177,7 @@ public final class Constants {
       public static final int kOuttakeId = 18;
       public static final int kAbsoluteEncoderId = 0;
 
-      public static final double kOuttakeEncoderOffset = 129.0;
+      public static final double kOuttakeEncoderOffset = 70.0;
 
       public static final double kGearRatio = 1.0 / 20.0;
     }
