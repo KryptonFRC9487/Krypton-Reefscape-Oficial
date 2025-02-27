@@ -133,7 +133,7 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.0; // 0.0.17
+      public static final double kP = 0.0; // 0.017
       public static final double kI = 0.0; // 0.0
       public static final double kD = 0.0; // 0.015
 

@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Blue 1"
+            "pathName": "Middle Right Coral 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "elevatorUp"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Blue ",
   "choreoAuto": false
 }

@@ -21,7 +21,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private final SparkMax leftMotor, rightMotor;
   private final SparkMaxConfig leftMotorConfig, rightMotorConfig;
-  private final SparkClosedLoopController leftClosedLoopController;
+  private final SparkClosedLoopController rightClosedLoopController;
   private final RelativeEncoder leftEncoder, rightEncoder;
 
   public ElevatorSubsystem() {
@@ -31,46 +31,51 @@ public class ElevatorSubsystem extends SubsystemBase {
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
 
-    leftClosedLoopController = leftMotor.getClosedLoopController();
+    rightClosedLoopController = rightMotor.getClosedLoopController();
 
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
 
-    leftMotorConfig
-        .closedLoopRampRate(0.1).closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(
-          ElevatorConstants.kP,
-          ElevatorConstants.kI,
-          ElevatorConstants.kD,
-          ElevatorConstants.kFF 
-        )
-        .velocityFF(ElevatorConstants.kVelocityFF)
-        // .outputRange(-1.0, 1.0);
-        .outputRange(-0.8, 0.8);
+    rightMotorConfig
+      // .smartCurrentLimit(40)
+      .closedLoopRampRate(0.5).inverted(true).closedLoop
+      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+      .pidf(
+        ElevatorConstants.kP,
+        ElevatorConstants.kI,
+        ElevatorConstants.kD,
+        ElevatorConstants.kFF
+      )
+      .velocityFF(ElevatorConstants.kVelocityFF)
+      .outputRange(-1.0, 1.0);
+
+    rightMotorConfig.encoder
+      .positionConversionFactor(1)
+      .velocityConversionFactor(1);
+
 
     leftMotorConfig.encoder
-        .positionConversionFactor(1)
-        .velocityConversionFactor(1);
+      .positionConversionFactor(1)
+      .velocityConversionFactor(1);
 
-    rightMotorConfig.follow(leftMotor, true);
+    leftMotorConfig.follow(rightMotor, true);
 
     leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     rightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   public void setElevatorPose(ReefsScorePose reefsScorePose) {
-    leftClosedLoopController.setReference(
-        reefsScorePose.height,
-        ControlType.kPosition);
+    // rightClosedLoopController.setReference(
+    //     reefsScorePose.height,
+    //     ControlType.kPosition);
   }
 
   public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
-    return runOnce(() -> setElevatorPose(reefsScorePose));
+    return run(() -> setElevatorPose(reefsScorePose));
   }
 
   public double getElevatorPosition() {
-    return leftEncoder.getPosition();
+    return rightEncoder.getPosition();
   }
 
   public boolean atScoringPose(ReefsScorePose reefsScorePose) {
@@ -83,10 +88,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("L. Elevator Velocity (Rotations per Second)", leftEncoder.getVelocity());
     SmartDashboard.putNumber("L. Elevator Applied Voltage", leftMotor.getAppliedOutput() * leftMotor.getBusVoltage());
     SmartDashboard.putNumber("L. Elevator Applied Output", leftMotor.getAppliedOutput());
+    SmartDashboard.putNumber("L. Elevator Temperature", leftMotor.getMotorTemperature());
 
     SmartDashboard.putNumber("R. Elevator Position (Rotations)", rightEncoder.getPosition());
     SmartDashboard.putNumber("R. Elevator Velocity (Rotations per Second)", rightEncoder.getVelocity());
     SmartDashboard.putNumber("R. Elevator Applied Voltage", rightMotor.getAppliedOutput() * rightMotor.getBusVoltage());
     SmartDashboard.putNumber("R. Elevator Applied Output", rightMotor.getAppliedOutput());
+    SmartDashboard.putNumber("R. Elevator Temperature", rightMotor.getMotorTemperature());
   }
 }
