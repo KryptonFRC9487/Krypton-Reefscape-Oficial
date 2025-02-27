@@ -105,16 +105,16 @@ public final class Constants {
     public static final int CURRENT_LIMIT = 60;
 
     // PID Gains Elevator
-    public static final double kP = 0.3; // Proporcional
+    public static final double kP = 0.05; // Proporcional
     public static final double kI = 0.0; // Integral
     public static final double kD = 0.0; // Derivativo
-    public static final double kFF = 0.05; // Feedforward
+    public static final double kFF = 0.05; // Feed Forward
 
     public static final double kVelocityFF = 0.001; // Feedforward
 
     // Feedforward Gains
     public static final double kS = 0.095388; // Tensão estática TODO
-    public static final double kG = 0.54402; // Gravidade TODO
+    public static final double kG = 0.54402; // Gravidade TODO  
     public static final double kV = 7.43; // Velocidade TODO
     public static final double kA = 1.0; // Aceleração TODO
 
@@ -133,13 +133,16 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.17; // 0.0065
-      public static final double kI = 0.00; // 0.02
-      public static final double kD = 0.015; // 0.0003
+      public static final double kP = 0.185; // 0.017
+      public static final double kI = 0.0; // 0.0
+      public static final double kD = 0.03; // 0.015
 
-      // Ganhos de Feedforward // MIN DOWN -0.036 MIN UP -0.071
-      public static final double kG = 0.0535; // Gravidade
-      public static final double kV = 0.0175; // Velocidade
+      private static final double kMinUp = 0.185; // motor.set() 0.071
+      private static final double kMinDown = 0.07; // // motor.set() 0.036
+
+      // Ganhos de Feedforward
+      public static final double kG = (kMinUp + kMinDown) / 2; // Gravidade 0.0535
+      public static final double kV = (kMinUp - kMinDown) / 2; // Velocidade 0.0175
       public static final double kS = 0.0; // Tensão estática
       public static final double kA = 0.0; // Aceleração
     }
@@ -162,7 +165,7 @@ public final class Constants {
       public static final double kClosedLoopRate = 0.5;
       public static final Angle kMinAngle = Degrees.of(-98.0);
       public static final Angle kMaxAngle = Degrees.of(87.0);
-      public static final Angle kMinSafeAngle = Degrees.of(-45.0);
+      public static final Angle kMinSafeAngle = Degrees.of(-93.0);
     }
 
     /**
@@ -174,7 +177,7 @@ public final class Constants {
       public static final int kOuttakeId = 18;
       public static final int kAbsoluteEncoderId = 0;
 
-      public static final double kOuttakeEncoderOffset = 129.0;
+      public static final double kOuttakeEncoderOffset = 70;
 
       public static final double kGearRatio = 1.0 / 20.0;
     }
@@ -183,11 +186,11 @@ public final class Constants {
   public static final class ReefsConstants {
 
     public static enum ReefsScorePose {
-      INITAL(2, -100),
-      L1(2, 75),
-      L2(11, -80),
-      L3(2, 69),
-      L4(57, 76);
+      INITAL(8, -120),
+      L1(8, 75),
+      L2(8, -80),
+      L3(8, 73),
+      L4(56, 73);
 
       public final double height;
       public final double angle;
@@ -198,11 +201,6 @@ public final class Constants {
       }
     }
   }
-
-
-
-
-
   /**
    * Configurações de visão.
    */

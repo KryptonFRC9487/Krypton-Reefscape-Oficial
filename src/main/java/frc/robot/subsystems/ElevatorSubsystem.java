@@ -69,10 +69,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     rightClosedLoopController.setReference(
         reefsScorePose.height,
         ControlType.kPosition);
-
-    // rightClosedLoopController.setReference(
-    //     reefsScorePose.height,
-    //     ControlType.kPosition);
   }
 
   public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
