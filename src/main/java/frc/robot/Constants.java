@@ -133,9 +133,9 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.185; // 0.017
+      public static final double kP = 0.35; // 0.017
       public static final double kI = 0.0; // 0.0
-      public static final double kD = 0.03; // 0.015
+      public static final double kD = 0.07; // 0.015
 
       private static final double kMinUp = 0.185; // motor.set() 0.071
       private static final double kMinDown = 0.07; // // motor.set() 0.036
@@ -186,11 +186,11 @@ public final class Constants {
   public static final class ReefsConstants {
 
     public static enum ReefsScorePose {
-      INITAL(8, -120),
+      INITAL(8, -112),
       L1(8, 75),
-      L2(8, -80),
-      L3(8, 73),
-      L4(56, 73);
+      L2(20, -87),
+      L3(56, -87),
+      L4(56, 58);  
 
       public final double height;
       public final double angle;

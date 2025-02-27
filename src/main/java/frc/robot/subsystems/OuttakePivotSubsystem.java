@@ -82,7 +82,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
         .closedLoopRampRate(ArmConfig.kClosedLoopRate).closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(Gains.kP, Gains.kI, Gains.kD)
-        .outputRange(-1.0, 1.0);
+        .outputRange(-1, 1);
     // .outputRange(-0.05, 0.05);
 
     m_rightPivotConfig.encoder
