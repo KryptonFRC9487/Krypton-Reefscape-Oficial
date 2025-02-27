@@ -133,12 +133,12 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.0; // 0.0.17
+      public static final double kP = 0.0; // 0.017
       public static final double kI = 0.0; // 0.0
       public static final double kD = 0.0; // 0.015
 
-      private static final double kMinUp = 0.0; // motor.set() 0.071
-      private static final double kMinDown = 0.0; // // motor.set() 0.036
+      private static final double kMinUp = 0.185; // motor.set() 0.071
+      private static final double kMinDown = 0.07; // // motor.set() 0.036
 
       // Ganhos de Feedforward
       public static final double kG = (kMinUp + kMinDown) / 2; // Gravidade 0.0535
