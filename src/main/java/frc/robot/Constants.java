@@ -96,7 +96,7 @@ public final class Constants {
       public static final double kP = 0.05; // Proporcional
       public static final double kI = 0.0; // Integral
       public static final double kD = 0.0; // Derivativo
-      public static final double kFF = 0.05; // Feed Forward
+      public static final double kFF = 0.0; // Feed Forward
 
       public static final double kVelocityFF = 0.001; // Feedforward
     }

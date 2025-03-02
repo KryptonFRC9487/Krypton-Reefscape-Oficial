@@ -33,7 +33,7 @@ import frc.robot.commands.teleOp.SwerveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
-// import frc.robot.subsystems.OuttakePivotSubsystem;
+import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -51,7 +51,7 @@ public class RobotContainer {
 
   // private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
   // private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  // private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
 
   private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem);
@@ -133,9 +133,9 @@ public class RobotContainer {
     //           Rotation2d.fromDegrees(0)
     //   )));
     // }
-        climberSubsystem.setDefaultCommand(
-      new ClimberCommand(
-        climberSubsystem, p1Controller));
+      //   climberSubsystem.setDefaultCommand(
+      // new ClimberCommand(
+      //   climberSubsystem, p1Controller));
       
 
     new JoystickButton(p1Controller, XboxController.Button.kBack.value).onFalse(new SwerveCommand(

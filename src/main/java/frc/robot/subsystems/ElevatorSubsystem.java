@@ -38,7 +38,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     rightEncoder = rightMotor.getEncoder();
 
     rightMotorConfig
-        .inverted(true).closedLoop
+        .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pidf(
             Gains.kP,
@@ -60,16 +60,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         .positionConversionFactor(1)
         .velocityConversionFactor(1);
 
-    // leftMotorConfig.follow(rightMotor, true);
+    leftMotorConfig.follow(rightMotor, true);
 
     leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     rightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   public void setElevatorPose(ReefsScorePose reefsScorePose) {
-    // rightClosedLoopController.setReference(
-    // reefsScorePose.height,
-    // ControlType.kPosition);
+    rightClosedLoopController.setReference(
+        reefsScorePose.height,
+        ControlType.kPosition);
   }
 
   public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
@@ -97,7 +97,5 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("R. Elevator Applied Voltage", rightMotor.getAppliedOutput() * rightMotor.getBusVoltage());
     SmartDashboard.putNumber("R. Elevator Applied Output", rightMotor.getAppliedOutput());
     SmartDashboard.putNumber("R. Elevator Temperature", rightMotor.getMotorTemperature());
-
-    rightMotor.set(1);
   }
 }
