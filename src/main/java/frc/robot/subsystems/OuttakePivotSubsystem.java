@@ -78,8 +78,8 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     m_rightPivotConfig = new SparkMaxConfig();
 
     m_rightPivotConfig.idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
-        .closedLoopRampRate(ArmConfig.kClosedLoopRate).closedLoop
+        .smartCurrentLimit(HardwareConfig.kStallCurrentLimit)
+        .closedLoopRampRate(HardwareConfig.kClosedLoopRate).closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(Gains.kP, Gains.kI, Gains.kD)
         .outputRange(-1, 1);
@@ -90,8 +90,8 @@ public class OuttakePivotSubsystem extends SubsystemBase {
         .velocityConversionFactor(HardwareConfig.kGearRatio);
 
     m_rightPivotConfig.idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ArmConfig.kStallCurrentLimit)
-        .closedLoopRampRate(ArmConfig.kClosedLoopRate).encoder
+        .smartCurrentLimit(HardwareConfig.kStallCurrentLimit)
+        .closedLoopRampRate(HardwareConfig.kClosedLoopRate).encoder
         .positionConversionFactor(HardwareConfig.kGearRatio)
         .velocityConversionFactor(HardwareConfig.kGearRatio);
 
@@ -105,7 +105,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     synchronizeMotors();
 
     m_sysIdRoutine = new SysIdRoutine(
-        new SysIdRoutine.Config(Volts.per(Second).of(ArmConfig.kClosedLoopRate),
+        new SysIdRoutine.Config(Volts.per(Second).of(HardwareConfig.kClosedLoopRate),
             Volts.of(1),
             Seconds.of(30)),
         new SysIdRoutine.Mechanism(

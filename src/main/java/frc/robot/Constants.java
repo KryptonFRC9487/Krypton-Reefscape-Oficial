@@ -91,40 +91,26 @@ public final class Constants {
    * Configurações do elevador.
    */
   public static final class ElevatorConstants {
+    public static class Gains {
+      // Ganhos PID para o Elevator
+      public static final double kP = 0.05; // Proporcional
+      public static final double kI = 0.0; // Integral
+      public static final double kD = 0.0; // Derivativo
+      public static final double kFF = 0.05; // Feed Forward
 
-    // IDs dos motores
-    public static final int LEFT_MOTOR_ID = 15;
-    public static final int RIGHT_MOTOR_ID = 16;
+      public static final double kVelocityFF = 0.001; // Feedforward
+    }
 
-    // Constantes do elevador
-    public static final double GEARING = 5.0;
-    public static final double MASS_KG = 5.0;
-    public static final double DRUM_CIRCUMFERENCE = 2.0 * Math.PI * Units.inchesToMeters(2.0);
-    public static final double ENCODER_ROTATIONS_TO_METERS = DRUM_CIRCUMFERENCE / GEARING;
+    /**
+     * IDs e configurações do sistema.
+     */
+    public static final class HardwareConfig {
+      public static final int kLeftMotorId = 15;
+      public static final int kRightMotorId = 16;
 
-    public static final int CURRENT_LIMIT = 60;
-
-    // PID Gains Elevator
-    public static final double kP = 0.05; // Proporcional
-    public static final double kI = 0.0; // Integral
-    public static final double kD = 0.0; // Derivativo
-    public static final double kFF = 0.05; // Feed Forward
-
-    public static final double kVelocityFF = 0.001; // Feedforward
-
-    // Feedforward Gains
-    public static final double kS = 0.095388; // Tensão estática TODO
-    public static final double kG = 0.54402; // Gravidade TODO  
-    public static final double kV = 7.43; // Velocidade TODO
-    public static final double kA = 1.0; // Aceleração TODO
-
-    // Restrições de movimento
-    public static final double MIN_HEIGHT_METERS = 0.005; // TODO
-    public static final double MAX_HEIGHT_METERS = 1.57; // TODO
-    public static final double MAX_VELOCITY = 3.67; // Velocidade máxima (m/s) TODO
-    public static final double MAX_ACCELERATION = 3.0; // Aceleração máxima (m/s^2) TODO
-    public static final TrapezoidProfile.Constraints MOVEMENT_pCONSTRAINTS = new TrapezoidProfile.Constraints(
-        MAX_VELOCITY, MAX_ACCELERATION);
+      public static final double kClosedLoopRate = 0.5;
+      public static final int kStallCurrentLimit = 40;
+    }
   }
 
   /**
@@ -161,8 +147,6 @@ public final class Constants {
      * Limites e taxas do braço.
      */
     public static final class ArmConfig {
-      public static final int kStallCurrentLimit = 40;
-      public static final double kClosedLoopRate = 0.5;
       public static final Angle kMinAngle = Degrees.of(-98.0);
       public static final Angle kMaxAngle = Degrees.of(87.0);
       public static final Angle kMinSafeAngle = Degrees.of(-93.0);
@@ -180,6 +164,9 @@ public final class Constants {
       public static final double kOuttakeEncoderOffset = 70;
 
       public static final double kGearRatio = 1.0 / 20.0;
+
+      public static final int kStallCurrentLimit = 40;
+      public static final double kClosedLoopRate = 0.5;
     }
   }
 
@@ -191,7 +178,7 @@ public final class Constants {
       L2(20, -87),
       L3(55, -90),
       L4(56, 58),
-      CLIMBPOSE(4,10);  
+      CLIMBPOSE(4, 10);
 
       public final double height;
       public final double angle;
@@ -202,6 +189,7 @@ public final class Constants {
       }
     }
   }
+
   /**
    * Configurações de visão.
    */
@@ -246,8 +234,8 @@ public final class Constants {
     public static final int UP_LEFT = 315;
   }
 
-  public static final class ClimberMotor{
+  public static final class ClimberMotor {
 
-   public static  final int m_climber = 4;
+    public static final int m_climber = 4;
   }
 }

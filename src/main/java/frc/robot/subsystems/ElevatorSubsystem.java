@@ -14,7 +14,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.ElevatorConstants.*;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -25,8 +25,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final RelativeEncoder leftEncoder, rightEncoder;
 
   public ElevatorSubsystem() {
-    leftMotor = new SparkMax(ElevatorConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-    rightMotor = new SparkMax(ElevatorConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+    leftMotor = new SparkMax(HardwareConfig.kLeftMotorId, MotorType.kBrushless);
+    rightMotor = new SparkMax(HardwareConfig.kRightMotorId, MotorType.kBrushless);
 
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
@@ -37,28 +37,30 @@ public class ElevatorSubsystem extends SubsystemBase {
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
 
-    rightMotorConfig 
-      // .smartCurrentLimit(40)
-      .closedLoopRampRate(0.5).inverted(true).closedLoop
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .pidf(
-        ElevatorConstants.kP,
-        ElevatorConstants.kI,
-        ElevatorConstants.kD,
-        ElevatorConstants.kFF
-      )
-      .velocityFF(ElevatorConstants.kVelocityFF)
-      .outputRange(-1.0, 1.0);
+    rightMotorConfig
+        .inverted(true).closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pidf(
+            Gains.kP,
+            Gains.kI,
+            Gains.kD,
+            Gains.kFF)
+        .velocityFF(Gains.kVelocityFF)
+        .outputRange(-1.0, 1.0);
 
-    rightMotorConfig.encoder
-      .positionConversionFactor(1)
-      .velocityConversionFactor(1);
+    rightMotorConfig
+        .smartCurrentLimit(HardwareConfig.kStallCurrentLimit)
+        .closedLoopRampRate(HardwareConfig.kClosedLoopRate).encoder
+        .positionConversionFactor(1)
+        .velocityConversionFactor(1);
 
-    leftMotorConfig.encoder
-      .positionConversionFactor(1)
-      .velocityConversionFactor(1);
+    leftMotorConfig
+        .smartCurrentLimit(HardwareConfig.kStallCurrentLimit)
+        .closedLoopRampRate(HardwareConfig.kClosedLoopRate).encoder
+        .positionConversionFactor(1)
+        .velocityConversionFactor(1);
 
-    // leftMotorConfig.follow(rightMotor, true); 
+    // leftMotorConfig.follow(rightMotor, true);
 
     leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     rightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -66,8 +68,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setElevatorPose(ReefsScorePose reefsScorePose) {
     // rightClosedLoopController.setReference(
-    //     reefsScorePose.height,
-    //     ControlType.kPosition);
+    // reefsScorePose.height,
+    // ControlType.kPosition);
   }
 
   public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
