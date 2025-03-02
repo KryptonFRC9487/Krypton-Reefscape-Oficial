@@ -93,7 +93,7 @@ public final class Constants {
   public static final class ElevatorConstants {
     public static class Gains {
       // Ganhos PID para o Elevator
-      public static final double kP = 0.05; // Proporcional
+      public static final double kP = 0.03; // Proporcional
       public static final double kI = 0.0; // Integral
       public static final double kD = 0.0; // Derivativo
       public static final double kFF = 0.0; // Feed Forward
@@ -108,7 +108,7 @@ public final class Constants {
       public static final int kLeftMotorId = 15;
       public static final int kRightMotorId = 16;
 
-      public static final double kClosedLoopRate = 0.5;
+      public static final double kClosedLoopRate = 0.3;
       public static final int kStallCurrentLimit = 40;
     }
   }

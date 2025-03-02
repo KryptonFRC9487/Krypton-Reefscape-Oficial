@@ -49,12 +49,15 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile, vision);
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
-  // private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
-  // private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
+  private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
+  private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
   // private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
 
-  private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem);
+  private final ScoreSystem m_scoreSystem = new ScoreSystem(
+  m_elevatorSubsystem,
+  m_outtakePivotSubsystem,
+  m_outtakeSubsystem);
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -91,7 +94,7 @@ public class RobotContainer {
         () -> p1Controller.getRightBumperButtonPressed()));
     }
 
-    // m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, p2Controller));
+    m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, p2Controller));
   }
 
   private void registerAutoCommands() {
