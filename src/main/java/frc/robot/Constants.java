@@ -189,8 +189,9 @@ public final class Constants {
       INITAL(8, -112),
       L1(8, 75),
       L2(20, -87),
-      L3(56, -87),
-      L4(56, 58);  
+      L3(55, -90),
+      L4(56, 58),
+      CLIMBPOSE(4,10);  
 
       public final double height;
       public final double angle;
@@ -243,5 +244,10 @@ public final class Constants {
     public static final int DOWN_LEFT = 225;
     public static final int LEFT = 270;
     public static final int UP_LEFT = 315;
+  }
+
+  public static final class ClimberMotor{
+
+   public static  final int m_climber = 4;
   }
 }

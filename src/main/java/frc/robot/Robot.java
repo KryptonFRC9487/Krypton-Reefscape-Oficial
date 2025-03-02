@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  CameraServer cameraServer;
   public Robot() {
   }
 
@@ -25,13 +27,13 @@ public class Robot extends TimedRobot {
     if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
-    // CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture();
   }
   
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run(); 
     
     SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Voltage", RobotController.getBatteryVoltage());

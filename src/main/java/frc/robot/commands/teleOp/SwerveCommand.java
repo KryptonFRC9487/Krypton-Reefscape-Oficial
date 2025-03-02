@@ -55,14 +55,14 @@ public class SwerveCommand extends Command {
           break;
       }
     }
-    
+
     switch (fastSpeedMode) {
       case StateStrings.ON:
-        drive(0.8);
-        break;
+        drive(0.6);
+         break;
 
       case StateStrings.OFF:
-        drive(0.1);
+        drive(0.2);
         break;
     }
   }

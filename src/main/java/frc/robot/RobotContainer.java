@@ -23,13 +23,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Constants.Buttons;
 import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.POV;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
+import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.teleOp.SwerveCommand;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
+// import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -45,14 +49,12 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile, vision);
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
-  private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
-  private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
+  // private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
+  // private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
-  // private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem, m_outtakePivotSubsystem);
-  private final ScoreSystem m_scoreSystem = new ScoreSystem(
-      m_elevatorSubsystem,
-      m_outtakePivotSubsystem,
-      m_outtakeSubsystem);
+
+  private final ScoreSystem m_scoreSystem = new ScoreSystem(m_elevatorSubsystem);
 
   private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT
@@ -89,7 +91,7 @@ public class RobotContainer {
         () -> p1Controller.getRightBumperButtonPressed()));
     }
 
-    m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, p2Controller));
+    // m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, p2Controller));
   }
 
   private void registerAutoCommands() {
@@ -131,6 +133,10 @@ public class RobotContainer {
     //           Rotation2d.fromDegrees(0)
     //   )));
     // }
+        climberSubsystem.setDefaultCommand(
+      new ClimberCommand(
+        climberSubsystem, p1Controller));
+      
 
     new JoystickButton(p1Controller, XboxController.Button.kBack.value).onFalse(new SwerveCommand(
       swerveSubsystem,
@@ -146,6 +152,7 @@ public class RobotContainer {
     new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
     new POVButton(p2Controller, POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
     new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
+    new JoystickButton(p2Controller, Buttons.BUTTON_BACK).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.CLIMBPOSE));
 
     // ToPose Commands
     if (Robot.isSimulation()) {

@@ -9,12 +9,6 @@
           "data": {
             "pathName": "Middle Right Coral 1"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "elevatorUp"
-          }
         }
       ]
     }
