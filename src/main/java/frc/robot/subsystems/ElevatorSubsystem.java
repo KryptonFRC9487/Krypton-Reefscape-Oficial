@@ -67,9 +67,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setElevatorPose(ReefsScorePose reefsScorePose) {
-    // rightClosedLoopController.setReference(
-    // reefsScorePose.height,
-    // ControlType.kPosition);
+    rightClosedLoopController.setReference(
+    reefsScorePose.height,
+    ControlType.kPosition);
   }
 
   public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
@@ -81,7 +81,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atPose(ReefsScorePose reefsScorePose) {
-    return MathUtil.isNear(reefsScorePose.height, getElevatorPosition(), 2.0);
+    return MathUtil.isNear(reefsScorePose.height, getElevatorPosition(), 5.0);
   }
 
   @Override

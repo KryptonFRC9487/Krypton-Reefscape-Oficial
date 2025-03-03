@@ -178,8 +178,8 @@ public final class Constants {
   public static final class ReefsConstants {
 
     public static enum ReefsScorePose {
-      HORIZONTAL(8, 0),
-      VERTICAL(8, -90),
+      // HORIZONTAL(8, 0),
+      // VERTICAL(8, -90),
       INITAL(8, -112),
       L1(8, 75),
       L2(20, -87),
