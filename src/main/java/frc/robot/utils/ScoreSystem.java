@@ -3,7 +3,9 @@ package frc.robot.utils;
 import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.Constants.OuttakeConstants.ArmConfig.kMinSafeAngle;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
@@ -32,11 +34,21 @@ public class ScoreSystem {
     setCoralSystemSafeMode(reefsScorePose);
     setReefsTarget(reefsScorePose);
 
+    SmartDashboard.putBoolean("Safe Mode", m_coralSystemInSafeMode);
+
     if (m_coralSystemInSafeMode) {
+      // if (m_outtakePivotSubsystem.outtakeIsSafe()) {
+      // return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
+      // .until(() -> m_elevatorSubsystem.atPose(m_reefsScorePose))
+      // .andThen(() ->
+      // m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));
+      // }
+
       return m_outtakePivotSubsystem.setOuttakePositionCmd(kMinSafeAngle.in(Degrees))
           .until(() -> m_outtakePivotSubsystem.outtakeIsSafe())
           .andThen(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
-              .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 10.0))
+              .until(() -> m_elevatorSubsystem.atPose(m_reefsScorePose)
+                  || m_elevatorSubsystem.getElevatorPosition() <= ReefsScorePose.INITAL.height))
           .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));
     }
 
@@ -47,7 +59,6 @@ public class ScoreSystem {
   public Command scoreCoralAuto(ReefsScorePose reefsScorePose) {
     setCoralSystemSafeMode(reefsScorePose);
     setReefsTarget(reefsScorePose);
-
 
     return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
         .alongWith(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose))

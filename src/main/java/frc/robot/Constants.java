@@ -110,6 +110,8 @@ public final class Constants {
 
       public static final double kClosedLoopRate = 0.3;
       public static final int kStallCurrentLimit = 40;
+
+      public static final double kOutputRange = 1.0;
     }
   }
 
@@ -119,16 +121,18 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.35; // 0.017
+      public static final double kP = 0.25; // 0.31
       public static final double kI = 0.0; // 0.0
-      public static final double kD = 0.07; // 0.015
+      public static final double kD = 0.05; // 0.07
 
-      private static final double kMinUp = 0.185; // motor.set() 0.071
-      private static final double kMinDown = 0.07; // // motor.set() 0.036
+      private static final double kMinUp = 0.135;
+      private static final double kMinDown = 0.055;
 
       // Ganhos de Feedforward
-      public static final double kG = (kMinUp + kMinDown) / 2; // Gravidade 0.0535
-      public static final double kV = (kMinUp - kMinDown) / 2; // Velocidade 0.0175
+      // public static final double kG = (kMinUp + kMinDown) / 2; // Gravidade 0.0535
+      // public static final double kV = (kMinUp - kMinDown) / 2; // Velocidade 0.0175
+      public static final double kG = 0.0535; // Gravidade 0.0535
+      public static final double kV = 0.0175; // Velocidade 0.0175
       public static final double kS = 0.0; // Tensão estática
       public static final double kA = 0.0; // Aceleração
     }
@@ -137,8 +141,9 @@ public final class Constants {
      * Restrições do perfil trapezoidal.
      */
     public static final class TrapezoidProfileConstants {
-      public static final double kMaxVelocity = 50.0; // Velocidade máxima (rad/s)
-      public static final double kMaxAcceleration = 25.0; // Aceleração máxima (rad/s^2)
+      // public static final double kMaxVelocity = 50.0; // Velocidade máxima (rad/s)
+      public static final double kMaxVelocity = 35.0; // Velocidade máxima (rad/s)
+      public static final double kMaxAcceleration = 17.5; // Aceleração máxima (rad/s^2) 12.5
       public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity,
           kMaxAcceleration);
     }
@@ -149,7 +154,7 @@ public final class Constants {
     public static final class ArmConfig {
       public static final Angle kMinAngle = Degrees.of(-98.0);
       public static final Angle kMaxAngle = Degrees.of(87.0);
-      public static final Angle kMinSafeAngle = Degrees.of(-93.0);
+      public static final Angle kMinSafeAngle = Degrees.of(-80.0);
     }
 
     /**
@@ -173,6 +178,8 @@ public final class Constants {
   public static final class ReefsConstants {
 
     public static enum ReefsScorePose {
+      HORIZONTAL(8, 0),
+      VERTICAL(8, -90),
       INITAL(8, -112),
       L1(8, 75),
       L2(20, -87),

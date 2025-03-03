@@ -46,7 +46,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             Gains.kD,
             Gains.kFF)
         .velocityFF(Gains.kVelocityFF)
-        .outputRange(-1.0, 1.0);
+        .outputRange(-HardwareConfig.kOutputRange, HardwareConfig.kOutputRange);
 
     rightMotorConfig
         .smartCurrentLimit(HardwareConfig.kStallCurrentLimit)
@@ -67,9 +67,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setElevatorPose(ReefsScorePose reefsScorePose) {
-    rightClosedLoopController.setReference(
-        reefsScorePose.height,
-        ControlType.kPosition);
+    // rightClosedLoopController.setReference(
+    // reefsScorePose.height,
+    // ControlType.kPosition);
   }
 
   public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
@@ -81,7 +81,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean atPose(ReefsScorePose reefsScorePose) {
-    return MathUtil.isNear(reefsScorePose.height, getElevatorPosition(), 1.0);
+    return MathUtil.isNear(reefsScorePose.height, getElevatorPosition(), 2.0);
   }
 
   @Override

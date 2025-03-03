@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -149,8 +150,8 @@ public class OuttakePivotSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm FF Output", feedforwardOutput);
     SmartDashboard.putNumber("Arm Output", output);
     SmartDashboard.putNumber("Arm Position", Radians.of(position).in(Degrees));
-    SmartDashboard.putNumber("Arm Velocity", velocity);
     SmartDashboard.putNumber("Arm Setpoint", Radians.of(m_pid.getSetpoint().position).in(Degrees));
+    SmartDashboard.putBoolean("Outtake is Safe", outtakeIsSafe());
   }
   
   // Função para obter a medição da posição (encoder)
@@ -181,7 +182,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
   }
 
   public boolean outtakeIsSafe() {
-    return getAngle().gte(kMinSafeAngle.minus(Degrees.of(10.0)));
+    return getAngle().gte(kMinSafeAngle.minus(Degrees.of(5.0)));
   }
 
   public boolean atPose(ReefsScorePose reefsScorePose) {

@@ -24,9 +24,10 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     // m_sysIdRoutineBot = new SysIdRoutineBot();
 
-    if (isSimulation()) {
+    if (isSimulation() || isTeleop()) {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
+
     CameraServer.startAutomaticCapture();
   }
   
