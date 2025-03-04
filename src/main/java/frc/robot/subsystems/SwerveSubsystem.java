@@ -45,7 +45,6 @@ public class SwerveSubsystem extends SubsystemBase {
   public boolean correctionPID = false;
   private final CorePigeon2 pigeon;
 
-  private final SwerveDrivePoseEstimator m_poseEstimator;
 
   // Método construtor da classe
   public SwerveSubsystem(File directory, VisionSubsystem vision) {
@@ -58,10 +57,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     pigeon = new CorePigeon2(13);
-
-    m_poseEstimator = new SwerveDrivePoseEstimator(
-        swerveDrive.kinematics, getHeading(),
-        swerveDrive.getModulePositions(), getPose());
 
     // swerveDrive.setHeadingCorrection(true);
 
