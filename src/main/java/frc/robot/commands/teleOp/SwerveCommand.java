@@ -42,7 +42,7 @@ public class SwerveCommand extends Command {
   @Override
   public void initialize() {}
 
-  @Override
+  @Override 
   public void execute() {
     if (toggleSpeed.getAsBoolean()) {
       switch (fastSpeedMode) {
@@ -58,11 +58,11 @@ public class SwerveCommand extends Command {
 
     switch (fastSpeedMode) {
       case StateStrings.ON:
-        drive(0.6);
+        drive(0.7);
          break;
 
       case StateStrings.OFF:
-        drive(0.2);
+        drive(0.15);
         break;
     }
   }

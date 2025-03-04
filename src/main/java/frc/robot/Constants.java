@@ -38,7 +38,7 @@ public final class Constants {
     public static final double wheelDiameterInMeters = Units.inchesToMeters(4);
 
     // Redução para motor de acionamento e ângulo
-    public static final double driveGearRatio = 6.18;
+    public static final double driveGearRatio = 6.75;
     public static final double angleGearRatio = 21.42;
 
     // PPR do encoder interno NEO;

@@ -53,8 +53,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-
+    m_robotContainer.setHeadingCorrection(true);
+    
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
       
