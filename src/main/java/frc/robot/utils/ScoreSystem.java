@@ -3,7 +3,6 @@ package frc.robot.utils;
 import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.Constants.OuttakeConstants.ArmConfig.kMinSafeAngle;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
@@ -52,6 +51,10 @@ public class ScoreSystem {
 
     return m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose)
         .alongWith(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose));
+  }
+
+  public Command loadCoral() {
+    return m_outtakeSubsystem.setOuttakeSpeedCmd(0.27).until(() -> m_outtakeSubsystem.outtakeHasCoral());
   }
 
   public Command scoreL4CoralAuto() {

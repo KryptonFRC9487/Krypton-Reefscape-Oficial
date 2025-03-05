@@ -14,14 +14,15 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ElevatorConstants.*;
+import frc.robot.Constants.ElevatorConstants.Gains;
+import frc.robot.Constants.ElevatorConstants.HardwareConfig;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
   private final SparkMax leftMotor, rightMotor;
   private final SparkMaxConfig leftMotorConfig, rightMotorConfig;
-  private final SparkClosedLoopController leftClosedLoopController, rightClosedLoopController;
+  private final SparkClosedLoopController rightClosedLoopController;
   private final RelativeEncoder leftEncoder, rightEncoder;
 
   public ElevatorSubsystem() {
@@ -31,7 +32,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
 
-    leftClosedLoopController = leftMotor.getClosedLoopController();
     rightClosedLoopController = rightMotor.getClosedLoopController();
 
     leftEncoder = leftMotor.getEncoder();

@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-
 import java.io.File;
 import java.util.function.Supplier;
 
@@ -18,8 +16,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -28,7 +24,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.vision.LimelightHelpers;
 import frc.robot.Constants.Tracao;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;

@@ -28,7 +28,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   }
 
   public Command setOuttakeSpeedCmd(double speed) {
-    return runOnce(() -> setOuttakeSpeed(speed));
+    return run(() -> setOuttakeSpeed(speed));
   }
 
   public boolean outtakeHasCoral() {
