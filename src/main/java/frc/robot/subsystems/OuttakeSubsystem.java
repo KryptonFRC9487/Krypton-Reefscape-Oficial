@@ -19,10 +19,6 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   }
 
-  public void periodic(){
-
-  }
-
   public void setOuttakeSpeed(double speed) {
     m_outtakeMotor.set(speed);
   }

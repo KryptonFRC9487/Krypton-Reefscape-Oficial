@@ -55,7 +55,7 @@ public class ScoreSystem {
 
   public Command loadCoral() {
     return m_outtakeSubsystem.setOuttakeSpeedCmd(-0.27).until(() -> m_outtakeSubsystem.outtakeHasCoral())
-        .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.0));
+        .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.0).unless(() -> !m_outtakeSubsystem.outtakeHasCoral()));
   }
 
   public Command scoreL4CoralAuto() {
