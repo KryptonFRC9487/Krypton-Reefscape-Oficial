@@ -34,8 +34,6 @@ public class ScoreSystem {
     setCoralSystemSafeMode(reefsScorePose);
     setReefsTarget(reefsScorePose);
 
-    SmartDashboard.putBoolean("Safe Mode", m_coralSystemInSafeMode);
-
     if (m_coralSystemInSafeMode) {
       // if (m_outtakePivotSubsystem.outtakeIsSafe()) {
       // return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
@@ -60,10 +58,10 @@ public class ScoreSystem {
     setCoralSystemSafeMode(ReefsScorePose.L4);
     setReefsTarget(ReefsScorePose.L4);
 
-    return m_elevatorSubsystem.setElevatorPoseCmd(ReefsScorePose.L4)
-        .alongWith(m_outtakePivotSubsystem.setOuttakePositionCmd(ReefsScorePose.L4))
-        .until(() -> scoringPoseReached())
-        .andThen(() -> new WaitCommand(0.5))
+    return m_outtakePivotSubsystem.setOuttakePositionCmd(ReefsScorePose.L4)
+        .andThen(m_elevatorSubsystem.setElevatorPoseCmd(ReefsScorePose.L4)
+            .until(() -> m_elevatorSubsystem.atPose(ReefsScorePose.L4)))
+        .andThen(() -> new WaitCommand(1.0))
         .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.3))
         .andThen(() -> new WaitCommand(0.5))
         .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.0));
