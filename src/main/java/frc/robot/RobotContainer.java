@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.Buttons;
@@ -95,13 +94,11 @@ public class RobotContainer {
   }
 
   private void registerAutoCommands() {
-
     NamedCommands.registerCommand("Expelir Coral", m_outtakeSubsystem.setOuttakeSpeedCmd(0.3));
-
     NamedCommands.registerCommand("Parar Expelir", m_outtakeSubsystem.setOuttakeSpeedCmd(0));
 
-    NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreCoralAuto(ReefsScorePose.L4));
-    NamedCommands.registerCommand("Elevator Init", m_scoreSystem.scoreCoralAuto(ReefsScorePose.INITAL));
+    NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreL4CoralAuto());
+    NamedCommands.registerCommand("Elevator Init", m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
 
   }
 

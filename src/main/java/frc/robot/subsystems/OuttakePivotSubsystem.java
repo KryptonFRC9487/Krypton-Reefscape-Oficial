@@ -186,7 +186,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
   }
 
   public boolean atPose(ReefsScorePose reefsScorePose) {
-    return MathUtil.isNear(reefsScorePose.angle, getOuttakePosition(), 1.0);
+    return MathUtil.isNear(reefsScorePose.angle, getOuttakePosition(), 3.0);
   }
 
   public Command runSysIdRoutine() {

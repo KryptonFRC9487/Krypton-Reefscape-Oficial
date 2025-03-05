@@ -5,7 +5,7 @@ import static frc.robot.Constants.OuttakeConstants.ArmConfig.kMinSafeAngle;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
@@ -56,19 +56,17 @@ public class ScoreSystem {
         .alongWith(m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose));
   }
 
-  public Command scoreCoralAuto(ReefsScorePose reefsScorePose) {
-    setCoralSystemSafeMode(reefsScorePose);
-    setReefsTarget(reefsScorePose);
+  public Command scoreL4CoralAuto() {
+    setCoralSystemSafeMode(ReefsScorePose.L4);
+    setReefsTarget(ReefsScorePose.L4);
 
-    return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
-        .alongWith(m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose))
+    return m_elevatorSubsystem.setElevatorPoseCmd(ReefsScorePose.L4)
+        .alongWith(m_outtakePivotSubsystem.setOuttakePositionCmd(ReefsScorePose.L4))
         .until(() -> scoringPoseReached())
-        .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.0).withTimeout(0.5))
-        .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(kMinSafeAngle.in(Degrees))
-            .until(() -> m_outtakePivotSubsystem.outtakeIsSafe()))
-        .andThen(m_elevatorSubsystem.setElevatorPoseCmd(ReefsScorePose.INITAL)
-            .until(() -> m_elevatorSubsystem.getElevatorPosition() <= 10.0)) // 30.0 é a altura safe para o outtake
-        .andThen(m_outtakePivotSubsystem.setOuttakePositionCmd(ReefsScorePose.INITAL));
+        .andThen(() -> new WaitCommand(0.5))
+        .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.3))
+        .andThen(() -> new WaitCommand(0.5))
+        .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.0));
   }
 
   private boolean scoringPoseReached() {
