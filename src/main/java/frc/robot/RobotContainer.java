@@ -97,7 +97,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Expelir Coral", m_outtakeSubsystem.setOuttakeSpeedCmd(0.3));
     NamedCommands.registerCommand("Parar Expelir", m_outtakeSubsystem.setOuttakeSpeedCmd(0));
 
-    NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreL4CoralAuto());
+    NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreCoral(ReefsScorePose.L4));
     NamedCommands.registerCommand("Elevator Init", m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
 
   }
