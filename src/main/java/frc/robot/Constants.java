@@ -35,7 +35,7 @@ public final class Constants {
     public static final double MAX_VEL_AUTO = 4;
 
     // Diâmetro da roda do módulo
-    public static final double wheelDiameterInMeters = Units.inchesToMeters(4);
+    public static final double wheelDiameterInMeters = Units.inchesToMeters(3.75);
 
     // Redução para motor de acionamento e ângulo
     public static final double driveGearRatio = 6.75;
@@ -245,4 +245,9 @@ public final class Constants {
 
     public static final int m_climber = 4;
   }
+
+  // public static final class Setpoints {
+  //   private static final double armNormal = 0.5;
+  //   public static final double armScore = armNormal + 0.37;
+  // }
 }

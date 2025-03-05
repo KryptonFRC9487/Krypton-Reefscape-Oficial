@@ -95,8 +95,14 @@ public class RobotContainer {
   }
 
   private void registerAutoCommands() {
-    NamedCommands.registerCommand("Intake", new PrintCommand("Intake"));
-    // NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreCoralAuto(ReefsScorePose.L4));
+
+    NamedCommands.registerCommand("Expelir Coral", m_outtakeSubsystem.setOuttakeSpeedCmd(0.3));
+
+    NamedCommands.registerCommand("Parar Expelir", m_outtakeSubsystem.setOuttakeSpeedCmd(0));
+
+    NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreCoralAuto(ReefsScorePose.L4));
+    NamedCommands.registerCommand("Elevator Init", m_scoreSystem.scoreCoralAuto(ReefsScorePose.INITAL));
+
   }
 
   private void configureBindings() {

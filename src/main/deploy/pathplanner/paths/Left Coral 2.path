@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.26,
-        "y": 5.067
+        "x": 5.259,
+        "y": 5.086
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8763602941176467,
-        "y": 6.2825330882352945
+        "x": 5.695033112582781,
+        "y": 6.3422392384105954
       },
       "isLocked": false,
       "linkedName": null
@@ -29,19 +29,46 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.86643109540636,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.1314487632508792,
+      "maxWaypointRelativePos": 0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "elevatorDown",
-      "waypointRelativePos": 0.09501557632398644,
+      "name": "Elevator Init",
+      "waypointRelativePos": 0.10318021201413488,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -57,5 +84,5 @@
     "velocity": 0.0,
     "rotation": -120.25643716352937
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

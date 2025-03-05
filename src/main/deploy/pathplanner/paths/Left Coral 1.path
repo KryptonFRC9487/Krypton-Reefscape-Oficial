@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.26,
-        "y": 5.067
+        "x": 5.259188741721854,
+        "y": 5.085554635761589
       },
       "prevControl": {
-        "x": 5.828004229612479,
-        "y": 5.901383035873194
+        "x": 5.827192971334333,
+        "y": 5.919937671634783
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,19 +29,38 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8197879858657183,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "elevatorUp",
-      "waypointRelativePos": 0.9026479750778759,
+      "name": "Score Coral - L4",
+      "waypointRelativePos": 0.6501766784452296,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Score Coral - L4"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -57,5 +76,5 @@
     "velocity": 0.0,
     "rotation": 180.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
