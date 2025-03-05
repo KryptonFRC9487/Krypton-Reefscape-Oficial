@@ -19,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.1
           }
         },
         {
@@ -38,6 +38,36 @@
           "type": "path",
           "data": {
             "pathName": "Left Coral 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coletar Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Coral 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Expelir Coral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Parar Expelir"
           }
         }
       ]
