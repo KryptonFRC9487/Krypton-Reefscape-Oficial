@@ -61,9 +61,14 @@
   "eventMarkers": [
     {
       "name": "Elevator Init",
-      "waypointRelativePos": 0.10318021201413488,
+      "waypointRelativePos": 0.12579505300351163,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator Init"
+        }
+      }
     }
   ],
   "globalConstraints": {

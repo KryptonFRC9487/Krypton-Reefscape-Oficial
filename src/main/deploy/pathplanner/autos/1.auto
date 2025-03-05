@@ -39,6 +39,12 @@
           "data": {
             "pathName": "Left Coral 2"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
+          }
         }
       ]
     }
