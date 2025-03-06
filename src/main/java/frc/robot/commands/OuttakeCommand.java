@@ -23,7 +23,7 @@ public class OuttakeCommand extends Command {
   @Override
   public void execute() {
     if (p2Controller.getRightTriggerAxis() != 0) {
-      if (!outtakeSubsystem.outtakeHasCoral()) {
+      if (outtakeSubsystem.outtakeHasCoral()) {
         outtakeSubsystem.setOuttakeSpeed(0);
       } else {
         outtakeSubsystem.setOuttakeSpeed(-0.27);

@@ -27,7 +27,6 @@ import frc.robot.Constants.GamepadConstants;
 import frc.robot.Constants.POV;
 import frc.robot.Constants.ReefsConstants.ReefsScorePose;
 import frc.robot.commands.OuttakeCommand;
-import frc.robot.commands.auto.LoadCoralCommand;
 import frc.robot.commands.teleOp.SwerveCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
@@ -49,7 +48,6 @@ public class RobotContainer {
   private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
   private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
   // private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-
 
   private final ScoreSystem m_scoreSystem = new ScoreSystem(
   m_elevatorSubsystem,
@@ -100,7 +98,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Parar Expelir",
         new InstantCommand(() -> m_outtakeSubsystem.setOuttakeSpeed(0.0), m_outtakeSubsystem));
 
-    NamedCommands.registerCommand("Load Coral", new LoadCoralCommand(m_outtakeSubsystem));
+    NamedCommands.registerCommand("Load Coral", m_scoreSystem.loadCoral());
 
     NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreCoral(ReefsScorePose.L4));
     NamedCommands.registerCommand("Elevator Init", m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));

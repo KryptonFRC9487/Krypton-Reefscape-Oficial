@@ -36,7 +36,8 @@ public class ScoreSystem {
     if (m_coralSystemInSafeMode) {
       // if (m_outtakePivotSubsystem.outtakeIsSafe()) {
       // return m_elevatorSubsystem.setElevatorPoseCmd(m_reefsScorePose)
-      // .until(() -> m_elevatorSubsystem.atPose(m_reefsScorePose))
+      // .until(() -> m_elevatorSubsystem.atPose(m_reefsScorePose)
+      // || m_elevatorSubsystem.getElevatorPosition() <= ReefsScorePose.INITAL.height)
       // .andThen(() ->
       // m_outtakePivotSubsystem.setOuttakePositionCmd(m_reefsScorePose));
       // }
@@ -55,7 +56,8 @@ public class ScoreSystem {
 
   public Command loadCoral() {
     return m_outtakeSubsystem.setOuttakeSpeedCmd(-0.27).until(() -> m_outtakeSubsystem.outtakeHasCoral())
-        .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.0).unless(() -> !m_outtakeSubsystem.outtakeHasCoral()));
+        .withTimeout(2.0)
+        .andThen(m_outtakeSubsystem.setOuttakeSpeedCmd(0.0));
   }
 
   public Command scoreL4CoralAuto() {

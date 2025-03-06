@@ -37,8 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
 
-    rightMotorConfig
-        .closedLoop
+    rightMotorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pidf(
             Gains.kP,
@@ -68,8 +67,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setElevatorPose(ReefsScorePose reefsScorePose) {
     rightClosedLoopController.setReference(
-    reefsScorePose.height,
-    ControlType.kPosition);
+        reefsScorePose.height,
+        ControlType.kPosition);
   }
 
   public Command setElevatorPoseCmd(ReefsScorePose reefsScorePose) {
