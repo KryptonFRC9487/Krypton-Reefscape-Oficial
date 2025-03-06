@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.20636042402826624,
+      "minWaypointRelativePos": 0.1976173791170287,
       "maxWaypointRelativePos": 0,
       "constraints": {
         "maxVelocity": 0.5,
@@ -61,7 +61,7 @@
   "eventMarkers": [
     {
       "name": "Score Coral - L4",
-      "waypointRelativePos": 0.8141342756183799,
+      "waypointRelativePos": 0.5578135949544454,
       "endWaypointRelativePos": null,
       "command": null
     }
