@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.32,
-        "y": 3.0
+        "x": 5.179,
+        "y": 2.899
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9708012820512817,
-        "y": 1.8525320512820518
+        "x": 5.448054635761589,
+        "y": 2.4269039735099343
       },
       "isLocked": false,
       "linkedName": null
@@ -29,19 +29,51 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.04204625087596355,
+      "maxWaypointRelativePos": 0.1443587946741417,
+      "constraints": {
+        "maxVelocity": 0.45,
+        "maxAcceleration": 0.45,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.9348283111422565,
+      "maxWaypointRelativePos": 0.9740714786264888,
+      "constraints": {
+        "maxVelocity": 0.45,
+        "maxAcceleration": 0.45,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "",
-      "waypointRelativePos": 0.09968847352024979,
+      "name": "Elevator Init",
+      "waypointRelativePos": 0.2789067974772258,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator Init"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -57,5 +89,5 @@
     "velocity": 0,
     "rotation": 121.40320309096143
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

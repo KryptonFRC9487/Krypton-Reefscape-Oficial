@@ -71,6 +71,7 @@ public class OuttakePivotSubsystem extends SubsystemBase {
 
     m_feedforward = new ArmFeedforward(Gains.kS, Gains.kG, Gains.kV, Gains.kA);
     m_pid = new ProfiledPIDController(Gains.kP, Gains.kI, Gains.kD, TrapezoidProfileConstants.kConstraints);
+    m_pid.setIZone(2.5);
     // m_pid.setGoal(OuttakePose.INIT.value);
     // m_pid.setTolerance(0.1);
 

@@ -7,73 +7,79 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Coral 1"
+            "pathName": "Right Coral 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Expelir Coral"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.3
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Left Coral 2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left Coral 3"
+            "name": "Parar Expelir"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.2
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Coral 4"
+            "pathName": "Right Coral 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Load Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Coral 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Expelir Coral"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Parar Expelir"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Coral 5"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left Coral 6"
+            "pathName": "Right Coral 4"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Blue ",
+  "folder": null,
   "choreoAuto": false
 }

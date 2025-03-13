@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6,
-        "y": 7.34
+        "x": 1.590831953642384,
+        "y": 7.3592094370860925
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8300233903839718,
-        "y": 7.008023747092141
+        "x": 1.8208553440263557,
+        "y": 7.027233184178233
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.951655629139073,
+        "x": 3.9443915562913907,
         "y": 5.194515728476822
       },
       "prevControl": {
-        "x": 4.238438226508881,
+        "x": 4.231174153661199,
         "y": 4.949848472070288
       },
       "nextControl": null,
@@ -61,9 +61,14 @@
   "eventMarkers": [
     {
       "name": "Score Coral - L4",
-      "waypointRelativePos": 0.5578135949544454,
+      "waypointRelativePos": 0.5325858444288696,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Score Coral - L4"
+        }
+      }
     }
   ],
   "globalConstraints": {

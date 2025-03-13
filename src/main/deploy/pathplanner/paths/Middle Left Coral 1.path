@@ -33,10 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "",
-      "waypointRelativePos": 0.9,
+      "name": "Score Coral - L4",
+      "waypointRelativePos": 0.5353889278205954,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Score Coral - L4"
+        }
+      }
     }
   ],
   "globalConstraints": {

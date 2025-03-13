@@ -16,6 +16,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   CameraServer cameraServer;
+
   public Robot() {
   }
 
@@ -30,12 +31,11 @@ public class Robot extends TimedRobot {
 
     CameraServer.startAutomaticCapture();
   }
-  
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
-    
+    CommandScheduler.getInstance().run();
+
     SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Voltage", RobotController.getBatteryVoltage());
     SmartDashboard.putBoolean("RSL", RobotController.getRSLState());
@@ -52,12 +52,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    m_robotContainer.getSwerveSubsystem().resetGyro();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.setHeadingCorrection(true);
-    
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-      
+
     }
   }
 
@@ -71,7 +72,6 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     m_robotContainer.setHeadingCorrection(true);
 
-    m_robotContainer.getSwerveSubsystem().resetGyro();
   }
 
   @Override

@@ -33,9 +33,12 @@ import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.commands.ClimberCommand;
 import frc.robot.utils.ScoreSystem;
+import swervelib.SwerveInputStream;
 
-public class RobotContainer { 
+public class RobotContainer {
 
   private final File swerveConfigFile = new File(Filesystem.getDeployDirectory(), "swerve");
 
@@ -47,21 +50,38 @@ public class RobotContainer {
 
   private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
   private final OuttakePivotSubsystem m_outtakePivotSubsystem = new OuttakePivotSubsystem();
-  // private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
   private final ScoreSystem m_scoreSystem = new ScoreSystem(
-  m_elevatorSubsystem,
-  m_outtakePivotSubsystem,
-  m_outtakeSubsystem);
+      m_elevatorSubsystem,
+      m_outtakePivotSubsystem,
+      m_outtakeSubsystem);
 
-  private XboxController p1Controller = new XboxController(
-      GamepadConstants.P1_PORT
-  );
+  private XboxController p1Controller = new XboxController( 
+      GamepadConstants.P1_PORT);
 
   private XboxController p2Controller = new XboxController(
-  GamepadConstants.P2_PORT
-  );
+      GamepadConstants.P2_PORT);
 
+  SwerveInputStream driveOriented = SwerveInputStream
+      .of(swerveSubsystem.getSwerveDrive(),
+          () -> -p1Controller.getLeftY(),
+          () -> -p1Controller.getLeftX())
+      .withControllerRotationAxis(() -> -p1Controller.getRightX())
+      .deadband(GamepadConstants.DEADBAND)
+      .scaleTranslation(0.7)
+      .scaleRotation(0.7)
+      .allianceRelativeControl(true);
+
+  SwerveInputStream driveOrientedLow = SwerveInputStream
+      .of(swerveSubsystem.getSwerveDrive(),
+          () -> -p1Controller.getLeftY(),
+          () -> -p1Controller.getLeftX())
+      .withControllerRotationAxis(() -> -p1Controller.getRightX())
+      .deadband(GamepadConstants.DEADBAND)
+      .scaleTranslation(0.15)
+      .scaleRotation(0.5)
+      .allianceRelativeControl(true); 
 
   public RobotContainer() {
     setDefaultCommands();
@@ -73,21 +93,29 @@ public class RobotContainer {
   }
 
   private void setDefaultCommands() {
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-      swerveSubsystem.setDefaultCommand(new SwerveCommand(
-        swerveSubsystem, 
-        () -> -p1Controller.getLeftY(),  
-        () -> -p1Controller.getLeftX(), 
-        () -> -p1Controller.getRightX(),
-        () -> p1Controller.getRightBumperButtonPressed()));
-    } else if (DriverStation.getAlliance().get() ==  DriverStation.Alliance.Blue){
-      swerveSubsystem.setDefaultCommand(new SwerveCommand(
-        swerveSubsystem, 
-        () -> -p1Controller.getLeftY(),  
-        () -> -p1Controller.getLeftX(), 
-        () -> -p1Controller.getRightX(),
-        () -> p1Controller.getRightBumperButtonPressed()));
-    }
+    // if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+    // swerveSubsystem.setDefaultCommand(new SwerveCommand(
+    // swerveSubsystem,
+    // () -> -p1Controller.getLeftY(),
+    // () -> -p1Controller.getLeftX(),
+    // () -> -p1Controller.getRightX(),
+    // () -> p1Controller.getRightBumperButtonPressed()));
+    // } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
+    // {
+    // swerveSubsystem.setDefaultCommand(new SwerveCommand(
+    // swerveSubsystem,
+    // () -> -p1Controller.getLeftY(),
+    // () -> -p1Controller.getLeftX(),
+    // () -> -p1Controller.getRightX(),
+    // () -> p1Controller.getRightBumperButtonPressed()));
+    // }
+
+    // swerveSubsystem.setDefaultCommand(new SwerveCommand(
+    // swerveSubsystem,
+    // () -> -p1Controller.getLeftY(),
+    // () -> -p1Controller.getLeftX(),
+    // () -> -p1Controller.getRightX(),
+    // () -> p1Controller.getRightBumperButtonPressed()));
 
     m_outtakeSubsystem.setDefaultCommand(new OuttakeCommand(m_outtakeSubsystem, p2Controller));
   }
@@ -103,85 +131,91 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Score Coral - L4", m_scoreSystem.scoreCoral(ReefsScorePose.L4));
     NamedCommands.registerCommand("Elevator Init", m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
-
   }
 
   private void configureBindings() {
+    Command drive = swerveSubsystem.driveFieldOriented(driveOriented);
+    Command driveLow = swerveSubsystem.driveFieldOriented(driveOrientedLow);
+
+    swerveSubsystem.setDefaultCommand(drive);
+
+    new JoystickButton(p1Controller, XboxController.Button.kRightBumper.value).toggleOnTrue(driveLow);
+
     // if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-    //   new JoystickButton(p1Controller, XboxController.Button.kX.value)
-    //     .whileTrue(
-    //       swerveSubsystem.driveToPose(
-    //         new Pose2d(
-    //           new Translation2d(1.630, 7.328), 
-    //           Rotation2d.fromDegrees(0)
-    //   )));
+    // new JoystickButton(p1Controller, XboxController.Button.kX.value)
+    // .whileTrue(
+    // swerveSubsystem.driveToPose(
+    // new Pose2d(
+    // new Translation2d(1.630, 7.328),
+    // Rotation2d.fromDegrees(0)
+    // )));0000000000000000000000000000000
 
-    //   new JoystickButton(p1Controller, XboxController.Button.kB.value)
-    //     .whileTrue(
-    //       swerveSubsystem.driveToPose(
-    //         new Pose2d(
-    //           new Translation2d(0.707, 1.346), 
-    //           Rotation2d.fromDegrees(0)
-    //   )));
+    // new JoystickButton(p1Controller, XboxController.Button.kB.value)
+    // .whileTrue(
+    // swerveSubsystem.driveToPose(
+    // new Pose2d(
+    // new Translation2d(0.707, 1.346),
+    // Rotation2d.fromDegrees(0)
+    // )));
     // } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-    //   new JoystickButton(p1Controller, XboxController.Button.kX.value)
-    //     .whileTrue(
-    //       swerveSubsystem.driveToPose(
-    //         new Pose2d(
-    //           new Translation2d(15.980, 0.758), 
-    //           Rotation2d.fromDegrees(0)
-    //   )));
+    // new JoystickButton(p1Controller, XboxController.Button.kX.value)
+    // .whileTrue(
+    // swerveSubsystem.driveToPose(
+    // new Pose2d(
+    // new Translation2d(15.980, 0.758),
+    // Rotation2d.fromDegrees(0)
+    // )));
 
-    //   new JoystickButton(p1Controller, XboxController.Button.kB.value)
-    //     .whileTrue(
-    //       swerveSubsystem.driveToPose(
-    //         new Pose2d(
-    //           new Translation2d( 15.872, 7.364), 
-    //           Rotation2d.fromDegrees(0)
-    //   )));
+    // new JoystickButton(p1Controller, XboxController.Button.kB.value)
+    // .whileTrue(
+    // swerveSubsystem.driveToPose(
+    // new Pose2d(
+    // new Translation2d( 15.872, 7.364),
+    // Rotation2d.fromDegrees(0)
+    // )));
     // }
-      //   climberSubsystem.setDefaultCommand(
-      // new ClimberCommand(
-      //   climberSubsystem, p1Controller));
-      
+    climberSubsystem.setDefaultCommand(
+        new ClimberCommand(
+            climberSubsystem, p1Controller));
 
     new JoystickButton(p1Controller, XboxController.Button.kBack.value).onFalse(new SwerveCommand(
-      swerveSubsystem,
-      () -> -MathUtil.applyDeadband(p1Controller.getLeftY(), GamepadConstants.DEADBAND),
-      () -> -MathUtil.applyDeadband(p1Controller.getLeftX(), GamepadConstants.DEADBAND),
-      () -> -MathUtil.applyDeadband(p1Controller.getRightX(), GamepadConstants.DEADBAND),
-      () -> p1Controller.getRightBumperPressed()));
-
-    new JoystickButton(p1Controller, XboxController.Button.kA.value)
-        .onTrue(new InstantCommand(swerveSubsystem::resetGyro));
+        swerveSubsystem,
+        () -> -MathUtil.applyDeadband(p1Controller.getLeftY(), GamepadConstants.DEADBAND),
+        () -> -MathUtil.applyDeadband(p1Controller.getLeftX(), GamepadConstants.DEADBAND),
+        () -> -MathUtil.applyDeadband(p1Controller.getRightX(), GamepadConstants.DEADBAND),
+        () -> p1Controller.getRightBumperPressed()));
 
     new POVButton(p2Controller, POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
     new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
     new POVButton(p2Controller, POV.LEFT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L3));
     new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
-    new JoystickButton(p2Controller, Buttons.BUTTON_BACK).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.CLIMBPOSE));
+
+    new JoystickButton(p2Controller, Buttons.BUTTON_BACK).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.REMOVEALGAE));
+    new JoystickButton(p2Controller, Buttons.RIGHT_BUMPER).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.CLIMBPOSE));
 
     // ToPose Commands
     if (Robot.isSimulation()) {
       new JoystickButton(p1Controller, XboxController.Button.kStart.value)
-        .onTrue(Commands.runOnce(() -> swerveSubsystem.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+          .onTrue(Commands.runOnce(() -> swerveSubsystem.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
     }
 
     new JoystickButton(p1Controller, XboxController.Button.kA.value)
-        .onTrue(new InstantCommand(
-            swerveSubsystem::resetGyro));
+        .onTrue(Commands.runOnce(() -> swerveSubsystem.resetGyro()));
 
     new JoystickButton(p1Controller, XboxController.Button.kY.value)
         .toggleOnTrue(Commands.startEnd(
             swerveSubsystem::disableHeading, swerveSubsystem::resetHeading));
+
+    // new JoystickButton(p2Controller,
+    // XboxController.Button.kA.value).onTrue(m_scoreSystem.loadCoral());
   }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
 
-  //Heading Correction 
-  public void setHeadingCorrection(boolean setHeadingCorrection){
+  // Heading Correction
+  public void setHeadingCorrection(boolean setHeadingCorrection) {
     swerveSubsystem.getSwerveDrive().setHeadingCorrection(setHeadingCorrection);
   }
 
