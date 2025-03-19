@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_robotContainer.getSwerveSubsystem().resetGyro();
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.setHeadingCorrection(true);
 
@@ -66,10 +67,13 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
 
     // m_robotContainer.getSwerveSubsystem().updateOdometry();
+
   }
 
   @Override
   public void teleopInit() {
+
+    // m_robotContainer.getSwerveSubsystem().resetGyro();
     m_robotContainer.setHeadingCorrection(true);
 
   }

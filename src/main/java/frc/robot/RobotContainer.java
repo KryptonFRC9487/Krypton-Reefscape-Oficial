@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,7 +33,6 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.OuttakePivotSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.utils.ScoreSystem;
@@ -44,8 +44,7 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
-  private final VisionSubsystem vision = new VisionSubsystem();
-  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile, vision);
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(swerveConfigFile);
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   private final OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
@@ -57,7 +56,7 @@ public class RobotContainer {
       m_outtakePivotSubsystem,
       m_outtakeSubsystem);
 
-  private XboxController p1Controller = new XboxController( 
+  private XboxController p1Controller = new XboxController(
       GamepadConstants.P1_PORT);
 
   private XboxController p2Controller = new XboxController(
@@ -65,23 +64,33 @@ public class RobotContainer {
 
   SwerveInputStream driveOriented = SwerveInputStream
       .of(swerveSubsystem.getSwerveDrive(),
-          () -> -p1Controller.getLeftY(),
-          () -> -p1Controller.getLeftX())
+          () -> -reversibleLeftY(),
+          () -> -reversibleLeftX())
       .withControllerRotationAxis(() -> -p1Controller.getRightX())
       .deadband(GamepadConstants.DEADBAND)
       .scaleTranslation(0.7)
       .scaleRotation(0.7)
-      .allianceRelativeControl(true);
+      .allianceRelativeControl(false);
+
+  SwerveInputStream driveOrientedInverted = SwerveInputStream
+      .of(swerveSubsystem.getSwerveDrive(),
+          () -> -reversibleLeftY(),
+          () -> -reversibleLeftX())
+      .withControllerRotationAxis(() -> p1Controller.getRightX())
+      .deadband(GamepadConstants.DEADBAND)
+      .scaleTranslation(0.7)
+      .scaleRotation(0.7)
+      .allianceRelativeControl(false);
 
   SwerveInputStream driveOrientedLow = SwerveInputStream
       .of(swerveSubsystem.getSwerveDrive(),
-          () -> -p1Controller.getLeftY(),
-          () -> -p1Controller.getLeftX())
+          () -> -reversibleLeftY(),
+          () -> -reversibleLeftX())
       .withControllerRotationAxis(() -> -p1Controller.getRightX())
       .deadband(GamepadConstants.DEADBAND)
       .scaleTranslation(0.15)
       .scaleRotation(0.5)
-      .allianceRelativeControl(true); 
+      .allianceRelativeControl(false);
 
   public RobotContainer() {
     setDefaultCommands();
@@ -178,12 +187,16 @@ public class RobotContainer {
         new ClimberCommand(
             climberSubsystem, p1Controller));
 
-    new JoystickButton(p1Controller, XboxController.Button.kBack.value).onFalse(new SwerveCommand(
-        swerveSubsystem,
-        () -> -MathUtil.applyDeadband(p1Controller.getLeftY(), GamepadConstants.DEADBAND),
-        () -> -MathUtil.applyDeadband(p1Controller.getLeftX(), GamepadConstants.DEADBAND),
-        () -> -MathUtil.applyDeadband(p1Controller.getRightX(), GamepadConstants.DEADBAND),
-        () -> p1Controller.getRightBumperPressed()));
+    // new JoystickButton(p1Controller,
+    // XboxController.Button.kBack.value).onFalse(new SwerveCommand(
+    // // swerveSubsystem,
+    // // () -> -MathUtil.applyDeadband(p1Controller.getLeftY(),
+    // GamepadConstants.DEADBAND),
+    // // () -> -MathUtil.applyDeadband(p1Controller.getLeftX(),
+    // GamepadConstants.DEADBAND),
+    // // () -> -MathUtil.applyDeadband(p1Controller.getRightX(),
+    // GamepadConstants.DEADBAND),
+    // // () -> p1Controller.getRightBumperPressed()));
 
     new POVButton(p2Controller, POV.DOWN).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.INITAL));
     new POVButton(p2Controller, POV.RIGHT).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L2));
@@ -191,7 +204,7 @@ public class RobotContainer {
     new POVButton(p2Controller, POV.UP).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.L4));
 
     new JoystickButton(p2Controller, Buttons.BUTTON_BACK).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.REMOVEALGAE));
-    new JoystickButton(p2Controller, Buttons.RIGHT_BUMPER).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.CLIMBPOSE));
+    // new JoystickButton(p2Controller, Buttons.RIGHT_BUMPER).onTrue(m_scoreSystem.scoreCoral(ReefsScorePose.CLIMBPOSE));
 
     // ToPose Commands
     if (Robot.isSimulation()) {
@@ -205,9 +218,6 @@ public class RobotContainer {
     new JoystickButton(p1Controller, XboxController.Button.kY.value)
         .toggleOnTrue(Commands.startEnd(
             swerveSubsystem::disableHeading, swerveSubsystem::resetHeading));
-
-    // new JoystickButton(p2Controller,
-    // XboxController.Button.kA.value).onTrue(m_scoreSystem.loadCoral());
   }
 
   public Command getAutonomousCommand() {
@@ -221,5 +231,37 @@ public class RobotContainer {
 
   public SwerveSubsystem getSwerveSubsystem() {
     return swerveSubsystem;
+  }
+
+  public double reversibleLeftX() {
+    double manualRevertMultiplier = 1;
+    if(p1Controller.getLeftTriggerAxis() > 0.3){
+      manualRevertMultiplier = -1;
+    }
+    if(DriverStation.getAlliance().isPresent()){
+      if(DriverStation.getAlliance().get() == Alliance.Red) {
+        return -p1Controller.getLeftX() * manualRevertMultiplier;
+      }else{
+        return p1Controller.getLeftX() * manualRevertMultiplier;
+      }
+    }else{
+      return -p1Controller.getLeftX() * manualRevertMultiplier;
+    }
+  }  
+
+  public double reversibleLeftY() {
+    double manualRevertMultiplier = 1;
+    if(p1Controller.getLeftTriggerAxis() > 0.3){
+      manualRevertMultiplier = -1;
+    }
+    if (DriverStation.getAlliance().isPresent()) {
+      if (DriverStation.getAlliance().get() == Alliance.Red) {
+        return -p1Controller.getLeftY() * manualRevertMultiplier;
+      } else {
+        return p1Controller.getLeftY() * manualRevertMultiplier;
+      }
+    } else {
+      return p1Controller.getLeftY() * manualRevertMultiplier;
+    }
   }
 }

@@ -48,7 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final Field2d field = new Field2d();
 
   // Método construtor da classe
-  public SwerveSubsystem(File directory, VisionSubsystem vision) {
+  public SwerveSubsystem(File directory) {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
     try {

@@ -121,9 +121,9 @@ public final class Constants {
   public static final class OuttakeConstants {
     public static class Gains {
       // Ganhos PID para o Outtake
-      public static final double kP = 0.45; // 0.31
+      public static final double kP = 0.27; // 0.31
       public static final double kI = 0.0; // 0.0
-      public static final double kD = 0.035; // 0.07
+      public static final double kD = 0.039; // 0.07
 
       private static final double kMinUp = 0.135;
       private static final double kMinDown = 0.055;
@@ -184,9 +184,8 @@ public final class Constants {
       INITAL(8, -112),
       L2(20, -87),
       L3(55, -90),
-      L4(54, 60),
-      REMOVEALGAE(4, 10),
-      CLIMBPOSE(8,105);
+      L4(50.8, 67),
+      REMOVEALGAE(4, 10); 
 
       public final double height;
       public final double angle;
